@@ -1,0 +1,14 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.config/nvim: nvim
+    ~/.zshrc: zsh/zshrc
+    ~/.zprofile: zsh/zprofile
+    ~/.profile: zsh/profile
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
