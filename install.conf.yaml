@@ -15,6 +15,10 @@
     ~/.profile: zsh/profile
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux: tmux
+    ~/.local/bin/:
+      path: bin/*
+      create: true
+      glob: true
 
 - brewfile:
     # This accepts the same options as `brew bundle` command:
