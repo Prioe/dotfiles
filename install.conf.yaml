@@ -14,6 +14,7 @@
     ~/.zprofile: zsh/zprofile
     ~/.profile: zsh/profile
     ~/.tmux.conf: tmux/tmux.conf
+    ~/.tmux: tmux
 
 - brewfile:
     # This accepts the same options as `brew bundle` command:
