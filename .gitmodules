@@ -2,9 +2,6 @@
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
-[submodule "nvim"]
-	path = nvim
-	url = https://github.com/Prioe/init.lua
 [submodule "dotbot-brewfile"]
 	path = dotbot-brewfile
 	url = https://github.com/sobolevn/dotbot-brewfile.git
@@ -14,3 +11,6 @@
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "astro_nvim"]
+	path = astro_nvim
+	url = https://github.com/AstroNvim/AstroNvim

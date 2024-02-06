@@ -9,7 +9,8 @@
 - clean: ['~']
 
 - link:
-    ~/.config/nvim: nvim
+    ~/.config/nvim: astro_nvim
+    ~/.config/nvim/lua/user: astro_user
     ~/.zshrc: zsh/zshrc
     ~/.zprofile: zsh/zprofile
     ~/.profile: zsh/profile
