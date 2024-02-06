@@ -1,6 +1,10 @@
 - defaults:
     link:
       relink: true
+    brewfile:
+      stdout: false
+      stderr: false
+      include: ['tap', 'brew', 'cask', 'mas']
 
 - clean: ['~']
 
@@ -9,6 +13,10 @@
     ~/.zshrc: zsh/zshrc
     ~/.zprofile: zsh/zprofile
     ~/.profile: zsh/profile
+
+- brewfile:
+    # This accepts the same options as `brew bundle` command:
+    file: Brewfile
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
