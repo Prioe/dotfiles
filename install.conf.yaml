@@ -19,5 +19,10 @@
     # This accepts the same options as `brew bundle` command:
     file: Brewfile
 
+- asdf:
+  - plugin: nodejs
+    versions:
+      - 20.11.0
+
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
