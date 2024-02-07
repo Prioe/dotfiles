@@ -137,6 +137,7 @@ bindkey -M vicmd '^a' incarg
 # +------------+
 
 source $DOTFILES/zsh/completion.zsh
+source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # autoload -Uz $DOTFILES/zsh/plugins/kubectl-completion/zsh-kubectl-completion
 
 # +-----+
