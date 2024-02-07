@@ -6,4 +6,5 @@ return {
 
   { import = "astrocommunity.colorscheme.rose-pine" },
   { import = "astrocommunity.completion.copilot-lua-cmp" },
+  { import = "astrocommunity.pack.python-ruff" }
 }
