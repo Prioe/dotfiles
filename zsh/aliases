@@ -1,1 +1,12 @@
+#!/usr/bin/env bash
+
+# Git
 alias gc='git commit'
+
+# Folders
+alias dot="$DOTFILES"
+alias code="$HOME/code"
+
+# Quick access to some config files
+alias ev="nvim $DOTFILES/nvim"
+alias et="nvim $DOTFILES/tmux"
