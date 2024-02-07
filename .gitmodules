@@ -14,3 +14,10 @@
 [submodule "astro_nvim"]
 	path = astro_nvim
 	url = https://github.com/AstroNvim/AstroNvim
+[submodule "zsh/plugins/zsh-completions"]
+	path = zsh/plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions
+[submodule "zsh/plugins/zsh-syntax-highlighting"]
+	path = zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting
+	ignore = dirty

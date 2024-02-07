@@ -1,0 +1,29 @@
+# Inspiration: 
+# - https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
+# - https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshenv
+
+export DOTFILES="$HOME/.dotfiles"
+
+export EDITOR="nvim"
+
+# XDG
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$XDG_CONFIG_HOME/local/share
+export XDG_CACHE_HOME=$XDG_CONFIG_HOME/cache
+
+# zsh
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
+export HISTSIZE=10000                   # Maximum events for internal history
+export SAVEHIST=10000                   # Maximum events in history file
+
+# Man pages
+export MANPAGER='nvim +Man!'
+
+# Add all directories in `~/.local/bin` to $PATH
+export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
+
+[ -d /home/linuxbrew/.linuxbrew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -d ~/.linuxbrew ] && eval "$(~/.linuxbrew/bin/brew shellenv)"
+[ -d /opt/homebrew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -d "$HOME/.cargo" ] && . "$HOME/.cargo/env"

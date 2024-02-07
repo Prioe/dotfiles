@@ -1,3 +1,5 @@
+# Docs: https://github.com/anishathalye/dotbot?tab=readme-ov-file#configuration
+
 - defaults:
     link:
       relink: true
@@ -11,9 +13,11 @@
 - link:
     ~/.config/nvim: astro_nvim
     ~/.config/nvim/lua/user: astro_user
-    ~/.zshrc: zsh/zshrc
-    ~/.zprofile: zsh/zprofile
-    ~/.profile: zsh/profile
+
+    ~/.config/zsh: zsh
+    ~/.config/zsh/.zshrc: zsh/zshrc
+    ~/.zshenv: zsh/zshenv
+
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux: tmux
     ~/.local/bin/:
