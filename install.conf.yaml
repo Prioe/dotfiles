@@ -1,14 +1,19 @@
 # Docs: https://github.com/anishathalye/dotbot?tab=readme-ov-file#configuration
-
 - defaults:
     link:
       relink: true
     brewfile:
-      stdout: false
-      stderr: false
+      stdout: true
+      stderr: true
       include: ['tap', 'brew', 'cask', 'mas']
 
 - clean: ['~']
+
+- create:
+  - ~/.config
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
 
 - link:
     ~/.config/nvim: astro_nvim
@@ -34,5 +39,5 @@
     versions:
       - 20.11.0
 
-- shell:
-  - [git submodule update --init --recursive, Installing submodules]
+# - shell:
+#   - [nvim --headless +q]
