@@ -13,6 +13,8 @@
 
 # Load more completions
 fpath=($DOTFILES/zsh/plugins/zsh-completions/src $fpath)
+# Homebrew also brings some completions
+fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 
 # Should be called before compinit
 zmodload zsh/complist
