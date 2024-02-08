@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Dotfiles
+alias di='$DOTFILES/instll'
+alias bbd='brew bundle dump --tap --formula --cleanup --force --verbose --file=$DOTFILES/Brewfile'
+
 # Git
 alias gc='git commit'
 
