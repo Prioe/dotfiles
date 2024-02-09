@@ -14,6 +14,9 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
 
+env:
+  HOMEBREW_NO_ANALYTICS: 1
+
 jobs:
   install-dotfiles:
     runs-on: ubuntu-latest
@@ -39,22 +42,36 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+      - name: Setup Homebrew env
+        id: setup-homebrew-env
+        run: |
+          # add all relevant env to github actions env
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "HOMEBREW_PREFIX=$HOMEBREW_PREFIX" >> "$GITHUB_ENV"
+          echo "HOMEBREW_CELLAR=$HOMEBREW_CELLAR" >> "$GITHUB_ENV"
+          echo "HOMEBREW_REPOSITORY=$HOMEBREW_REPOSITORY" >> "$GITHUB_ENV"
+          echo "$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin" >> "$GITHUB_PATH"
+
       - name: Bootstrap dotfiles
         id: bootstrap-dotfiles
+        shell: zsh {0}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          # symlink the dotfiles to the current users home directory
           ln -sf $GITHUB_WORKSPACE $HOME/.dotfiles
           ./install
 
       - name: Verify
         id: verify
+        shell: zsh {0}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
           # zsh is available
           zsh --version
 
-          # headless install nvim
-          zsh -c "nvim --headless +q"
+          tmux -V
+          asdf --version
+          node --version
+          fzf --version
+          gh --version
+          nvim --version
 
           # TODO implement more checks
