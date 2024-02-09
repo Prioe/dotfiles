@@ -6,6 +6,7 @@ alias bbd='brew bundle dump --tap --formula --cleanup --force --verbose --file=$
 
 # Git
 alias gc='git commit'
+alias gp='git push'
 
 # Folders
 alias dot='$DOTFILES'
