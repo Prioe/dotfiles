@@ -54,7 +54,6 @@ jobs:
 
       - name: Bootstrap dotfiles
         id: bootstrap-dotfiles
-        shell: zsh {0}
         run: |
           # symlink the dotfiles to the current users home directory
           ln -sf $GITHUB_WORKSPACE $HOME/.dotfiles
