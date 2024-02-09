@@ -19,7 +19,10 @@ env:
 
 jobs:
   install-dotfiles:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         id: checkout
@@ -30,19 +33,21 @@ jobs:
       - name: Cache Homebrew
         id: cache-homebrew
         uses: actions/cache@v4
+        if: runner.os != 'macOS'
         with:
           path: |
             /home/linuxbrew/.linuxbrew
-          key: ${{ runner.os }}-homebrew
+          key: ${{ runner.os }}-${{ hashFiles('**/Brewfile', '**/Brewfile.lock.json') }}-homebrew
 
       - name: Install Homebrew
         id: install-homebrew
-        if: steps.cache-homebrew.outputs.cache-hit != 'true'
+        if: runner.os != 'macOS' && steps.cache-homebrew.outputs.cache-hit != 'true'
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
       - name: Setup Homebrew env
         id: setup-homebrew-env
+        if: runner.os != 'macOS'
         run: |
           # add all relevant env to github actions env
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
