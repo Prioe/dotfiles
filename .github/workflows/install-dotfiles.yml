@@ -19,8 +19,10 @@ env:
 
 jobs:
   install-dotfiles:
-    # runs-on: ubuntu-latest
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         id: checkout
@@ -31,10 +33,11 @@ jobs:
       - name: Cache Homebrew
         id: cache-homebrew
         uses: actions/cache@v4
+        if: runner.os != 'macOS'
         with:
           path: |
             /home/linuxbrew/.linuxbrew
-          key: ${{ runner.os }}-homebrew
+          key: ${{ runner.os }}-${{ hashFiles('**/Brewfile', '**/Brewfile.lock.json') }}-homebrew
 
       - name: Install Homebrew
         id: install-homebrew
