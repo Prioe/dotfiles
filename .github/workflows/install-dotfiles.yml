@@ -17,12 +17,12 @@ concurrency:
 jobs:
   install-dotfiles:
     runs-on: ubuntu-latest
-    # The `steps` key groups together all the steps that will run as part of the `check-links` job. Each job in a workflow has its own `steps` section.
     steps:
-      # The `uses` key tells the job to retrieve the action named `actions/checkout`. This is an action that checks out your repository and downloads it to the runner, allowing you to run actions against your code (such as testing tools). You must use the checkout action any time your workflow will use the repository's code or you are using an action defined in the repository.
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Cache Homebrew
         id: cache-homebrew
@@ -39,13 +39,6 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-      # - name: Install zsh
-      #   id: install-zsh
-      #   run: |
-      #     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      #     brew install zsh
-      #     ln -s $(which zsh) /usr/bin/zsh
-
       - name: Bootstrap dotfiles
         id: bootstrap-dotfiles
         run: |
@@ -58,15 +51,10 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+          # zsh is available
           zsh --version
-          zsh -c "echo Hello World"
-          zsh -c "env"
+
+          # headless install nvim
           zsh -c "nvim --headless +q"
 
-
-
-      # - name: Check nvim
-      #   id: check-nvim
-      #   run: |
-      #     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      #     zsh -c "nvim --headless +q"
+          # TODO implement more checks
