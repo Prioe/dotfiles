@@ -38,3 +38,6 @@
   - plugin: nodejs
     versions:
       - 20.11.0
+
+- shell:
+  - [nvim --headless +q, Installing nvim plugins]
