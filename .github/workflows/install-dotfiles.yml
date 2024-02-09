@@ -19,7 +19,8 @@ env:
 
 jobs:
   install-dotfiles:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         id: checkout
@@ -37,12 +38,13 @@ jobs:
 
       - name: Install Homebrew
         id: install-homebrew
-        if: steps.cache-homebrew.outputs.cache-hit != 'true'
+        if: runner.os != 'macOS' && steps.cache-homebrew.outputs.cache-hit != 'true'
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
       - name: Setup Homebrew env
         id: setup-homebrew-env
+        if: runner.os != 'macOS'
         run: |
           # add all relevant env to github actions env
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
