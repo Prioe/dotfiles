@@ -23,8 +23,8 @@
     ~/.config/zsh/.zshrc: zsh/zshrc
     ~/.zshenv: zsh/zshenv
 
-    ~/.tmux.conf: tmux/tmux.conf
-    ~/.tmux: tmux
+    ~/.config/tmux: tmux
+
     ~/.local/bin/:
       path: bin/*
       create: true
