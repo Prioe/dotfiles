@@ -30,6 +30,10 @@
       create: true
       glob: true
 
+    ~/.config/systemd:
+      path: systemd
+      create: true
+
 - brewfile:
     # This accepts the same options as `brew bundle` command:
     file: Brewfile

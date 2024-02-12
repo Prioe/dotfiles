@@ -1,0 +1,11 @@
+# systemd timer for the sync-notes.service
+
+[Unit]
+Description=Sync notes with github
+
+[Timer]
+# Run every 10 minutes
+OnCalendar=*:0/10
+
+[Install]
+WantedBy=timers.target

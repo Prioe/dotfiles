@@ -1,0 +1,6 @@
+[Unit]
+Description=Pull and Push the notes directory from and to github
+
+[Service]
+Type=oneshot
+ExecStart=zsh -ic "sync_notes"
