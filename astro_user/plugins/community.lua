@@ -6,7 +6,6 @@ return {
 
   -- { import = "astrocommunity.colorscheme.rose-pine" },
   { import = "astrocommunity.colorscheme.catppuccin" },
-  { import = "astrocommunity.completion.copilot-lua-cmp" },
   { import = "astrocommunity.motion.nvim-surround" },
 
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
