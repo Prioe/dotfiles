@@ -15,3 +15,7 @@ alias code='$HOME/code'
 # Quick access to some config files
 alias ev='nvim $DOTFILES/nvim'
 alias et='nvim $DOTFILES/tmux'
+
+# Eza
+alias l="eza -l --icons --git -a"
+alias lt="eza --tree --level=2 --long --icons --git"
