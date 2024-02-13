@@ -23,16 +23,18 @@
     ~/.config/zsh/.zshrc: zsh/zshrc
     ~/.zshenv: zsh/zshenv
 
+    ~/.tool-versions: asdf/tool-versions
+    ~/.asdfrc: asdf/asdfrc
+
     ~/.config/tmux: tmux
+
+    ~/.config/systemd: systemd
 
     ~/.local/bin/:
       path: bin/*
       create: true
       glob: true
 
-    ~/.config/systemd:
-      path: systemd
-      create: true
 
 - brewfile:
     # This accepts the same options as `brew bundle` command:
