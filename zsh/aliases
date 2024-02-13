@@ -11,6 +11,7 @@ alias gp='git push'
 # Folders
 alias dot='$DOTFILES'
 alias code='$HOME/code'
+alias notes='$HOME/notes'
 
 # Quick access to some config files
 alias ev='nvim $DOTFILES/nvim'

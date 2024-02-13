@@ -9,7 +9,9 @@ local icons = {
 return {
   n = {
     ["<leader>N"] = { name = icons.Note .. "Notes" },
-    ["<leader>Nn"] = { ":ObsidianNew", desc = "New Note" },
+    ["<leader>Nn"] = { ":ObsidianNew<CR>", desc = "[N]ew note" },
+    ["<leader>Nt"] = { ":ObsidianToday<CR>", desc = "Open [t]odays daily note" },
+    ["<leader>No"] = { ":ObsidianOpen<CR>", desc = "[O]pen current note" },
 
     ["<leader>fN"] = { ":ObsidianSearch<CR>", desc = "Find Notes" },
   },
