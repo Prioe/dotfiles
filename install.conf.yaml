@@ -2,10 +2,6 @@
 - defaults:
     link:
       relink: true
-    brewfile:
-      stdout: true
-      stderr: true
-      include: ['tap', 'brew', 'cask', 'mas']
 
 - clean: ['~']
 
@@ -35,15 +31,3 @@
       create: true
       glob: true
 
-
-- brewfile:
-    # This accepts the same options as `brew bundle` command:
-    file: Brewfile
-
-- asdf:
-  - plugin: nodejs
-    versions:
-      - 20.11.0
-
-- shell:
-  - [nvim --headless +q, Installing nvim plugins]
