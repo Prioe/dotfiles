@@ -39,11 +39,20 @@ jobs:
             /home/linuxbrew/.linuxbrew
           key: ${{ runner.os }}-${{ hashFiles('**/Brewfile', '**/Brewfile.lock.json') }}-homebrew
 
-      - name: Install Homebrew
-        id: install-homebrew
-        if: runner.os != 'macOS' && steps.cache-homebrew.outputs.cache-hit != 'true'
+      - name: Cache asdf
+        id: cache-asdf
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.asdf
+          key: ${{ runner.os }}-${{ hashFiles('**/asdf/tool-versions') }}-asdf
+
+      - name: Bootstrap dotfiles
+        id: bootstrap-dotfiles
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          # symlink the dotfiles to the current users home directory
+          ln -sf $GITHUB_WORKSPACE $HOME/.dotfiles
+          ./bootstrap
 
       - name: Setup Homebrew env
         id: setup-homebrew-env
@@ -55,13 +64,6 @@ jobs:
           echo "HOMEBREW_CELLAR=$HOMEBREW_CELLAR" >> "$GITHUB_ENV"
           echo "HOMEBREW_REPOSITORY=$HOMEBREW_REPOSITORY" >> "$GITHUB_ENV"
           echo "$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin" >> "$GITHUB_PATH"
-
-      - name: Bootstrap dotfiles
-        id: bootstrap-dotfiles
-        run: |
-          # symlink the dotfiles to the current users home directory
-          ln -sf $GITHUB_WORKSPACE $HOME/.dotfiles
-          ./install
 
       - name: Verify
         id: verify

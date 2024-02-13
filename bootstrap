@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+set -e
+
+# https://stackoverflow.com/a/246128
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+REPO="https://github.com/prioe/dotfiles"
+
+_brew_shellenv() {
+	dirs=(
+		/home/linuxbrew/.linuxbrew
+		~/.linuxbrew
+		/opt/homebrew
+	)
+
+	for dir in "${dirs[@]}"; do
+		if [ -d "$dir" ]; then
+			eval "$("$dir"/bin/brew shellenv)"
+
+			# append this to bashrc if its not already there
+			eval_string="eval \"\$($dir/bin/brew shellenv)\""
+
+			if ! grep -q "$eval_string" ~/.bashrc; then
+				echo "# Homebrew shellenv" >>~/.bashrc
+				echo "$eval_string" >>~/.bashrc
+			fi
+
+			return
+		fi
+	done
+}
+
+_install_brew() {
+	if ! command -v brew &>/dev/null; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		_brew_shellenv
+	fi
+}
+
+_install_brew_packages() {
+	brew bundle install --file="$SCRIPT_DIR/Brewfile"
+	# brew install asdf
+}
+
+_install_dotbot() {
+	"$SCRIPT_DIR/install"
+}
+
+_install_asdf() {
+	tool_versions="$SCRIPT_DIR/asdf/tool-versions"
+
+	ln -sf "$tool_versions" ~/.tool-versions
+	ln -sf "$SCRIPT_DIR/asdf/asdfrc" ~/.asdfrc
+
+	# install asdf plugins referenced in tool-versions
+	awk '{print $1}' "$tool_versions" | xargs -I {} asdf plugin add {}
+	asdf install
+
+	eval_path="$(brew --prefix asdf)/libexec/asdf.sh"
+	# shellcheck disable=SC1090
+	. "$eval_path"
+
+	if ! grep -q ". $eval_path" ~/.bashrc; then
+		echo ". $eval_path" >>~/.bashrc
+	fi
+
+}
+
+_install_nvim() {
+	nvim --headless +q
+}
+
+_bootstrap() {
+	_install_brew
+	_install_brew_packages
+	_install_asdf
+	_install_dotbot
+	_install_nvim
+}
+
+_clone_repo() {
+	if [ ! -d "$HOME/.dotfiles" ]; then
+		git clone "$REPO" "$HOME/.dotfiles"
+		"$HOME/.dotfiles/bootstrap"
+		exit 0
+	fi
+}
+
+_clone_repo
+_bootstrap
