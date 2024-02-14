@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-#
+
 ## HEAVILY inspired by:
 ## https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshrc
 ## https://thevaluable.dev/zsh-install-configure-mouseless/
@@ -36,13 +36,6 @@ setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
 
-# +--------+
-# | COLORS |
-# +--------+
-
-# Override colors
-eval "$(dircolors -b $ZDOTDIR/dircolors)"
-
 # +---------+
 # | ALIASES |
 # +---------+
@@ -54,35 +47,10 @@ source $DOTFILES/zsh/aliases
 # +---------+
 
 source $DOTFILES/zsh/scripts.zsh
-# if [ -e "$DOTFILES_CLOUD/scripts.zsh" ]; then
-#     source $DOTFILES_CLOUD/scripts.zsh
-# fi
-#
-# source "$DOTFILES/zsh/plugins/fg_bg.sh"
-# zle -N fg-bg
-# bindkey '^Z' fg-bg
-#
-# function _new_command {
-#     zle push-input
-#     BUFFER=""
-# }
-#
-# zle -N _new_command
-# bindkey '^Xo' _new_command
-
-# +--------------------+
-# | TIME NOTIFICATIONS |
-# +--------------------+
-
-# Send notification when command line done
-# source $DOTFILES/zsh/plugins/notifyosd.zsh
 
 # +--------+
 # | PROMPT |
 # +--------+
-
-# fpath=($DOTFILES/zsh/prompt $fpath)
-# source $DOTFILES/zsh/prompt/prompt_purification_setup
 
 eval "$(starship init zsh)"
 
@@ -141,13 +109,6 @@ source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # autoload -Uz $DOTFILES/zsh/plugins/kubectl-completion/zsh-kubectl-completion
 
 # +-----+
-# | Git |
-# +-----+
-
-# Add command gitit to open Github repo in default browser from a local repo
-# source $DOTFILES/zsh/plugins/gitit.zsh
-
-# +-----+
 # | FZF |
 # +-----+
 
@@ -160,29 +121,10 @@ source $DOTFILES/zsh/plugins/fzf.zsh
 source $DOTFILES/zsh/plugins/asdf.zsh
 
 # +---------+
-# | Startup |
-# +---------+
-
-# if [[ "$(tty)" = "/dev/tty1" ]];
-# then
-#     pgrep i3 || exec ssh-agent startx "$XDG_CONFIG_HOME/X11/xinitrc"
-# else
-#     ftmuxp
-# fi
-
-# +---------+
 # | BINDING |
 # +---------+
 
-# ctrl+l used for tmux (switch pane)
-bindkey -r '^l'
-bindkey -r '^g'
 bindkey '^g' .clear-screen
-
-bindkey -r '^p'
-bindkey -s '^p' 'fpdf\n'
-
-# bindkey -s '^b' 'go run .\n'
 
 # edit current command line with vim (vim-mode, then CTRL-v)
 autoload -Uz edit-command-line
@@ -190,12 +132,6 @@ zle -N edit-command-line
 bindkey -M vicmd '^v' edit-command-line
 
 # source "$DOTFILES/zsh/bindings.zsh"
-
-# +------+
-# | Node |
-# +------+
-
-# source /usr/share/nvm/init-nvm.sh
 
 # +---------------------+
 # | SYNTAX HIGHLIGHTING |
