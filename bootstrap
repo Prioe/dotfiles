@@ -17,15 +17,6 @@ _brew_shellenv() {
 	for dir in "${dirs[@]}"; do
 		if [ -d "$dir" ]; then
 			eval "$("$dir"/bin/brew shellenv)"
-
-			# append this to bashrc if its not already there
-			eval_string="eval \"\$($dir/bin/brew shellenv)\""
-
-			if ! grep -q "$eval_string" ~/.bashrc; then
-				echo "# Homebrew shellenv" >>~/.bashrc
-				echo "$eval_string" >>~/.bashrc
-			fi
-
 			return
 		fi
 	done
@@ -40,7 +31,6 @@ _install_brew() {
 
 _install_brew_packages() {
 	brew bundle install --file="$SCRIPT_DIR/Brewfile"
-	# brew install asdf
 }
 
 _install_dotbot() {
@@ -57,14 +47,8 @@ _install_asdf() {
 	awk '{print $1}' "$tool_versions" | xargs -I {} asdf plugin add {}
 	asdf install
 
-	eval_path="$(brew --prefix asdf)/libexec/asdf.sh"
-	# shellcheck disable=SC1090
-	. "$eval_path"
-
-	if ! grep -q ". $eval_path" ~/.bashrc; then
-		echo ". $eval_path" >>~/.bashrc
-	fi
-
+	# shellcheck disable=SC1091
+	. "$(brew --prefix asdf)/libexec/asdf.sh"
 }
 
 _install_nvim() {
