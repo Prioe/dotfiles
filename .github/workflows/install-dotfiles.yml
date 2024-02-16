@@ -68,15 +68,4 @@ jobs:
       - name: Verify
         id: verify
         shell: zsh {0}
-        run: |
-          # zsh is available
-          zsh --version
-
-          tmux -V
-          asdf --version
-          node --version
-          fzf --version
-          gh --version
-          nvim --version
-
-          # TODO implement more checks
+        run: ./doctor
