@@ -11,12 +11,22 @@ return {
       "VeryLazy",
     },
     opts = {
-      dir = vim.env.HOME .. "/notes",
-      notes_dir = "notes",
+      -- default astrocommunity config sets this to a path which i dont use
+      dir = vim.NIL,
+      workspaces = {
+        {
+          name = "personal",
+          path = "~/notes",
+        },
+      },
+      notes_subdir = "notes",
+      new_notes_location = "notes_subdir",
       daily_notes = {
         folder = "notes/dailies",
       },
-      new_notes_location = "notes_subdir",
+      completion = {
+        min_chars = 1,
+      },
     },
   },
 }
