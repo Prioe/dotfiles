@@ -19,6 +19,8 @@
     ~/.config/zsh/.zshrc: zsh/zshrc
     ~/.zshenv: zsh/zshenv
 
+    ~/.config/starship.toml: starship/starship.toml
+
     ~/.tool-versions: asdf/tool-versions
     ~/.asdfrc: asdf/asdfrc
 
