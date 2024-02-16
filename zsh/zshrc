@@ -139,5 +139,12 @@ bindkey -M vicmd '^v' edit-command-line
 
 source $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# WSL specific
+if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
+  source $DOTFILES/zsh/wsl.zsh
+else
+  echo "TODO: WSL not detected, some further configuration might be needed."
+fi
+
 # Zoxide
 eval "$(zoxide init zsh)"
