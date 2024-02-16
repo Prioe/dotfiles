@@ -750,6 +750,20 @@
             }
           }
         }
+      },
+      "nvimpager": {
+        "version": "0.12.0",
+        "bottle": {
+          "rebuild": 0,
+          "root_url": "https://ghcr.io/v2/homebrew/core",
+          "files": {
+            "all": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/nvimpager/blobs/sha256:323b753e500c077e90388c784d2be86b63cf7fdc26874931df283712dcd1cc97",
+              "sha256": "323b753e500c077e90388c784d2be86b63cf7fdc26874931df283712dcd1cc97"
+            }
+          }
+        }
       }
     }
   },
