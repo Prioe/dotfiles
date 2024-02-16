@@ -113,6 +113,7 @@ source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # +-----+
 
 source $DOTFILES/zsh/plugins/fzf.zsh
+source $DOTFILES/zsh/plugins/op-fzf.zsh
 
 # +------+
 # | Asdf |
