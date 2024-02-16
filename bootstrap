@@ -52,7 +52,7 @@ _install_asdf() {
 }
 
 _install_nvim() {
-	nvim --headless +q
+	zsh -c "nvim --headless +q"
 }
 
 _bootstrap() {
