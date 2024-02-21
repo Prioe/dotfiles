@@ -21,7 +21,6 @@ warn() {
 }
 
 info() {
-	echo -e "${BLUE}${BOLD}ℹ ${NC} ${GRAY}$*${NC}"
 	echo -e "${BLUE}${BOLD}ℹ ${NC} $*"
 }
 
@@ -55,6 +54,7 @@ _check_nvim() {
 
 	if [ "$errors" ]; then
 		error "nvim health check failed"
+		debug "$(cat "$health_log")"
 
 		for error in $errors; do
 			error "$error"
