@@ -100,25 +100,17 @@ autoload -Uz incarg
 zle -N incarg
 bindkey -M vicmd '^a' incarg
 
-# +------------+
-# | COMPLETION |
-# +------------+
+# +---------+
+# | PLUGINS |
+# +---------+
 
 source $DOTFILES/zsh/completion.zsh
 source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-# autoload -Uz $DOTFILES/zsh/plugins/kubectl-completion/zsh-kubectl-completion
-
-# +-----+
-# | FZF |
-# +-----+
+source $DOTFILES/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 
 source $DOTFILES/zsh/plugins/fzf.zsh
 source $DOTFILES/zsh/plugins/op-fzf.zsh
 
-# +------+
-# | Asdf |
-# +------+
-#
 source $DOTFILES/zsh/plugins/asdf.zsh
 
 # +---------+
