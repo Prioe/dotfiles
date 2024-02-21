@@ -22,10 +22,15 @@ warn() {
 
 info() {
 	echo -e "${BLUE}${BOLD}ℹ ${NC} ${GRAY}$*${NC}"
+	echo -e "${BLUE}${BOLD}ℹ ${NC} $*"
 }
 
 success() {
 	echo -e "${GREEN}${BOLD}✔ ${NC} $*"
+}
+
+debug() {
+	echo -e "${GRAY}${BOLD}➜ ${NC} $*"
 }
 
 _check_nvim() {
@@ -50,6 +55,10 @@ _check_nvim() {
 
 	if [ "$errors" ]; then
 		error "nvim health check failed"
+
+		for error in $errors; do
+			error "$error"
+		done
 		return 1
 	fi
 
