@@ -1,6 +1,7 @@
+#:schema https://raw.githubusercontent.com/distinction-dev/alacritty-schema/main/alacritty/reference.json
 # Docs: https://alacritty.org/config-alacritty.html
 
-# import = ["rose-pine.toml"]
+live_config_reload = true
 
 [env]
 TERM = "xterm-256color"
@@ -17,6 +18,7 @@ bold_italic = { family = "FiraCode Nerd Font", style = "SemiBold Italic" }
 
 # Colors section of "Alacritty - TOML configuration file format"
 # https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd#colors
+[colors]
 
 [colors.primary]
 background = "#1E1E2E"
