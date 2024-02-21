@@ -6,6 +6,9 @@
 
 fpath=($DOTFILES/zsh/plugins $fpath)
 
+# dircolors
+eval $(dircolors -p | perl -pe 's/^((CAP|S[ET]|O[TR]|M|E)\w+).*/$1 00/' | dircolors -)
+
 # +------------+
 # | NAVIGATION |
 # +------------+
