@@ -11,6 +11,12 @@
 
 # source ./gambit.zsh
 
+# Remove the crappy zsh completion shipped by Homebrew git.
+# I prefer zsh's builtin git completion.
+# https://github.com/Homebrew/homebrew-core/issues/33275
+[[ -f  $HOMEBREW_PREFIX/share/zsh/site-functions/_git ]] && \
+  rm -f $HOMEBREW_PREFIX/share/zsh/site-functions/_git
+
 # Load more completions
 fpath=($DOTFILES/zsh/plugins/zsh-completions/src $fpath)
 # Homebrew also brings some completions
