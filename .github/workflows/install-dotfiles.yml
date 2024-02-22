@@ -70,4 +70,4 @@ jobs:
         shell: zsh {0}
         env:
           TERM: xterm-256color
-        run: ./doctor
+        run: ./doctor --nvim
