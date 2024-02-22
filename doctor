@@ -32,7 +32,61 @@ debug() {
 	echo -e "${GRAY}${BOLD}➜ ${NC} $*"
 }
 
-_check_nvim() {
+check_asdf() {
+	info "Checking asdf..."
+
+	if ! command -v asdf &>/dev/null; then
+		error "asdf not found"
+		return 1
+	fi
+
+	if ! asdf version &>/dev/null; then
+		error "asdf failed to start"
+		return 1
+	fi
+
+	# check if global plugins are installed: nodejs, python, deno
+	local -r asdf_plugin_count="$(asdf info | rg -c "nodejs|python|deno")"
+	if [ "$asdf_plugin_count" -ne 3 ]; then
+		error "asdf global plugins are not installed"
+		error "\$ asdf info\n$(asdf info)"
+		return 1
+	fi
+
+	# check if binaries are in PATH are the asdf ones
+	local -r binaries=(
+		"node"
+		"npm"
+		"python"
+		"pip"
+		"deno"
+	)
+
+	for binary in "${binaries[@]}"; do
+		info "  > Checking $binary..."
+		if ! command -v "$binary" &>/dev/null; then
+			error "$binary not found in PATH"
+			return 1
+		fi
+
+		if ! which "$binary" | rg -q "asdf"; then
+			error "A global version of $binary if found first"
+			error "\$ which $binary\n$(which "$binary")"
+			return 1
+		fi
+
+		if ! asdf which "$binary" &>/dev/null; then
+			error "$binary is not managed by asdf"
+			error "\$ asdf which $binary\n$(asdf which "$binary")"
+			return 1
+		fi
+
+	done
+
+	success "asdf is healthy"
+}
+
+check_nvim() {
 	info "Checking nvim..."
 
 	if ! command -v nvim &>/dev/null; then
@@ -52,6 +106,14 @@ _check_nvim() {
 	local -r warnings=$(grep "WARNING" "$health_log")
 	local -r errors=$(grep "ERROR" "$health_log")
 
+	if [ "$warnings" ]; then
+		warn "nvim health check warnings:"
+
+		for warning in $warnings; do
+			warn "$warning"
+		done
+	fi
+
 	if [ "$errors" ]; then
 		error "nvim health check failed"
 		debug "$(cat "$health_log")"
@@ -62,23 +124,16 @@ _check_nvim() {
 		return 1
 	fi
 
-	if [ "$warnings" ]; then
-		warn "nvim health check warnings:"
-
-		for warning in $warnings; do
-			warn "$warning"
-		done
-	fi
-
 	success "nvim is healthy"
 }
 
-_dotfiles_doctor() {
+dotfiles_doctor() {
+	cd "$HOME"
 	info "Running dotfiles doctor..."
-	if ! _check_nvim; then
+	if ! check_nvim || ! check_asdf; then
 		error "dotfiles doctor failed"
 		exit 1
 	fi
 }
 
-_dotfiles_doctor
+dotfiles_doctor
