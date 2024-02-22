@@ -111,6 +111,7 @@ source $DOTFILES/zsh/completion.zsh
 source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $DOTFILES/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 
+export DISABLE_FZF_KEY_BINDINGS=true
 source $DOTFILES/zsh/plugins/fzf.zsh
 source $DOTFILES/zsh/plugins/op-fzf.zsh
 

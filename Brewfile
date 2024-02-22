@@ -1,6 +1,7 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 brew "asdf"
+brew "atuin"
 brew "difftastic"
 brew "docker-completion"
 brew "dos2unix"

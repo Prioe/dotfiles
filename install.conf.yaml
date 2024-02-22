@@ -28,6 +28,8 @@
 
     ~/.config/systemd: systemd
 
+    ~/.config/atuin: atuin
+
     ~/.local/bin/:
       path: bin/*
       create: true
