@@ -127,13 +127,80 @@ check_nvim() {
 	success "nvim is healthy"
 }
 
-dotfiles_doctor() {
-	cd "$HOME"
-	info "Running dotfiles doctor..."
-	if ! check_nvim || ! check_asdf; then
-		error "dotfiles doctor failed"
+help() {
+	cat <<EOF
+Usage: $0 [options]
+
+Options:
+	-h, --help    Show this help message and exit
+	-a, --all     Run all checks
+	--nvim        Check nvim health
+	--asdf        Check asdf health
+EOF
+}
+
+main() {
+	local -r options=$(getopt -o ha --long help,all,nvim,asdf -- "$@")
+	local checks=()
+
+	eval set -- "$options"
+
+	while true; do
+		case "$1" in
+		-h | --help)
+			help
+			exit 0
+			;;
+		-a | --all)
+			checks+=("nvim" "asdf")
+			break
+			;;
+		--nvim)
+			checks+=("nvim")
+			shift
+			;;
+		--asdf)
+			checks+=("asdf")
+			shift
+			;;
+		--)
+			shift
+			break
+			;;
+		*)
+			echo "Internal error!"
+			exit 1
+			;;
+		esac
+	done
+
+	if [ ${#checks[@]} -eq 0 ]; then
+		error "No checks specified"
+		help
+		exit 1
+	fi
+
+	local has_errors=false
+
+	for check in "${checks[@]}"; do
+		case "$check" in
+		"nvim")
+			check_nvim || has_errors=true
+			;;
+		"asdf")
+			check_asdf || has_errors=true
+			;;
+		*)
+			error "Unknown check: $check"
+			exit 1
+			;;
+		esac
+	done
+
+	if [ $has_errors == true ]; then
+		error "Some checks failed"
 		exit 1
 	fi
 }
 
-dotfiles_doctor
+main "$@"
