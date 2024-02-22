@@ -21,8 +21,8 @@
 
     ~/.config/starship.toml: starship/starship.toml
 
+    ~/.config/asdf: asdf
     ~/.tool-versions: asdf/tool-versions
-    ~/.asdfrc: asdf/asdfrc
 
     ~/.config/tmux: tmux
 

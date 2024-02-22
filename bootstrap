@@ -38,10 +38,10 @@ _install_dotbot() {
 }
 
 _install_asdf() {
-	tool_versions="$SCRIPT_DIR/asdf/tool-versions"
+	export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME}/asdf/asdfrc"
+	export ASDF_DATA_DIR="${XDG_DATA_HOME}/asdf"
 
-	ln -sf "$tool_versions" ~/.tool-versions
-	ln -sf "$SCRIPT_DIR/asdf/asdfrc" ~/.asdfrc
+	tool_versions="$SCRIPT_DIR/asdf/tool-versions"
 
 	# install asdf plugins referenced in tool-versions
 	awk '{print $1}' "$tool_versions" | xargs -I {} asdf plugin add {}
@@ -55,12 +55,20 @@ _install_nvim() {
 	zsh -c "nvim --headless +q"
 }
 
+_setup_env() {
+	export XDG_CONFIG_HOME=$HOME/.config
+	export XDG_CACHE_HOME=$HOME/.cache
+	export XDG_DATA_HOME=$HOME/.local/share
+	export XDG_STATE_HOME=$HOME/.local/state
+}
+
 _bootstrap() {
 	cd "$HOME"
+	_setup_env
 	_install_brew
 	_install_brew_packages
-	_install_asdf
 	_install_dotbot
+	_install_asdf
 	_install_nvim
 }
 
