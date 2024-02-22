@@ -51,6 +51,15 @@ _install_asdf() {
 	. "$(brew --prefix asdf)/libexec/asdf.sh"
 }
 
+_install_rustup() {
+	export CARGO_HOME="$XDG_DATA_HOME"/cargo
+	export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+
+	if ! command -v rustup &>/dev/null; then
+		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path
+	fi
+}
+
 _install_nvim() {
 	zsh -c "nvim --headless +q"
 }
@@ -69,6 +78,7 @@ _bootstrap() {
 	_install_brew_packages
 	_install_dotbot
 	_install_asdf
+	_install_rustup
 	_install_nvim
 }
 
