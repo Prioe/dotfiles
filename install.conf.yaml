@@ -29,6 +29,7 @@
     ~/.config/systemd: systemd
 
     ~/.config/atuin: atuin
+    ~/.config/zellij: zellij
 
     ~/.local/bin/:
       path: bin/*
