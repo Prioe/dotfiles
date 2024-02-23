@@ -144,3 +144,6 @@ fi
 
 # Zoxide
 eval "$(zoxide init zsh)"
+
+# Atuin
+eval "$(atuin init zsh)"
