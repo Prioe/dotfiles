@@ -12,7 +12,6 @@ return {
     ["<leader>Nn"] = { ":ObsidianNew<CR>", desc = "[N]ew note" },
     ["<leader>Nt"] = { ":ObsidianToday<CR>", desc = "Open [t]odays daily note" },
     ["<leader>No"] = { ":ObsidianOpen<CR>", desc = "[O]pen current note" },
-
-    ["<leader>fN"] = { ":ObsidianSearch<CR>", desc = "Find Notes" },
+    ["<leader>Nf"] = { ":ObsidianSearch<CR>", desc = "[F]ind Notes" },
   },
 }
