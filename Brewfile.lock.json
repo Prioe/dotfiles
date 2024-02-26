@@ -921,6 +921,25 @@
             }
           }
         }
+      },
+      "prioe/personal/tmux-sessionizer": {
+        "version": "0.4.0",
+        "bottle": {
+          "rebuild": 0,
+          "root_url": "https://github.com/Prioe/homebrew-personal/releases/download/tmux-sessionizer-0.4.0",
+          "files": {
+            "ventura": {
+              "cellar": ":any",
+              "url": "https://github.com/Prioe/homebrew-personal/releases/download/tmux-sessionizer-0.4.0/tmux-sessionizer-0.4.0.ventura.bottle.tar.gz",
+              "sha256": "1edbb836922bffd2f58e9d068b2e7e76ff7315935e75da24cf6970ed6fb594d5"
+            },
+            "x86_64_linux": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://github.com/Prioe/homebrew-personal/releases/download/tmux-sessionizer-0.4.0/tmux-sessionizer-0.4.0.x86_64_linux.bottle.tar.gz",
+              "sha256": "0b2142fe5fbe33e33bd2fb21c032bd2ee18ea6ddb19471c40c91cfb85a1d138a"
+            }
+          }
+        }
       }
     }
   },
