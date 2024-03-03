@@ -9,7 +9,8 @@ export VISUAL="nvim"
 export PAGER="nvimpager"
 
 # Man pages
-export MANPAGER='nvim +Man!'
+# export MANPAGER='nvim +Man!'
+export MANPAGER='nvimpager'
 
 # XDG
 # See: https://wiki.archlinux.org/title/XDG_Base_Directory
