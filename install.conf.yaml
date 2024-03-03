@@ -30,6 +30,7 @@
 
     ~/.config/atuin: atuin
     ~/.config/zellij: zellij
+    ~/.config/bat: bat
 
     ~/.local/bin/:
       path: bin/*
