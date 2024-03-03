@@ -36,6 +36,7 @@ export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
 
 # Homebrew
 export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_BUNDLE_NO_LOCK=1
 
 [ -d /home/linuxbrew/.linuxbrew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 [ -d ~/.linuxbrew ] && eval "$(~/.linuxbrew/bin/brew shellenv)"

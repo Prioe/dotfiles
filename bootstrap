@@ -69,6 +69,9 @@ _setup_env() {
 	export XDG_CACHE_HOME=$HOME/.cache
 	export XDG_DATA_HOME=$HOME/.local/share
 	export XDG_STATE_HOME=$HOME/.local/state
+
+	export HOMEBREW_NO_ANALYTICS=1
+	export HOMEBREW_BUNDLE_NO_LOCK=1
 }
 
 _bootstrap() {
