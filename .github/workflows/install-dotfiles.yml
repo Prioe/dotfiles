@@ -21,7 +21,7 @@ jobs:
   install-dotfiles:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -67,6 +67,7 @@ jobs:
 
       - name: Verify
         id: verify
+        if: runner.os != 'macOS'
         shell: zsh {0}
         env:
           TERM: xterm-256color
