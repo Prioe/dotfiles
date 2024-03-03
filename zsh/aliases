@@ -18,5 +18,6 @@ alias ev='nvim $DOTFILES/nvim'
 alias et='nvim $DOTFILES/tmux'
 
 # Eza
+alias ls="eza --icons --git"
 alias l="eza -l --icons --git -a"
 alias lt="eza --tree --level=2 --long --icons --git"
