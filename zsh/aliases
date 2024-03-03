@@ -21,3 +21,6 @@ alias et='nvim $DOTFILES/tmux'
 alias ls="eza --icons --git"
 alias l="eza -l --icons --git -a"
 alias lt="eza --tree --level=2 --long --icons --git"
+
+# zoxide
+alias cd='z'
