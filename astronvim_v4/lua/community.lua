@@ -8,5 +8,6 @@ return {
   { "AstroNvim/astrocommunity", branch = "v4" },
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.completion.copilot-lua-cmp" },
+  { import = "astrocommunity.motion.nvim-surround" },
   -- import/override with your plugins folder
 }
