@@ -4,6 +4,7 @@
 
 export DOTFILES="$HOME/.dotfiles"
 
+export NVIM_APPNAME=astronvim_v4
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="nvimpager"

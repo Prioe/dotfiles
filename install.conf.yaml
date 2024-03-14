@@ -16,6 +16,7 @@
 
     ~/.config/nvim: astro_nvim
     ~/.config/nvim/lua/user: astro_user
+    ~/.config/astronvim_v4: astronvim_v4
 
     ~/.config/zsh: zsh
     ~/.config/zsh/.zshrc: zsh/zshrc
