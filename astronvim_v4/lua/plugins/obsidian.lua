@@ -5,6 +5,28 @@ return {
     "BufReadPre */notes/**.md",
     "VeryLazy",
   },
+  dependencies = {
+    {
+      "AstroNvim/astrocore",
+      ---@type AstroCoreOpts
+      opts = {
+        options = {
+          opt = {
+            conceallevel = 1,
+          },
+        },
+        mappings = {
+          n = {
+            ["<leader>N"] = { name = "󱓧 Notes" },
+            ["<leader>Nn"] = { ":ObsidianNew<CR>", desc = "[N]ew note" },
+            ["<leader>Nt"] = { ":ObsidianToday<CR>", desc = "Open [t]odays daily note" },
+            ["<leader>No"] = { ":ObsidianOpen<CR>", desc = "[O]pen current note" },
+            ["<leader>Nf"] = { ":ObsidianSearch<CR>", desc = "[F]ind Notes" },
+          },
+        },
+      },
+    },
+  },
   ---@type obsidian.config.ClientOpts | table<string, any>
   opts = {
     -- default astrocommunity config sets this to a path which i dont use
