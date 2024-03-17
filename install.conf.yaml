@@ -12,6 +12,8 @@
   - [git submodule update --init --recursive, Installing submodules]
 
 - link:
+    ~/.config/git: git
+
     ~/.config/nvim: astro_nvim
     ~/.config/nvim/lua/user: astro_user
 

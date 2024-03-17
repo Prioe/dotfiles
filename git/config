@@ -1,0 +1,16 @@
+[user]
+	email = michael@prio.one
+	name = Michael Albertz
+
+[init]
+	defaultBranch = main
+
+[help]
+	autocorrect = 1
+
+[rerere]
+	# Remember resolutions of conflicted merges
+	enabled = true
+
+[include]
+	path = ~/.config/git/config.local
