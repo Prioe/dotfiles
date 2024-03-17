@@ -10,6 +10,7 @@ return {
   { import = "astrocommunity.completion.copilot-lua-cmp" },
   { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.note-taking.obsidian-nvim" },
+  { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
 
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
   { import = "astrocommunity.pack.rust" },
