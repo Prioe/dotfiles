@@ -12,6 +12,9 @@ return {
   { import = "astrocommunity.note-taking.obsidian-nvim" },
   { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
 
+  { import = "astrocommunity.git.neogit" },
+  { import = "astrocommunity.git.diffview-nvim" },
+
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
   { import = "astrocommunity.pack.rust" },
   { import = "astrocommunity.pack.lua" },
