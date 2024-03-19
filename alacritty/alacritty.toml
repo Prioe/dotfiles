@@ -11,10 +11,9 @@ history = 100000
 
 [font]
 size = 13.0
-normal = { family = "FiraCode Nerd Font", style = "Medium" }
-italic = { family = "FiraCode Nerd Font", style = "Italic" }
-bold = { family = "FiraCode Nerd Font", style = "SemiBold" }
-bold_italic = { family = "FiraCode Nerd Font", style = "SemiBold Italic" }
+
+[font.normal]
+family = "FiraCode Nerd Font"
 
 # Colors section of "Alacritty - TOML configuration file format"
 # https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd#colors

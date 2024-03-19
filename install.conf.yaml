@@ -14,8 +14,7 @@
 - link:
     ~/.config/git: git
 
-    ~/.config/nvim: astro_nvim
-    ~/.config/nvim/lua/user: astro_user
+    ~/.config/nvim: nvim
 
     ~/.config/zsh: zsh
     ~/.config/zsh/.zshrc: zsh/zshrc
