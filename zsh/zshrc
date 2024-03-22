@@ -4,6 +4,9 @@
 ## https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshrc
 ## https://thevaluable.dev/zsh-install-configure-mouseless/
 
+# To enable zsh startup profiling, uncomment the following line and $ zprof at the end of the file
+# zmodload zsh/zprof
+
 fpath=($DOTFILES/zsh/plugins $fpath)
 
 # dircolors
@@ -147,3 +150,5 @@ eval "$(zoxide init zsh)"
 
 # Atuin
 eval "$(atuin init zsh)"
+
+# zprof
