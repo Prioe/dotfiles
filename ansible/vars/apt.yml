@@ -1,0 +1,35 @@
+---
+apt:
+  # CLI
+  ansible:
+  git:
+  python3:
+  python3-pip:
+
+  asdf:
+  atuin:
+  bat:
+  difftastic:
+  docker-completion:
+  dos2unix:
+  eza:
+  fd:
+  fzf:
+  gh:
+  gnu-getopt:
+  jq:
+  lazygit:
+  neovim:
+  nvimpager:
+  ripgrep:
+  starship:
+  stow:
+  tmux:
+  yq:
+  zoxide:
+  zsh:
+
+  # GUI
+  chromium-browser:
+  chromium-codecs-ffmpeg-extra:
+

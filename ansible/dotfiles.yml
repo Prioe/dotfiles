@@ -1,0 +1,33 @@
+---
+# Inspired by: https://github.com/elnappo/dotfiles/blob/master/ansible/dotfiles.yml
+- name: Playbook to manage my dotfiles (https://github.com/prioe/dotfiles)
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Load custom vars
+      include_vars: ../vars.yml
+      tags:
+        - always
+
+    - include_tasks: tasks/arch.yml
+      when: ansible_os_family == "Archlinux"
+      tags:
+        - arch
+
+    - include_tasks: tasks/create_dirs.yml
+      tags:
+        - dirs
+
+    - include_tasks: tasks/link_files.yml
+      tags:
+        - links
+
+    - include_tasks: tasks/packages.yml
+      tags:
+        - packages
+
+    - name: Make sure dotfiles are present
+      git:
+        repo: git@github.com:prioe/dotfiles
+        dest: ~/.dotfiles
+

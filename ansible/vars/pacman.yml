@@ -1,0 +1,35 @@
+---
+pacman:
+  # CLI
+  base:
+  base-devel:
+  ansible:
+
+  python:
+  python-pip:
+  python-libtmux:
+
+  atuin:
+  bat:
+  difftastic:
+  dos2unix:
+  eza:
+  fd:
+  fzf:
+  github-cli:
+  jq:
+  lazygit:
+  neovim:
+  ripgrep:
+  starship:
+  stow:
+  tmux:
+  yq:
+  zoxide:
+  zsh:
+
+
+
+  # GUI
+  chromium:
+  kitty:

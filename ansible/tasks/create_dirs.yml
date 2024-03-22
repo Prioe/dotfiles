@@ -1,0 +1,10 @@
+---
+- name: Create folder
+  file:
+    path: "{{item}}"
+    state: directory
+  loop:
+    - "~/.cache/" # $XDG_CACHE_HOME
+    - "~/.config/" # $XDG_CONFIG_HOME
+    - "~/.local/share/" # $XDG_DATA_HOME
+    - "~/.local/state/" # $XDG_STATE_HOME

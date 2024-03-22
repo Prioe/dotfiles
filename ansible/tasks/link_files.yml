@@ -1,0 +1,29 @@
+---
+- name: Link dotfiles
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    
+  loop:
+    - { src: "~/.dotfiles/git", dest: "~/.config/git" }
+    - { src: "~/.dotfiles/nvim", dest: "~/.config/nvim" }
+
+    - { src: "~/.dotfiles/zsh", dest: "~/.config/zsh" }
+    - { src: "~/.dotfiles/zsh/zshenv", dest: "~/.zshenv" }
+
+    - { src: "~/.dotfiles/starship/starship.toml", dest: "~/.config/starship.toml" }
+
+    - { src: "~/.dotfiles/asdf", dest: "~/.config/asdf" }
+    - { src: "~/.dotfiles/asdf/tool-versions", dest: "~/.tool-versions" }
+
+    - { src: "~/.dotfiles/tmux", dest: "~/.config/tmux" }
+
+    - { src: "~/.dotfiles/systemd", dest: "~/.config/systemd" }
+
+    - { src: "~/.dotfiles/atuin", dest: "~/.config/atuin" }
+    - { src: "~/.dotfiles/zellij", dest: "~/.config/zellij" }
+    - { src: "~/.dotfiles/bat", dest: "~/.config/bat" }
+    - { src: "~/.dotfiles/kitty", dest: "~/.config/kitty" }
+
+    - { src: "~/.dotfiles/bin", dest: "~/.config/bin" }

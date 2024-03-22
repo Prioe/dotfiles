@@ -1,0 +1,53 @@
+---
+- block:
+  - name: Configure pacman
+    lineinfile:
+      path: /etc/pacman.conf
+      line: "{{ item.line }}"
+      regexp: "{{ item.regexp }}"
+      backrefs: "{{ item.backrefs }}"
+    loop:
+      - { line: "Color", regexp: "#Color", backrefs: true}
+      - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: true}
+
+  - name: Enable Multilib
+    ini_file:
+      path: /etc/pacman.conf
+      section: "{{ item.section }}"
+      option: "{{ item.option }}"
+      value: "{{ item.value | default(omit) }}"
+    loop:
+      - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
+
+  - name: Enable pkgfile update timer
+    systemd:
+      name: pkgfile-update.timer
+      enabled: true
+      state: started
+    # Only enable if not running in container
+    when: ansible_virtualization_type != 'docker'
+
+  - name: Add user to wheel group
+    user:
+      name: "{{ ansible_user_id }}"
+      groups: wheel
+      append: true
+
+  - name: Create the `aur_builder` user
+    become: true
+    ansible.builtin.user:
+      name: aur_builder
+      create_home: true
+      group: wheel
+
+  - name: Allow the `aur_builder` user to run `sudo pacman` without a password
+    become: true
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers.d/11-install-aur_builder
+      line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+      create: yes
+      mode: 0644
+      validate: 'visudo -cf %s'
+
+
+  become: true
