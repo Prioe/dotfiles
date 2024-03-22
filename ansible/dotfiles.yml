@@ -9,6 +9,13 @@
       tags:
         - always
 
+    - name: Make sure dotfiles are present
+      git:
+        repo: git@github.com:prioe/dotfiles
+        dest: ~/.dotfiles
+      # Disable when were in a CI environment
+      when: ansible_virtualization_role != "guest"
+
     - include_tasks: tasks/arch.yml
       when: ansible_os_family == "Archlinux"
       tags:
@@ -26,8 +33,6 @@
       tags:
         - packages
 
-    - name: Make sure dotfiles are present
-      git:
-        repo: git@github.com:prioe/dotfiles
-        dest: ~/.dotfiles
-
+    - include_tasks: tasks/shells.yml
+      tags:
+        - shells

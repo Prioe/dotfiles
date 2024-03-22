@@ -24,8 +24,8 @@
       name: pkgfile-update.timer
       enabled: true
       state: started
-    # Only enable if not running in container
-    when: ansible_virtualization_type != 'docker'
+    # Disable when were in a CI environment
+    when: ansible_virtualization_role != "guest"
 
   - name: Add user to wheel group
     user:
