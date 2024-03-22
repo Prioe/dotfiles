@@ -151,4 +151,7 @@ eval "$(zoxide init zsh)"
 # Atuin
 eval "$(atuin init zsh)"
 
+# Mise
+eval "$(mise activate zsh)"
+
 # zprof
