@@ -91,6 +91,8 @@ fi
 echo "[i] Source zshenv"
 source "$SCRIPT_DIR/../zsh/zshenv"
 
+export ANSIBLE_STDOUT_CALLBACK=yaml
+
 # Install ansible requirements
 echo "[i] Install requirements"
 ansible-galaxy collection install -r ../ansible/requirements.yml
