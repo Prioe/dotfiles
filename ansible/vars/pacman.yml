@@ -4,10 +4,13 @@ pacman:
   base:
   base-devel:
   ansible:
+  pkgfile:
 
   python:
   python-pip:
   python-libtmux:
+  lua:
+  rustup:
 
   atuin:
   bat:

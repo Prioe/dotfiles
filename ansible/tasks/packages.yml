@@ -97,8 +97,7 @@
       state: "{{ item.value.state | default('latest') }}"
     with_dict: "{{pacman}}"
 
-  # - name: Install yay
-  #   include_tasks: install_yay.yml
+  - include_tasks: rustup.yml
 
   - name: Manage AUR packages
     kewlfft.aur.aur:
@@ -106,6 +105,8 @@
       state: "{{ item.value.state | default('present') }}"
     become_user: aur_builder
     with_dict: "{{aur}}"
+
+  - include_tasks: mise.yml
 
   become: true
   when: ansible_os_family == "Archlinux"

@@ -1,0 +1,5 @@
+---
+- name: Install global mise tool versions
+  command:
+    cmd: mise install
+    chdir: "{{ ansible_user_dir }}"

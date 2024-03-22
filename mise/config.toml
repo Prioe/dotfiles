@@ -1,0 +1,7 @@
+[tools]
+node = 'lts'
+deno = '1.40.4'
+python = ['3.12', '2.7']
+
+[settings]
+asdf_compat = true

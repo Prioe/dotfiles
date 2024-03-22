@@ -14,8 +14,7 @@
 
     - { src: "~/.dotfiles/starship/starship.toml", dest: "~/.config/starship.toml" }
 
-    - { src: "~/.dotfiles/asdf", dest: "~/.config/asdf" }
-    - { src: "~/.dotfiles/asdf/tool-versions", dest: "~/.tool-versions" }
+    - { src: "~/.dotfiles/mise", dest: "~/.config/mise" }
 
     - { src: "~/.dotfiles/tmux", dest: "~/.config/tmux" }
 
