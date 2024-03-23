@@ -1,21 +1,25 @@
 ---
-
 - block:
-  - name: Set rustup default toolchain
-    command: rustup default stable
-    become: true
-    become_user: "{{ item }}"
-    args:
-      creates: ~/
-    with_items: "{{ users }}"
+    - name: Set rustup default toolchain
+      command: rustup default stable
+      become: true
+      become_user: "{{ item }}"
+      args:
+        creates: ~/.local/share/rustup/
+      with_items: "{{ users }}"
 
-  - name: Update rustup
-    command: rustup update
-    become: true
-    become_user: "{{ item }}"
-    with_items: "{{ users }}"
+    - name: Update rustup
+      command: rustup update
+      become: true
+      become_user: "{{ item }}"
+      register: rustup_output
+      changed_when: "'unchanged' not in rustup_output.stdout"
+      with_items: "{{ users }}"
+
+  tags:
+    - rustup
 
   vars:
     users:
-      # - aur_builder
+      - aur_builder
       - "{{ ansible_user_id }}"
