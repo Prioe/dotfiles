@@ -3,3 +3,9 @@
   command:
     cmd: mise install
     chdir: "{{ ansible_user_dir }}"
+
+  register: mise_output
+  changed_when: mise_output.stdout != ""
+
+  tags:
+    - mise
