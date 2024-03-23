@@ -11,6 +11,11 @@ pacman:
   python-libtmux:
   lua:
   rustup:
+  unzip:
+
+  zsh-completions:
+  zsh-syntax-highlighting:
+  zsh-autosuggestions:
 
   atuin:
   bat:

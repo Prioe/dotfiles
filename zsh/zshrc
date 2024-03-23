@@ -111,7 +111,11 @@ bindkey -M vicmd '^a' incarg
 # +---------+
 
 source $DOTFILES/zsh/completion.zsh
-source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [[ -f $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
 export DISABLE_FZF_KEY_BINDINGS=true
 source $DOTFILES/zsh/plugins/fzf.zsh
@@ -136,7 +140,11 @@ source "$DOTFILES/zsh/bindings.zsh"
 # | SYNTAX HIGHLIGHTING |
 # +---------------------+
 
-source $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -f $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 # WSL specific
 if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
