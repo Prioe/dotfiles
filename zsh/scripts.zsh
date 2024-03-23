@@ -52,3 +52,7 @@ clear_nvim_config() {
 		fi
 	done
 }
+
+dotfiles() {
+	ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $HOME/.dotfiles/ansible/dotfiles.yml "$@" --ask-become-pass
+}
