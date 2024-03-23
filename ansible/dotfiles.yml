@@ -33,6 +33,10 @@
       tags:
         - packages
 
+    - include_tasks: tasks/tpm.yml
+      tags:
+        - tmux
+
     - include_tasks: tasks/shells.yml
       tags:
         - shells

@@ -1,0 +1,12 @@
+---
+- block:
+    - name: Install Tmux Plugins
+      command:
+        cmd: /usr/share/tmux-plugin-manager/bin/install_plugins
+        creates: ~/.config/tmux/plugins/
+
+    - name: Update Tmux Plugins
+      command: /usr/share/tmux-plugin-manager/bin/update_plugins all
+
+  tags:
+    - tmux

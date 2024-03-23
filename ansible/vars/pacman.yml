@@ -36,8 +36,6 @@ pacman:
   zoxide:
   zsh:
 
-
-
   # GUI
   chromium:
   kitty:
