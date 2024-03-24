@@ -1,0 +1,4 @@
+---
+dnf_repos:
+  https://mise.jdx.dev/rpm/mise.repo:
+  https://download.opensuse.org/repositories/shells:zsh-users:zsh-completions/Fedora_Rawhide/shells:zsh-users:zsh-completions.repo:

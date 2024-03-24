@@ -29,6 +29,21 @@
   tags:
     - apt
 
+- name: Include dnf package list
+  include_vars: vars/dnf.yml
+  tags:
+    - dnf
+
+- name: Include dnf copr list
+  include_vars: vars/copr.yml
+  tags:
+    - copr
+
+- name: Include dnf repos list
+  include_vars: vars/dnf_repos.yml
+  tags:
+    - dnf_repos
+
 - name: Include gems list
   include_vars: vars/gems.yml
   tags:
@@ -132,6 +147,38 @@
   become: true
   when: ansible_os_family == "Debian"
   tags: apt
+
+- block:
+    - name: Install config-manager
+      dnf:
+        name: dnf-plugins-core
+        state: present
+
+    - name: Enable dnf copr repositories
+      community.general.copr:
+        name: "{{ item.key }}"
+        state: enabled
+      with_dict: "{{copr}}"
+
+    - name: Add repos with dnf config-manager
+      command: dnf config-manager --add-repo "{{ item.key }}"
+      with_dict: "{{dnf_repos}}"
+
+    - name: Update/Upgrade dnf
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+
+    - name: Manage dnf packages
+      dnf:
+        name: "{{ item.key }}"
+        state: "{{ item.value.state | default('latest') }}"
+      with_dict: "{{dnf}}"
+
+  become: true
+  when: ansible_os_family == "RedHat"
+  tags: dnf
 
 - name: Manage gems
   gem:

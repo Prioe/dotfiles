@@ -1,5 +1,15 @@
 ---
 - block:
+    - name: Install Tmux Plugin Manager
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: /usr/share/tmux-plugin-manager
+        single_branch: true
+        depth: 1
+        version: master
+      when: ansible_os_family == "RedHat"
+      become: true
+
     - name: Install Tmux Plugins
       command:
         cmd: /usr/share/tmux-plugin-manager/bin/install_plugins

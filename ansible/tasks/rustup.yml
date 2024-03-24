@@ -1,5 +1,16 @@
 ---
+# TODO: Refactor this so the task receives a username as a parameter
+# This helps if we need to set this for distro specific users
 - block:
+    - name: Install rustup
+      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
+      become: true
+      become_user: "{{ item }}"
+      args:
+        creates: $XDG_DATA_HOME/cargo/
+      with_items: "{{ users }}"
+      when: ansible_distribution == "Fedora"
+
     - name: Set rustup default toolchain
       command: rustup default stable
       become: true
@@ -7,6 +18,8 @@
       args:
         creates: ~/.local/share/rustup/
       with_items: "{{ users }}"
+      environment:
+        PATH: "{{ ansible_env.XDG_DATA_HOME }}/cargo/bin:{{ ansible_env.PATH }}"
 
     - name: Update rustup
       command: rustup update
@@ -15,11 +28,12 @@
       register: rustup_output
       changed_when: "'unchanged' not in rustup_output.stdout"
       with_items: "{{ users }}"
+      environment:
+        PATH: "{{ ansible_env.XDG_DATA_HOME }}/cargo/bin:{{ ansible_env.PATH }}"
 
   tags:
     - rustup
 
   vars:
     users:
-      - aur_builder
       - "{{ ansible_user_id }}"

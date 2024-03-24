@@ -1,0 +1,54 @@
+---
+dnf:
+  # CLI
+  ansible:
+
+  python:
+  python-pip:
+  python-libtmux:
+  lua:
+  rustup:
+  unzip:
+
+  zsh-completions:
+  zsh-syntax-highlighting:
+  zsh-autosuggestions:
+
+  atuin:
+  bat:
+  difftastic:
+  dos2unix:
+  eza:
+  fd-find:
+  fzf:
+  gh:
+  jq:
+  lazygit:
+  mise:
+  neovim:
+  ripgrep:
+  starship:
+  stow:
+  tmux:
+  # yq:
+  zoxide:
+  zsh:
+
+  # pyenv deps
+  gcc:
+  make:
+  patch:
+  zlib-devel:
+  bzip2:
+  bzip2-devel:
+  readline-devel:
+  sqlite:
+  sqlite-devel:
+  openssl-devel:
+  tk-devel:
+  libffi-devel:
+  xz-devel:
+
+  # GUI
+  chromium:
+  kitty:

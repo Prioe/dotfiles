@@ -60,6 +60,17 @@ Linux)
 			fi
 			;;
 
+		fedora)
+			if [[ ! -x /usr/bin/ansible ]]; then
+				echo "[i] Install Ansible"
+				sudo dnf install -y ansible
+			fi
+			if [[ ! -x /usr/bin/git ]]; then
+				echo "[i] Install Git"
+				sudo dnf install -y git
+			fi
+			;;
+
 		*)
 			echo "[!] Unsupported Linux Distribution: $ID"
 			exit 1
@@ -95,11 +106,11 @@ export ANSIBLE_STDOUT_CALLBACK=yaml
 
 # Install ansible requirements
 echo "[i] Install requirements"
-ansible-galaxy collection install -r ../ansible/requirements.yml
+ansible-galaxy collection install -r "$SCRIPT_DIR/../ansible/requirements.yml"
 
 # Run main playbook
 echo "[i] Run Playbook"
-ansible-playbook ../ansible/dotfiles.yml --ask-become-pass
+ansible-playbook "$SCRIPT_DIR/../ansible/dotfiles.yml" --ask-become-pass
 
 echo "[i] From now on you can use $ dotfiles to manage your dotfiles"
 echo "[i] Done."
