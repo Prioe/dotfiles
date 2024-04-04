@@ -1,0 +1,32 @@
+---
+- block:
+  - name: NVIM | Install nvim
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: NVIM | Ensure nvim configuration directories exist
+    file:
+      path: "{{ item }}"
+      state: directory
+    loop:
+      - "{{ ansible_env.XDG_CONFIG_HOME }}/nvim"
+
+  - name: NVIM | Link nvim configuration
+    file:
+      src: "{{ role_path }}/files/{{ item.key }}"
+      dest: "{{ ansible_env.XDG_CONFIG_HOME }}/nvim/{{ item.value }}"
+      state: link
+    with_dict:
+      lua: lua
+      init.lua: init.lua
+      lazy-lock.json: lazy-lock.json
+
+  - name: NVIM | Install nvim plugins
+    shell: nvim --headless +qall
+    args:
+      creates: "{{ ansible_env.XDG_DATA_HOME }}/nvim/lazy"
+
+  - name: NVIM | Update nvim plugins
+    shell: nvim --headless +AstroUpdate +qall
+
+  tags: nvim

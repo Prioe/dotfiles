@@ -1,0 +1,6 @@
+---
+- name: NVIM | Install nvim using pacman
+  pacman:
+    name:
+      - neovim
+  become: true
