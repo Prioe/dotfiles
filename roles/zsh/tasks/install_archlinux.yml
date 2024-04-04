@@ -1,0 +1,9 @@
+---
+- name: ZSH | Install ZSH using pacman
+  pacman:
+    name:
+      - zsh
+      - zsh-completions
+      - zsh-syntax-highlighting
+      - zsh-autosuggestions
+  become: true

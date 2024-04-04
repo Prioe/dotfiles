@@ -1,0 +1,38 @@
+
+---
+- block:
+  - name: ZSH | Install ZSH
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: ZSH | Ensure ZSH configuration directories exist
+    file:
+      path: "{{ item }}"
+      state: directory
+    loop:
+      - "{{ ansible_env.XDG_CONFIG_HOME }}/zsh"
+      - "{{ ansible_env.XDG_CONFIG_HOME }}/zsh/plugins"
+
+  - name: ZSH | Link ZSH configuration
+    file:
+      src: "{{ role_path }}/files/{{ item.key }}"
+      dest: "{{ ansible_env.XDG_CONFIG_HOME }}/zsh/{{ item.value }}"
+      state: link
+    with_dict:
+      zshrc: .zshrc
+      zshenv: .zshenv
+      aliases: aliases
+      bindings.zsh: bindings.zsh
+      completion.zsh: completion.zsh
+      scripts.zsh: scripts.zsh
+      plugins/cursor_mode.zsh: plugins/cursor_mode.zsh
+
+
+  - name: ZSH | Set ZDOTDIR in global zshenv
+    lineinfile:
+      path: /etc/zsh/zshenv
+      line: "export ZDOTDIR={{ ansible_env.XDG_CONFIG_HOME }}/zsh"
+      create: true
+    become: true
+
+  tags: zsh

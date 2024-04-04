@@ -7,7 +7,7 @@
 # To enable zsh startup profiling, uncomment the following line and $ zprof at the end of the file
 # zmodload zsh/zprof
 
-fpath=($DOTFILES/zsh/plugins $fpath)
+fpath=($ZDOTDIR/plugins $fpath)
 
 # dircolors
 eval $(dircolors -p | perl -pe 's/^((CAP|S[ET]|O[TR]|M|E)\w+).*/$1 00/' | dircolors -)
@@ -26,7 +26,7 @@ setopt CORRECT              # Spelling correction
 setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
 
-# source $DOTFILES/zsh/plugins/bd.zsh
+# source $ZDOTDIR/plugins/bd.zsh
 
 # +---------+
 # | HISTORY |
@@ -46,13 +46,13 @@ setopt HIST_VERIFY               # Do not execute immediately upon history expan
 # | ALIASES |
 # +---------+
 
-source $DOTFILES/zsh/aliases
+source $ZDOTDIR/aliases
 
 # +---------+
 # | SCRIPTS |
 # +---------+
 
-source $DOTFILES/zsh/scripts.zsh
+source $ZDOTDIR/scripts.zsh
 
 # +--------+
 # | PROMPT |
@@ -75,7 +75,7 @@ bindkey -v
 export KEYTIMEOUT=1
 
 # Change cursor
-source "$DOTFILES/zsh/plugins/cursor_mode.zsh"
+source "$ZDOTDIR/plugins/cursor_mode.zsh"
 
 # Add Vi text-objects for brackets and quotes
 autoload -Uz select-bracketed select-quoted
@@ -110,18 +110,18 @@ bindkey -M vicmd '^a' incarg
 # | PLUGINS |
 # +---------+
 
-source $DOTFILES/zsh/completion.zsh
-if [[ -f $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZDOTDIR/completion.zsh
+if [[ -f $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 export DISABLE_FZF_KEY_BINDINGS=true
-source $DOTFILES/zsh/plugins/fzf.zsh
-source $DOTFILES/zsh/plugins/op-fzf.zsh
+source $ZDOTDIR/plugins/fzf.zsh
+source $ZDOTDIR/plugins/op-fzf.zsh
 
-source $DOTFILES/zsh/plugins/asdf.zsh
+source $ZDOTDIR/plugins/asdf.zsh
 
 # +---------+
 # | BINDING |
@@ -134,21 +134,21 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd '^v' edit-command-line
 
-source "$DOTFILES/zsh/bindings.zsh"
+source "$ZDOTDIR/bindings.zsh"
 
 # +---------------------+
 # | SYNTAX HIGHLIGHTING |
 # +---------------------+
 
-if [[ -f $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -f $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 elif [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # WSL specific
 if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
-  source $DOTFILES/zsh/wsl.zsh
+  source $ZDOTDIR/wsl.zsh
 else
   echo "TODO: WSL not detected, some further configuration might be needed."
 fi

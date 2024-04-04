@@ -1,0 +1,6 @@
+---
+- name: STARSHIP | Install starship using pacman
+  pacman:
+    name:
+      - starship
+  become: true

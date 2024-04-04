@@ -1,0 +1,6 @@
+---
+- name: ZOXIDE | Install ZSH using pacman
+  pacman:
+    name:
+      - zoxide
+  become: true

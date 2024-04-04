@@ -1,0 +1,6 @@
+---
+dotfiles_os_family: "{{ ansible_facts['os_family'] | lower }}"
+pacman_base_packages:
+  - base
+  - base-devel
+

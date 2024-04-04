@@ -1,0 +1,13 @@
+---
+- block:
+  - name: STARSHIP | Install starship
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: STARSHIP | Link starship configuration
+    file:
+      src: "{{ role_path }}/files/starship.toml"
+      dest: "{{ ansible_env.XDG_CONFIG_HOME }}/starship.toml"
+      state: link
+
+  tags: starship

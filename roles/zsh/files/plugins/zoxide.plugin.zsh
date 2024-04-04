@@ -1,0 +1,1 @@
+/home/user/.dotfiles/roles/zoxide/files/zoxide.plugin.zsh
