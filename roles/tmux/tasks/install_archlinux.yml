@@ -1,0 +1,12 @@
+---
+- name: TMUX | Install tmux using pacman
+  pacman:
+    name:
+      - tmux
+  become: true
+
+- name: TMUX | Install tmux dependencies using yay
+  kewlfft.aur.aur: 
+    name:
+      - tmux-plugin-manager
+  become_user: aur_builder

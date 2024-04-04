@@ -1,0 +1,26 @@
+---
+- block:
+  - name: "TMUX | Install tmux"
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: TMUX | Ensure tmux configuration directories exist
+    file:
+      path: "{{ ansible_env.XDG_CONFIG_HOME }}/tmux"
+      state: directory
+
+  - name: TMUX | Link tmux configuration
+    file:
+      src: "{{ role_path }}/files/tmux.conf"
+      dest: "{{ ansible_env.XDG_CONFIG_HOME }}/tmux/tmux.conf"
+      state: link
+
+  - name: TMUX | Install tmux Plugins
+    command:
+      cmd: /usr/share/tmux-plugin-manager/bin/install_plugins
+      creates: ~/.config/tmux/plugins/
+
+  - name: Update tmux Plugins
+    command: /usr/share/tmux-plugin-manager/bin/update_plugins all
+
+  tags: tmux
