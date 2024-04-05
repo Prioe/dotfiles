@@ -27,12 +27,17 @@
       scripts.zsh: scripts.zsh
       plugins/cursor_mode.zsh: plugins/cursor_mode.zsh
 
-
   - name: ZSH | Set ZDOTDIR in global zshenv
     lineinfile:
       path: /etc/zsh/zshenv
       line: "export ZDOTDIR={{ ansible_env.XDG_CONFIG_HOME }}/zsh"
       create: true
+    become: true
+
+  - name: ZSH | Set ZSH as the default shell
+    user:
+      name: "{{ ansible_user_id }}"
+      shell: /usr/bin/zsh
     become: true
 
   tags: zsh

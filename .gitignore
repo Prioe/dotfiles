@@ -1,4 +1,5 @@
 # im symlinking them back into the directory to maintain no-dot convention
-zsh/.*
-!zsh/.zshrc
-tmux/plugins
+roles/zsh/files/.*
+!roles/zsh/files/.zshrc
+!roles/zsh/files/.zshenv
+roles/tmux/files/plugins
