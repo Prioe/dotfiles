@@ -1,4 +1,25 @@
 ---
+- name: COMMON | Configure pacman
+  lineinfile:
+    path: /etc/pacman.conf
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    backrefs: "{{ item.backrefs }}"
+  loop:
+    - { line: "Color", regexp: "#Color", backrefs: true}
+    - { line: "ILoveCandy", regexp: "#ILoveCandy", backrefs: true}
+  become: true
+
+- name: COMMON | Enable Multilib
+  ini_file:
+    path: /etc/pacman.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value | default(omit) }}"
+  loop:
+    - { section: "multilib", option: "Include", value: "/etc/pacman.d/mirrorlist" }
+  become: true
+
 - name: COMMON | Update and upgrade system using pacman
   pacman:
     update_cache: true
@@ -8,34 +29,31 @@
 - name: COMMON | Install base packages
   pacman:
     name: "{{ pacman_base_packages }}"
-
-- block:
-
-  - name: Create the `aur_builder` group
-    become: true
-    ansible.builtin.group:
-      name: aur_builder
-
-  - name: Create the `aur_builder` user
-    become: true
-    ansible.builtin.user:
-      name: aur_builder
-      group: aur_builder
-      create_home: true
-
-  - name: Allow the `aur_builder` user to run `sudo pacman` without a password
-    become: true
-    ansible.builtin.lineinfile:
-      path: /etc/sudoers.d/11-install-aur_builder
-      line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
-      create: true
-      mode: 0644
-      validate: 'visudo -cf %s'
-
-  - name: Install AUR helper (yay)
-    kewlfft.aur.aur: 
-      name: yay
-    become_user: aur_builder
+  become: true
 
 
-  name: COMMON | Install AUR helper (yay)
+- name: COMMON | Create the `aur_builder` group
+  become: true
+  ansible.builtin.group:
+    name: aur_builder
+
+- name: COMMON | Create the `aur_builder` user
+  become: true
+  ansible.builtin.user:
+    name: aur_builder
+    group: aur_builder
+    create_home: true
+
+- name: COMMON | Allow the `aur_builder` user to run `sudo pacman` without a password
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: true
+    mode: 0644
+    validate: 'visudo -cf %s'
+
+- name: COMMON | Install AUR helper (yay)
+  kewlfft.aur.aur: 
+    name: yay
+  become_user: aur_builder
