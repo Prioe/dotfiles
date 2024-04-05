@@ -1,18 +1,23 @@
 ---
-- name: COMMON | Gathering facts
-  setup:
+- block:
+  - name: COMMON | Gathering facts
+    setup:
 
-- name: COMMON | Ensure required paths exist
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 0755
-  loop:
-    - "{{ ansible_env.XDG_CONFIG_HOME }}"
-    - "{{ ansible_env.XDG_DATA_HOME }}"
-    - "{{ ansible_env.XDG_CACHE_HOME }}"
-    - "{{ ansible_env.XDG_STATE_HOME }}"
+  - name: COMMON | Ensure required paths exist
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0755
+    loop:
+      - "{{ ansible_env.XDG_CONFIG_HOME }}"
+      - "{{ ansible_env.XDG_DATA_HOME }}"
+      - "{{ ansible_env.XDG_CACHE_HOME }}"
+      - "{{ ansible_env.XDG_STATE_HOME }}"
 
-- name: COMMON | Run OS specific tasks
-  include_tasks: tasks/{{ dotfiles_os_family }}.yml
-  when: dotfiles_os_family in ['archlinux']
+  - name: COMMON | Run OS specific tasks
+    include_tasks: tasks/{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  tags:
+    - common
+    - always
