@@ -1,21 +1,20 @@
 ---
-- block:
-  - name: RUST | Install rustup using pacman
-    pacman:
-      name:
-        - rustup
-    become: true
+- name: RUST | Install rustup using pacman
+  pacman:
+    name:
+      - rustup
+  become: true
 
+- block:
   - name: RUST | Install rust using rustup for `aur_builder`
     command: rustup default stable
-    become: true
-    become_user: aur_builder
     register: rustup_output
     changed_when: "'latest update' in rustup_output.stdout"
 
   - name: RUST | Update rust using rustup for `aur_builder`
     command: rustup update
-    become: true
-    become_user: aur_builder
     register: rustup_output
     changed_when: "'unchanged' not in rustup_output.stdout"
+
+  become: true
+  become_user: aur_builder
