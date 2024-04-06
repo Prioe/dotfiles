@@ -1,0 +1,18 @@
+---
+- block:
+  - name: RUST | Install rustup
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: RUST | Install rust using rustup
+    command: rustup default stable
+    register: rustup_output
+    changed_when: "'latest update' in rustup_output.stdout"
+
+  - name: RUST | Update rust using rustup
+    command: rustup update
+    register: rustup_output
+    changed_when: "'unchanged' not in rustup_output.stdout"
+
+  tags:
+    - rust

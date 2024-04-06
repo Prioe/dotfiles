@@ -1,10 +1,10 @@
 ---
 - hosts: all
   environment:
-    XDG_CONFIG_HOME: "{{ ansible_env.HOME }}/.config"
-    XDG_DATA_HOME: "{{ ansible_env.HOME }}/.local/share"
-    XDG_CACHE_HOME: "{{ ansible_env.HOME }}/.cache"
-    XDG_STATE_HOME: "{{ ansible_env.HOME }}/.local/state"
+    XDG_CONFIG_HOME: "~/.config"
+    XDG_DATA_HOME: "~/.local/share"
+    XDG_CACHE_HOME: "~/.cache"
+    XDG_STATE_HOME: "~/.local/state"
   roles:
     - common
     - zsh
@@ -12,3 +12,4 @@
     - zoxide
     - tmux
     - nvim
+    - rust
