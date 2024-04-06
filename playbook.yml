@@ -12,4 +12,5 @@
     - zoxide
     - tmux
     - nvim
+    - mise
     - rust
