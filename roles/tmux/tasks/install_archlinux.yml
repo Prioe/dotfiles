@@ -9,4 +9,5 @@
   kewlfft.aur.aur: 
     name:
       - tmux-plugin-manager
+  become: true
   become_user: aur_builder

@@ -56,4 +56,5 @@
 - name: COMMON | Install AUR helper (yay)
   kewlfft.aur.aur: 
     name: yay
+  become: true
   become_user: aur_builder

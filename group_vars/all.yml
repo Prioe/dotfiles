@@ -4,4 +4,6 @@ pacman_base_packages:
   - base
   - base-devel
   - eza
+  - fd
+  - ripgrep
 
