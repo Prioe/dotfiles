@@ -1,0 +1,28 @@
+---
+- block:
+  - name: MISE | Install mise
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: MISE | Ensure mise configuration directories exist
+    file:
+      path: "{{ ansible_env.XDG_CONFIG_HOME }}/mise"
+      state: directory
+
+  - name: MISE | Link mise configuration
+    file:
+      src: "{{ role_path }}/files/config.toml"
+      dest: "{{ ansible_env.XDG_CONFIG_HOME }}/mise/config.toml"
+      state: link
+
+  - name: MISE | Install mise tools
+    command: mise install
+    register: mise_output
+    changed_when: mise_output.stdout != ""
+
+  - name: MISE | Update mise tools
+    command: mise upgrade
+    register: mise_output
+    changed_when: mise_output.stdout != ""
+
+  tags: mise

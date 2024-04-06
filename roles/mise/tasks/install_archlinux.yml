@@ -1,0 +1,7 @@
+---
+- name: MISE | Install mise from aur
+  kewlfft.aur.aur:
+    name: 
+      - mise
+  become: true
+  become_user: aur_builder
