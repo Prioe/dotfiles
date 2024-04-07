@@ -1,0 +1,6 @@
+---
+- name: BAT | Install bat using pacman
+  pacman:
+    name:
+      - bat
+  become: true

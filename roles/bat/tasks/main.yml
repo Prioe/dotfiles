@@ -1,0 +1,28 @@
+---
+- block:
+  - name: BAT | Install bat
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: BAT | Ensure bat configuration directories exist
+    file:
+      path: "{{ bat_config_home }}"
+      state: directory
+
+  - name: BAT | Link bat configuration
+    file:
+      src: "{{ role_path }}/files/{{ item }}"
+      dest: "{{ bat_config_home }}/{{ item }}"
+      state: link
+    loop: "{{ bat_config_files }}"
+
+  - name: BAT | Build cache
+    command: bat cache --build
+
+  vars:
+    bat_config_home: "{{ ansible_env.XDG_CONFIG_HOME }}/bat"
+    bat_config_files:
+      - config
+      - themes
+
+  tags: bat
