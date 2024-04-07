@@ -1,0 +1,39 @@
+---
+- block:
+  - name: SYSTEMD | Check if systemd is available
+    command: "systemctl status"
+    register: systemd_status
+    ignore_errors: true
+
+  - block:
+    - name: SYSTEMD | Ensure systemd configuration directories exist
+      file:
+        path: "{{ systemd_config_home }}"
+        state: directory
+
+    - name: SYSTEMD | Link systemd configuration
+      file:
+        src: "{{ role_path }}/files/{{ item }}"
+        dest: "{{ systemd_config_home }}/{{ item }}"
+        state: link
+      loop: "{{ systemd_config_files }}"
+
+    - name: SYSTEMD | Reload systemd user configuration
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+        scope: user
+      loop: "{{ systemd_user_services }}"
+
+    when: not systemd_status.failed
+
+  vars:
+    systemd_config_home: "{{ ansible_env.XDG_CONFIG_HOME }}/systemd/user"
+    systemd_config_files:
+      - sync-notes.service
+      - sync-notes.timer
+    systemd_user_services:
+      - sync-notes.timer
+
+  tags: systemd
