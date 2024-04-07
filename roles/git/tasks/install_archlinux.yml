@@ -1,0 +1,6 @@
+---
+- name: GIT | Install git using pacman
+  pacman:
+    name:
+      - git
+  become: true

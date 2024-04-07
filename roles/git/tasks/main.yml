@@ -1,0 +1,24 @@
+---
+- block:
+  - name: GIT | Install git
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: GIT | Ensure git configuration directories exist
+    file:
+      path: "{{ git_config_home }}"
+      state: directory
+
+  - name: GIT | Link git configuration
+    file:
+      src: "{{ role_path }}/files/{{ item }}"
+      dest: "{{ git_config_home }}/{{ item }}"
+      state: link
+    loop: "{{ git_config_files }}"
+
+  vars:
+    git_config_home: "{{ ansible_env.XDG_CONFIG_HOME }}/git"
+    git_config_files:
+      - config
+
+  tags: git
