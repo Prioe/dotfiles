@@ -1,0 +1,6 @@
+---
+- name: ATUIN | Install atuin using pacman
+  pacman:
+    name:
+      - atuin
+  become: true

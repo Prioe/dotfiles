@@ -1,0 +1,24 @@
+---
+- block:
+  - name: ATUIN | Install atuin
+    include_tasks: tasks/install_{{ dotfiles_os_family }}.yml
+    when: dotfiles_os_family in ['archlinux']
+
+  - name: ATUIN | Ensure atuin configuration directories exist
+    file:
+      path: "{{ atuin_config_home }}"
+      state: directory
+
+  - name: ATUIN | Link atuin configuration
+    file:
+      src: "{{ role_path }}/files/{{ item }}"
+      dest: "{{ atuin_config_home }}/{{ item }}"
+      state: link
+    loop: "{{ atuin_config_files }}"
+
+  vars:
+    atuin_config_home: "{{ ansible_env.XDG_CONFIG_HOME }}/atuin"
+    atuin_config_files:
+      - config.toml
+
+  tags: atuin
