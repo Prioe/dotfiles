@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+. "${SCRIPT_DIR}/../roles/zsh/files/zshenv"
+
+export ANSIBLE_CONFIG="${SCRIPT_DIR}/../ansible.cfg"
+
+ansible-galaxy install -r "${SCRIPT_DIR}/../requirements.yml"
+ansible-playbook -i "${SCRIPT_DIR}/../hosts.yml" "${SCRIPT_DIR}/../playbook.yml" "$@"
