@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Inspiration: 
 # - https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
 # - https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshenv

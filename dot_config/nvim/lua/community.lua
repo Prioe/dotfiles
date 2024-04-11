@@ -4,16 +4,15 @@
 
 ---@type LazySpec
 return {
-  -- TODO: Remove branch v4 on release
-  { "AstroNvim/astrocommunity", branch = "v4" },
+  { "AstroNvim/astrocommunity" },
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.completion.copilot-lua-cmp" },
   { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.note-taking.obsidian-nvim" },
   { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
 
-  { import = "astrocommunity.git.neogit" },
-  { import = "astrocommunity.git.diffview-nvim" },
+  --  { import = "astrocommunity.git.neogit" },
+  --  { import = "astrocommunity.git.diffview-nvim" },
 
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
   { import = "astrocommunity.pack.rust" },
