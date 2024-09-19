@@ -163,3 +163,6 @@ eval "$(atuin init zsh)"
 eval "$(mise activate zsh)"
 
 # zprof
+
+# Created by `pipx` on 2024-09-13 13:59:13
+export PATH="$PATH:/home/micha/.local/bin"

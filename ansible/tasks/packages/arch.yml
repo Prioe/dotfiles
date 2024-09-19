@@ -1,0 +1,22 @@
+---
+- block:
+    - name: Update/Upgrade pacman
+      pacman:
+        update_cache: true
+        upgrade: true
+
+    - name: Manage pacman packages
+      pacman:
+        name: "{{ pacman.keys() }}"
+        state: latest
+
+    - name: Manage AUR packages
+      kewlfft.aur.aur:
+        name: "{{ item.key }}"
+        state: "{{ item.value.state | default('present') }}"
+      become_user: aur_builder
+      with_dict: "{{aur}}"
+
+  become: true
+  when: ansible_os_family == "Archlinux"
+  tags: pacman

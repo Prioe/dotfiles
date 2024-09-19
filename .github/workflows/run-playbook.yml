@@ -1,0 +1,19 @@
+---
+name: 'Run playbook'
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  run-playbook:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - name: Check for dockerenv file
+        run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)
+      - run: cat /etc/os-release
+      - run: cat /.dockerenv
+

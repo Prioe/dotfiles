@@ -50,5 +50,5 @@ dnf:
   xz-devel:
 
   # GUI
-  chromium:
-  kitty:
+  # chromium:
+  # kitty:

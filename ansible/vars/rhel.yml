@@ -1,0 +1,65 @@
+---
+rhel:
+  copr:
+    atim/lazygit:
+    atim/starship:
+    sramanujam/atuin:
+
+  dnf_repos:
+    https://mise.jdx.dev/rpm/mise.repo:
+    https://download.opensuse.org/repositories/shells:zsh-users:zsh-completions/Fedora_Rawhide/shells:zsh-users:zsh-completions.repo:
+
+  dnf_cli:
+    ansible:
+
+    python:
+    python-pip:
+    python-libtmux:
+    lua:
+    rustup:
+    unzip:
+
+    zsh-completions:
+    zsh-syntax-highlighting:
+    zsh-autosuggestions:
+
+    atuin:
+    bat:
+    difftastic:
+    dos2unix:
+    eza:
+    fd-find:
+    fzf:
+    gh:
+    jq:
+    lazygit:
+    mise:
+    neovim:
+    ripgrep:
+    starship:
+    stow:
+    tmux:
+    # yq:
+    zoxide:
+    zsh:
+
+    # pyenv deps
+    gcc:
+    make:
+    patch:
+    zlib-devel:
+    bzip2:
+    bzip2-devel:
+    readline-devel:
+    sqlite:
+    sqlite-devel:
+    openssl-devel:
+    tk-devel:
+    libffi-devel:
+    xz-devel:
+
+  dnf_gui:
+    chromium:
+    kitty:
+    keepassxc:
+    evolution:

@@ -108,9 +108,8 @@
 
     - name: Manage pacman packages
       pacman:
-        name: "{{ item.key }}"
-        state: "{{ item.value.state | default('latest') }}"
-      with_dict: "{{pacman}}"
+        name: "{{ pacman.keys() }}"
+        state: latest
 
     - name: Manage AUR packages
       kewlfft.aur.aur:

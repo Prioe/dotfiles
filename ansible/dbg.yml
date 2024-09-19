@@ -1,0 +1,10 @@
+---
+- name: Debug playbook
+  hosts: localhost
+  connection: local
+  tasks:
+    - include_vars: vars/pacman.yml
+    - name: Debug
+      debug:
+        # man to dicts with keys { name, state }
+        msg: "{{ pacman | dict2items | ansible.utils.replace_keys(target=[{'before':'key','after':'name'}]) }}"

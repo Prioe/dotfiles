@@ -3,11 +3,8 @@ pacman:
   # CLI
   base:
   base-devel:
-  inetutils:
-  git-lfs:
   ansible:
   pkgfile:
-  pdfgrep:
 
   python:
   python-pip:
@@ -43,3 +40,8 @@ pacman:
   # GUI
   # chromium:
   # kitty:
+aur:
+  yay:
+  nvimpager:
+  mise-bin:
+  tmux-plugin-manager:

@@ -1,0 +1,28 @@
+FROM fedora:40
+
+ARG USER=user
+ARG GROUP=user
+ARG UID=1000
+ARG GID=1000
+
+
+# hadolint ignore=DL3040,DL3041
+RUN dnf update -y \
+  && dnf install -y ansible git
+
+# Create the user
+# hadolint ignore=DL3046
+RUN groupadd -g $GID $GROUP \
+  && useradd -m -u $UID -g $GID $USER \
+  && echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+COPY . /home/$USER/.dotfiles
+
+RUN chown -R $USER:$USER /home/$USER/.dotfiles
+
+USER $USER
+WORKDIR /home/$USER
+
+RUN "$HOME/.dotfiles/init/setup.sh"
+
+CMD ["/usr/bin/zsh"]

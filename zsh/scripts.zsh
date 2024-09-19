@@ -7,8 +7,8 @@ push_notes() {
 	T="$(date +'%d.%m.%Y, %H:%M')"
 	H="$(hostname)"
 	cd ~/notes || exit
-	git add .
-	git commit -m "Pushing notes from $H at $T"
+	git add . :!assets
+	git commit --no-signoff -m "Pushing notes from $H at $T"
 	git push
 	cd - || exit
 }
