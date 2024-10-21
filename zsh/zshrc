@@ -115,7 +115,13 @@ if [[ -f $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; t
   source $DOTFILES/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+# Timetrace
+eval "$(timetrace completion zsh)"
 
 export DISABLE_FZF_KEY_BINDINGS=true
 source $DOTFILES/zsh/plugins/fzf.zsh
@@ -144,13 +150,13 @@ if [[ -f $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.z
   source $DOTFILES/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 elif [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # WSL specific
 if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
   source $DOTFILES/zsh/wsl.zsh
-else
-  echo "TODO: WSL not detected, some further configuration might be needed."
 fi
 
 # Zoxide
