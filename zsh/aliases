@@ -18,7 +18,8 @@ alias ev='nvim $DOTFILES/nvim'
 alias et='nvim $DOTFILES/tmux'
 
 # NPX aliases
-alias bru='npx @usebruno/cli'
+alias bru='pnpm dlx @usebruno/cli'
+alias gcl='pnpm dlx gitlab-ci-local --shell-isolation --no-artifacts-to-source --mount-cache'
 
 # Eza
 alias ls="eza --icons --git"
