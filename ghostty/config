@@ -1,0 +1,5 @@
+theme = catppuccin-mocha
+font-family = Iosevka Medium
+font-family-bold = Iosevka Semibold
+font-size = 13
+window-decoration = false

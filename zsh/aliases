@@ -17,6 +17,10 @@ alias notes='$HOME/notes'
 alias ev='nvim $DOTFILES/nvim'
 alias et='nvim $DOTFILES/tmux'
 
+# NPX aliases
+alias bru='pnpm dlx @usebruno/cli'
+alias gcl='pnpm dlx gitlab-ci-local --shell-isolation --no-artifacts-to-source --mount-cache'
+
 # Eza
 alias ls="eza --icons --git"
 alias l="eza -l --icons --git -a"
@@ -30,3 +34,6 @@ alias cat='bat --paging=never --style=plain'
 # colorize help pages
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
+# Timetrace
+alias timetrace='docker container run -v ~/.local/share/timetrace:/data:z dominikbraun/timetrace'

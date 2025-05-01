@@ -56,3 +56,55 @@ clear_nvim_config() {
 dotfiles() {
 	ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $HOME/.dotfiles/ansible/dotfiles.yml "$@" --ask-become-pass
 }
+
+# Aliases to run programs in docker containers as if they were avalable on the host
+gitlab-runner() {
+	docker run -d --name gitlab-runner --restart always \
+		-v /srv/gitlab-runner/config:/etc/gitlab-runner \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		docker.io/gitlab/gitlab-runner:latest
+}
+
+get_idf() {
+	export IDF_PATH="$HOME/code/github.com/espressif/esp-idf"
+	. "$IDF_PATH"/export.sh
+}
+
+idf_shell() {
+	sh -c '. "$HOME/code/github.com/espressif/esp-idf/export.sh" &> /dev/null; exec zsh -i'
+}
+
+idf_nvim() {
+	sh -c '. "$HOME/code/github.com/espressif/esp-idf/export.sh" &> /dev/null; exec zsh -i -c nvim'
+}
+
+idf_bfm() {
+	sh -c '. "$HOME/code/github.com/espressif/esp-idf/export.sh" &> /dev/null; exec zsh -i -c "idf.py build flash monitor"'
+}
+
+idf() {
+	echo "Running idf $@"
+	sh -c '. "$HOME/code/github.com/espressif/esp-idf/export.sh" &> /dev/null; exec zsh -i -c "idf.py '"$@"'"'
+}
+
+PRE_COMMIT_CONTAINER="reg.implen.net/it/cicd/containers/validate"
+# PRE_COMMIT_CONTAINER="docker.io/kiwicom/pre-commit"
+pre-commit() {
+	GIT_REPO="$(git rev-parse --show-toplevel)"
+	podman run --rm -t \
+		-v "${GIT_REPO}:/app:z" \
+		-v "pre-commit-podman-cache:/.cache/pre-commit:z" \
+		-w "/app" \
+		"${PRE_COMMIT_CONTAINER}" \
+		"pre-commit" "$@"
+}
+pre-commit-print-log() {
+	podman container create \
+		--name pre-commit-log-getter \
+		-v "pre-commit-podman-cache:/.cache/pre-commit" \
+		"${PRE_COMMIT_CONTAINER}" >/dev/null
+	podman cp "pre-commit-log-getter:/.cache/pre-commit/pre-commit.log" "/tmp/pre-commit.log"
+	podman rm pre-commit-log-getter >/dev/null
+	printf "%s" "$(<"/tmp/pre-commit.log")"
+	rm "/tmp/pre-commit.log"
+}
