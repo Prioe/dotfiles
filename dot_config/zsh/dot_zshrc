@@ -9,6 +9,10 @@
 
 fpath=($ZDOTDIR/plugins $fpath)
 
+# Create cache and completions dir and add to $fpath
+mkdir -p "$ZSH_CACHE_DIR/completions"
+(( ${fpath[(Ie)$ZSH_CACHE_DIR/completions]} )) || fpath=("$ZSH_CACHE_DIR/completions" $fpath)
+
 # dircolors
 eval $(dircolors -p | perl -pe 's/^((CAP|S[ET]|O[TR]|M|E)\w+).*/$1 00/' | dircolors -)
 
@@ -54,110 +58,46 @@ source $ZDOTDIR/aliases
 
 source $ZDOTDIR/scripts.zsh
 
-# +--------+
-# | PROMPT |
-# +--------+
-
-eval "$(starship init zsh)"
-
 # +-----------+
 # | PROFILING |
 # +-----------+
 
 # zmodload zsh/zprof
 
-# +-----------+
-# | VI KEYMAP |
-# +-----------+
-
-# Vi mode
-bindkey -v
-export KEYTIMEOUT=1
-
-# Change cursor
-source "$ZDOTDIR/plugins/cursor_mode.zsh"
-
-# Add Vi text-objects for brackets and quotes
-autoload -Uz select-bracketed select-quoted
-zle -N select-quoted
-zle -N select-bracketed
-for km in viopp visual; do
-  bindkey -M $km -- '-' vi-up-line-or-history
-  for c in {a,i}${(s..)^:-\'\"\`\|,./:;=+@}; do
-    bindkey -M $km $c select-quoted
-  done
-  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
-    bindkey -M $km $c select-bracketed
-  done
-done
-
-# Emulation of vim-surround
-autoload -Uz surround
-zle -N delete-surround surround
-zle -N add-surround surround
-zle -N change-surround surround
-bindkey -M vicmd cs change-surround
-bindkey -M vicmd ds delete-surround
-bindkey -M vicmd ys add-surround
-bindkey -M visual S add-surround
-
-# Increment a number
-autoload -Uz incarg
-zle -N incarg
-bindkey -M vicmd '^a' incarg
-
 # +---------+
 # | PLUGINS |
 # +---------+
 
-source $ZDOTDIR/completion.zsh
-if [[ -f $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-export DISABLE_FZF_KEY_BINDINGS=true
-source $ZDOTDIR/plugins/fzf.zsh
-source $ZDOTDIR/plugins/op-fzf.zsh
-
-source $ZDOTDIR/plugins/asdf.zsh
-
-# +---------+
-# | BINDING |
-# +---------+
-
-bindkey '^g' .clear-screen
-
-# edit current command line with vim (vim-mode, then CTRL-v)
-autoload -Uz edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd '^v' edit-command-line
-
+source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/bindings.zsh"
 
 # +---------------------+
 # | SYNTAX HIGHLIGHTING |
 # +---------------------+
 
-if [[ -f $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+plugins=(
+  # custom located in $ZDOTDIR/plugins
+  vi-mode.zsh
+  # globally installed
+  zsh-autosuggestions/zsh-autosuggestions.zsh
+  zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  # oh-my-zsh
+  lib/key-bindings.zsh
+  plugins/vi-mode/vi-mode.plugin.zsh
+  plugins/zoxide/zoxide.plugin.zsh
+  plugins/starship/starship.plugin.zsh
+  plugins/mise/mise.plugin.zsh
+)
+
+# Load plugins defined above
+source $ZDOTDIR/plugins.zsh
 
 # WSL specific
 if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
   source $ZDOTDIR/wsl.zsh
 fi
 
-# Zoxide
-eval "$(zoxide init zsh)"
-
 # Atuin
 eval "$(atuin init zsh)"
-
-# Mise
-eval "$(mise activate zsh)"
 
 # zprof

@@ -32,6 +32,7 @@ export ANSIBLE_GALAXY_CACHE_DIR="${XDG_CACHE_HOME}/ansible/galaxy_cache"
 
 # zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh" # oh-my-zsh cache dir, some plugins use this
 export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
@@ -48,9 +49,13 @@ elif [[ -d ~/.linuxbrew ]]; then
 elif [[ -d /opt/homebrew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
-if [[ -d "$XDG_DATA_HOME/cargo" ]]; then
-  . "$XDG_DATA_HOME/cargo/env"
-fi
+
+# NOTE: This is not needed on arch since shipped rustup does this already.
+# If the upstream installation method should be supported, this has to be
+# included. .zshenv might not be the best place for this though.
+# if [[ -d "$XDG_DATA_HOME/cargo" ]]; then
+#   . "$XDG_DATA_HOME/cargo/env"
+# fi
 
 if [[ -x "$(command -v brew)" ]]; then
   export HOMEBREW_NO_ANALYTICS=1
