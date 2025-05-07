@@ -1,4 +1,0 @@
-# im symlinking them back into the directory to maintain no-dot convention
-zsh/.*
-!zsh/.zshrc
-tmux/plugins
