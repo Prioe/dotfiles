@@ -37,6 +37,8 @@ export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
 
+export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
+
 # Add all directories in `~/.local/bin` to $PATH
 if [[ -d ~/.local/bin ]]; then
   export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
