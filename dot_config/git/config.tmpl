@@ -1,3 +1,4 @@
+# vim:filetype=gitconfig
 [user]
 	email = michael@prio.one
 	name = Michael Albertz
@@ -12,5 +13,16 @@
 	# Remember resolutions of conflicted merges
 	enabled = true
 
+[pull]
+  rebase = true
+
 [include]
 	path = ~/.config/git/config.local
+
+{{ if lookPath "git-lfs" }}
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+{{ end }}
