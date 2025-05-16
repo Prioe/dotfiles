@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# Dotfiles
-alias di='$DOTFILES/instll'
-alias bbd='brew bundle dump --tap --formula --cleanup --force --verbose --file=$DOTFILES/Brewfile && brew bundle install --file=$DOTFILES/Brewfile'
-
 # Git
 alias gc='git commit'
 alias gp='git push'
@@ -30,3 +26,16 @@ alias cat='bat --paging=never --style=plain'
 # colorize help pages
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
+{{- if eq .chezmoi.osRelease.id "arch" }}
+#Search repos with 'paru' and 'fzf'
+alias parus="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
+
+#Search locally installed packages with 'paru', 'fzf' and 'bat'
+alias parup="paru -Qq | fzf --preview 'paru -Qil {}' --layout=reverse --bind 'enter:execute(paru -Qil {} | bat)'"
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+# Homebrew
+alias bbd='brew bundle dump --tap --formula --cleanup --force --verbose --file=$DOTFILES/Brewfile && brew bundle install --file=$DOTFILES/Brewfile'
+{{- end }}

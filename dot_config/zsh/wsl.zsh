@@ -65,4 +65,5 @@ docker_path="$windows_root/Program Files/Docker/Docker/resources/bin"
 
 if [ -d "$docker_path" ]; then
 	export PATH="$PATH:$docker_path"
+	eval "$(docker completion zsh)"
 fi
