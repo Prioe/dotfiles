@@ -19,9 +19,26 @@ add_winget_package_path() {
 	return 1
 }
 
+add_utf16_wrapper() {
+	local exe="$1"
+	local name="$2"
+
+	eval "$name() {
+    if [ -t 1 ]; then
+      command $exe \"\$@\"
+    else
+      command $exe \"\$@\" | iconv -f utf-16le -t utf-8 
+    fi
+  }"
+}
+
 # We set appendWindowsPath=false in /etc/wsl.conf to avoid Windows paths in $PATH
 # Some programs are very helpful and we add them to our path here
 # add Microsoft's OpenSSH to the path, so we can use 1password as authentication helper
+
+if ! grep -q "appendWindowsPath=false" /etc/wsl.conf; then
+	echo "WARNING: /etc/wsl.conf does not have appendWindowsPath=false, this may cause issues!"
+fi
 
 # Assume Windows is installed in C:
 windows_root="${WINDOWS_ROOT:-/mnt/c}"
@@ -35,6 +52,7 @@ windows_apps_path="$windows_root/Users/$windows_user/AppData/Local/Microsoft/Win
 if [ -d "$windows_apps_path" ]; then
 	export PATH="$PATH:$windows_apps_path"
 	alias winget='winget.exe'
+	add_utf16_wrapper 'wsl.exe' 'wsl'
 fi
 
 # win32yank
@@ -52,6 +70,7 @@ if add_winget_package_path 'AgileBits.1Password.CLI'; then
 
 	if [ -d "$ssh_path" ]; then
 		export PATH="$PATH:$ssh_path"
+		export GIT_SSH="ssh.exe"
 
 		# This is used for 1password support
 		# See: https://developer.1password.com/docs/ssh/integrations/wsl/#optional-add-an-alias-for-ssh-commands
