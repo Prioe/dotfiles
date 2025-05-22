@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+{{- range glob (joinPath .chezmoi.homeDir ".config/bat/**/*") }}
+# hash({{ . }}): {{ . | sha256sum }}
+{{- end }}
+
+echo "Rebuilding bat cache"
+bat cache --build
