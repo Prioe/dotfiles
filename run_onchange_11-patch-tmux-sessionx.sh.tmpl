@@ -5,6 +5,12 @@ set -uo pipefail
 
 # tmux.conf hash: {{ include "dot_config/tmux/tmux.conf" | sha256sum }}
 
+# Check if tmux-sessionx is installed and TMUX_PLUGIN_MANAGER_PATH is set
+if [[ -z "${TMUX_PLUGIN_MANAGER_PATH:-}" ]]; then
+  echo "TMUX_PLUGIN_MANAGER_PATH is not set. Skipping patch, run 'chezmoi apply -R' again once it is set."
+  exit 0
+fi
+
 # See: https://github.com/omerxx/tmux-sessionx/issues/172
 read -r -d '' enable_zoxide_mode <<'EOF'
 diff --git a/scripts/sessionx.sh b/scripts/sessionx.sh

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Inspiration: 
+# Inspiration:
 # - https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
 # - https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshenv
 
@@ -33,11 +33,11 @@ export ANSIBLE_GALAXY_CACHE_DIR="${XDG_CACHE_HOME}/ansible/galaxy_cache"
 # zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh" # oh-my-zsh cache dir, some plugins use this
-export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
-export HISTSIZE=10000                   # Maximum events for internal history
-export SAVEHIST=10000                   # Maximum events in history file
+export HISTFILE="$ZDOTDIR/.zhistory"       # History filepath
+export HISTSIZE=10000                      # Maximum events for internal history
+export SAVEHIST=10000                      # Maximum events in history file
 
-export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
+export TMUX_PLUGIN_MANAGER_PATH="$XDG_CONFIG_HOME/tmux/plugins"
 
 # Add all directories in `~/.local/bin` to $PATH
 if [[ -d ~/.local/bin ]]; then
@@ -63,4 +63,3 @@ if [[ -x "$(command -v brew)" ]]; then
   export HOMEBREW_NO_ANALYTICS=1
   export HOMEBREW_BUNDLE_NO_LOCK=1
 fi
-
