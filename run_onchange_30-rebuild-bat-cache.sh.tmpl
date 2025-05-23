@@ -4,5 +4,9 @@
 # hash({{ . }}): {{ . | sha256sum }}
 {{- end }}
 
+{{- if isExecutable "bat" }}
 echo "Rebuilding bat cache"
 bat cache --build
+{{- else }}
+echo "bat not found in PATH, skipping cache rebuild"
+{{- end }}
