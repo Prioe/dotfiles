@@ -93,9 +93,11 @@ plugins=(
 source $ZDOTDIR/plugins.zsh
 
 # WSL specific
-if [ -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
-  source $ZDOTDIR/wsl.zsh
-fi
+{{- if eq .chezmoi.os "linux" }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+source $ZDOTDIR/wsl.zsh
+{{-   end }}
+{{- end }}
 
 # Atuin
 eval "$(atuin init zsh)"

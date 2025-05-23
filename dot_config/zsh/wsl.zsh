@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # vim:ft=sh
 
-if [ ! -f "/proc/sys/fs/binfmt_misc/WSLInterop" ]; then
-	exit 1
+if [[ ! -f "/proc/sys/fs/binfmt_misc/WSLInterop" && ! -f "/proc/sys/fs/binfmt_misc/WSLInterop-late" ]]; then
+	echo "WSLInterop not found, skipping WSL specific setup"
+	return 0
 fi
 
 add_winget_package_path() {
