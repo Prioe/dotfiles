@@ -17,20 +17,21 @@ packages:
       - git-lfs
       - go-yq
       - jq
-      - lazydocker-bin
       - lazygit
       - mise
       - usage
-      - nvimpager
       - reflector
       - ripgrep
       - rsync
       - rustup
       - starship
       - tmux
-      - tmux-plugin-manager
-      - wsl-open
       - zoxide
       - zsh-autosuggestions
       - zsh-completions
       - zsh-syntax-highlighting
+    aur:
+      - tmux-plugin-manager
+      - wsl-open
+      - lazydocker-bin
+      - nvimpager
