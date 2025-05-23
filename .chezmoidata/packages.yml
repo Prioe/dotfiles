@@ -1,0 +1,36 @@
+packages:
+  archlinux:
+    pacman:
+      - base
+      - base-devel
+      - git
+      - chezmoi
+      - neovim
+      - zsh
+      - atuin
+      - bat
+      - btop
+      - eza
+      - fd
+      - fzf
+      - git
+      - git-lfs
+      - go-yq
+      - jq
+      - lazydocker-bin
+      - lazygit
+      - mise
+      - usage
+      - nvimpager
+      - reflector
+      - ripgrep
+      - rsync
+      - rustup
+      - starship
+      - tmux
+      - tmux-plugin-manager
+      - wsl-open
+      - zoxide
+      - zsh-autosuggestions
+      - zsh-completions
+      - zsh-syntax-highlighting
