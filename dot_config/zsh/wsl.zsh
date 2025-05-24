@@ -83,7 +83,12 @@ fi
 # Docker
 docker_path="$windows_root/Program Files/Docker/Docker/resources/bin"
 
-if [ -d "$docker_path" ]; then
+if [[ -d "$docker_path" ]]; then
 	export PATH="$PATH:$docker_path"
-	eval "$(docker completion zsh)"
+
+	if docker info >/dev/null 2>&1; then
+		eval "$(docker completion zsh)"
+	else
+		echo "⚠️  Docker Desktop doesn’t seem to be running, completion may not work."
+	fi
 fi
