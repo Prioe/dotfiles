@@ -38,7 +38,7 @@ add_utf16_wrapper() {
 # add Microsoft's OpenSSH to the path, so we can use 1password as authentication helper
 
 if ! grep -q "appendWindowsPath=false" /etc/wsl.conf; then
-	echo "WARNING: /etc/wsl.conf does not have appendWindowsPath=false, this may cause issues!"
+	echo "⚠️  /etc/wsl.conf does not have appendWindowsPath=false, this may cause issues!"
 fi
 
 # Assume Windows is installed in C:
