@@ -1,10 +1,11 @@
 packages:
-  archlinux:
+  archlinux: # these will be installed using paru
     pacman:
       - base
       - base-devel
       - git
       - chezmoi
+      - man-db
       - unzip
       - neovim
       - zsh
@@ -33,6 +34,7 @@ packages:
       - zsh-syntax-highlighting
     aur:
       - tmux-plugin-manager
-      - wsl-open
       - lazydocker-bin
       - nvimpager
+    wsl:
+      - wsl-open

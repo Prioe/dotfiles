@@ -5,8 +5,15 @@ set -euo pipefail
 . {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
 script_start
 
+{{- $packages := concat (.packages.archlinux.pacman) (.packages.archlinux.aur) }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{-     $packages = concat $packages (.packages.archlinux.wsl) }}
+{{-   end }}
+{{- end }}
+
 info "Installing packages using paru"
-paru -S --needed {{ quoteList .packages.archlinux.pacman | join " " }} {{ quoteList .packages.archlinux.aur | join " " }}
+paru -S --needed {{ quoteList $packages | join " " }}
 
 script_end
 {{ end -}}
