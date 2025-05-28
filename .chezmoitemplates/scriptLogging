@@ -26,20 +26,20 @@ debug() {
   fi
 }
 
-script_name() {
+_script_name() {
   local base name
   base=${0##*/}
   name=${base#*.}
   printf '%s' "$name"
 }
 
-script_start() {
-  info "Starting script: $(script_name)"
+_script_start() {
+  info "Starting script: $(_script_name)"
 }
 
-script_end() {
-  info "Script completed: $(script_name)"
+_script_end() {
+  info "Script completed: $(_script_name)"
 }
 
-script_start
-trap script_end EXIT
+_script_start
+trap _script_end EXIT
