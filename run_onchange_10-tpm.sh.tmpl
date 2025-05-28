@@ -3,9 +3,9 @@
 
 # tmux.conf hash: {{ include "dot_config/tmux/tmux.conf" | sha256sum }}
 
-if [[ -d "/usr/share/tmux-plugin-manager" ]]; then
-  /usr/share/tmux-plugin-manager/bin/install_plugins
-  /usr/share/tmux-plugin-manager/bin/update_plugins all
-else
-  echo "tmux-plugin-manager not found in /usr/share/tmux-plugin-manager"
-fi
+{{- if isExecutable "/usr/share/tmux-plugin-manager" }}
+/usr/share/tmux-plugin-manager/bin/install_plugins
+/usr/share/tmux-plugin-manager/bin/update_plugins all
+{{- else }}
+echo "tmux-plugin-manager not found in /usr/share/tmux-plugin-manager"
+{{- end }}
