@@ -1,5 +1,6 @@
 [tools]
 node = 'lts'
+rust = "stable"
 
 [settings]
 asdf_compat = true
