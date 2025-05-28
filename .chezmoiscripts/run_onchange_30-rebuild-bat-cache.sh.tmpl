@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# shellcheck source=tools/script_logging.sh
-. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
-script_start
+{{ template "scriptLogging" . }}
 
 {{- range glob (joinPath .chezmoi.homeDir ".config/bat/**/*") }}
 # hash({{ . }}): {{ . | sha256sum }}
@@ -14,5 +12,3 @@ bat cache --build
 {{- else }}
 warn "bat not found in PATH, skipping cache rebuild"
 {{- end }}
-
-script_end

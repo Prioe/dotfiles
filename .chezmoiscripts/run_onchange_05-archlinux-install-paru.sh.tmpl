@@ -1,9 +1,7 @@
 {{ if eq .chezmoi.osRelease.id "arch" -}}
 #!/usr/bin/env bash
 set -euo pipefail
-# shellcheck source=tools/script_logging.sh
-. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
-script_start
+{{ template "scriptLogging" . }}
 
 {{- if lookPath "paru" | not }}
 info "Installing paru AUR helper"
@@ -21,6 +19,5 @@ makepkg -si
 info "paru is already installed, skipping installation"
 {{- end }}
 
-script_end
 {{ end -}}
 

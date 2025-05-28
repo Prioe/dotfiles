@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# vim:ft=bash
-
 set -uo pipefail
+{{ template "scriptLogging" . }}
 
 # tmux.conf hash: {{ include "dot_config/tmux/tmux.conf" | sha256sum }}
 
 # Check if tmux-sessionx is installed and TMUX_PLUGIN_MANAGER_PATH is set
 if [[ -z "${TMUX_PLUGIN_MANAGER_PATH:-}" ]]; then
-  echo "TMUX_PLUGIN_MANAGER_PATH is not set. Skipping patch, run 'chezmoi apply -R' again once it is set."
+  warn "TMUX_PLUGIN_MANAGER_PATH is not set. Skipping patch, run 'chezmoi apply -R' again once it is set."
   exit 0
 fi
 
@@ -29,6 +28,6 @@ index 2a5cc9d..e0926a4 100755
 EOF
 
 if ! git -C "$TMUX_PLUGIN_MANAGER_PATH/tmux-sessionx" apply --reverse --check <<<"$enable_zoxide_mode"; then
-  echo "Applying patch to enable zoxide mode in tmux-sessionx"
+  info "Applying patch to enable zoxide mode in tmux-sessionx"
   git -C "$TMUX_PLUGIN_MANAGER_PATH/tmux-sessionx" apply <<<"$enable_zoxide_mode"
 fi

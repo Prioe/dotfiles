@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# vim:ft=sh
+set -euo pipefail
+{{ template "scriptLogging" . }}
 
 # tmux.conf hash: {{ include "dot_config/tmux/tmux.conf" | sha256sum }}
 

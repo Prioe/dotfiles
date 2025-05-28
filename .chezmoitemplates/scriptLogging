@@ -1,3 +1,5 @@
+# vi:ft=bash
+
 # detect color support on stderr, allow override with NO_COLOR
 if [ -t 2 ] && [ -z "${NO_COLOR-}" ] && [ "${TERM-}" != "dumb" ] && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
   ANSI_RESET='\033[0m'
@@ -38,3 +40,6 @@ script_start() {
 script_end() {
   info "Script completed: $(script_name)"
 }
+
+script_start
+trap script_end EXIT

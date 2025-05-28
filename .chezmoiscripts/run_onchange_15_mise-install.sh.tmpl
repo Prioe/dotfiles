@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# shellcheck source=tools/script_logging.sh
-. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
-script_start
+{{ template "scriptLogging" . }}
 
 # hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 
 info "Syncing mise configuration"
 mise install --cd ~
 mise prune --cd ~ --yes
-
-script_end
