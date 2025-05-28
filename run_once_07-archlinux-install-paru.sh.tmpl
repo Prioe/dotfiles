@@ -1,0 +1,25 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+# shellcheck source=tools/script_logging.sh
+. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
+script_start
+
+info "Installing paru AUR helper"
+
+{{- if lookPath "paru" | not }}
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+pushd "$tmpdir" || exit 1
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
+popd || exit 1
+{{- else }}
+info "paru is already installed, skipping installation"
+{{- end }}
+
+script_end
+{{ end -}}
+
