@@ -1,0 +1,16 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+
+# shellcheck source=tools/script_logging.sh
+. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
+
+script_start
+
+info "Enabling colors in pacman output"
+sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+
+script_end
+{{ end -}}
+
