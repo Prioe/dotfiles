@@ -1,6 +1,6 @@
 [tools]
 node = 'lts'
-rust = "stable"
+rust = { version = "stable", profile = "minimal" }
 
 [settings]
 asdf_compat = true

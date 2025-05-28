@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# shellcheck source=tools/script_logging.sh
+. {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
+script_start
+
+{{- if lookPath "keyd" }}
+if [[ "$(systemctl is-enabled keyd)" != "enabled" ]]; then
+  info "Enabling keyd service"
+  sudo systemctl enable keyd
+fi
+
+info "Restarting keyd service"
+sudo systemctl restart keyd
+{{- else }}
+warn "keyd not found in PATH, skipping restart"
+{{- end }}
+
+script_end
