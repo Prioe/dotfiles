@@ -5,9 +5,11 @@ set -euo pipefail
 . {{ joinPath .chezmoi.sourceDir "tools/script_logging.sh" }}
 script_start
 
+{{- if lookPath "paru" | not }}
 info "Installing paru AUR helper"
 
-{{- if lookPath "paru" | not }}
+sudo pacman -S --needed git base-devel
+
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
