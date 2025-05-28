@@ -1,3 +1,5 @@
+tools/ # a directory for custom scripts and tools
+
 {{- if eq .chezmoi.osRelease.id "arch" }}
 dot_config/paru
 {{- end }}
