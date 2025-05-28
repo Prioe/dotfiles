@@ -5,6 +5,7 @@ packages:
       - base-devel
       - git
       - chezmoi
+      - unzip
       - neovim
       - zsh
       - atuin
