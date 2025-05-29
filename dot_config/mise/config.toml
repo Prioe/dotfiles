@@ -1,6 +1,3 @@
 [tools]
 node = 'lts'
 rust = { version = "stable", profile = "minimal" }
-
-[settings]
-asdf_compat = true
