@@ -1,3 +1,6 @@
 [tools]
 node = 'lts'
 rust = { version = "stable", profile = "minimal" }
+
+[settings]
+experimental = true
