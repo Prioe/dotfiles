@@ -1,5 +1,6 @@
 tools/ # a directory for custom scripts and tools
 Dockerfile
+CLAUDE.md
 
 {{- if eq .chezmoi.osRelease.id "arch" }}
 dot_config/paru
