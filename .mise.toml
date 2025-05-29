@@ -1,9 +1,0 @@
-[tools]
-lua = "5.4.6"
-"npm:prettier" = "latest"
-
-[tasks.lint]
-run = "prettier --check ${STAGED:-.}"
-
-[tasks.pre-commit]
-depends = ["lint"]

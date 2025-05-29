@@ -1,0 +1,6 @@
+[tools]
+lua = "5.4.6"
+"npm:prettier" = "latest"
+
+[task_config]
+includes = [".mise/tasks.toml"]

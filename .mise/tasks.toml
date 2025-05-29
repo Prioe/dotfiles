@@ -1,0 +1,5 @@
+[lint]
+run = "prettier --check ${STAGED:-.}"
+
+[pre-commit]
+depends = ["lint"]
