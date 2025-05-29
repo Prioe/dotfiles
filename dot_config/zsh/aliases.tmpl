@@ -27,6 +27,9 @@ alias cat='bat --paging=never --style=plain'
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
+# claude code
+alias claude='pnpm dlx @anthropic-ai/claude-code'
+
 {{- if eq .chezmoi.osRelease.id "arch" }}
 #Search repos with 'paru' and 'fzf'
 alias parus="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
