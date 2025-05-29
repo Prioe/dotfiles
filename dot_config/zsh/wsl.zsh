@@ -8,16 +8,16 @@ fi
 
 add_winget_package_path() {
 	local -r package_name="$1"
-	local -r package_path="$(fd "$package_name" -p -t d "$windows_root/Users/$windows_user/AppData/Local/Microsoft/WinGet")"
-
-	if [ -d "$package_path" ]; then
-		export PATH="$PATH:$package_path"
+	local -r winget_dir="$windows_root/Users/$windows_user/AppData/Local/Microsoft/WinGet/Packages"
+	# Array needed for proper glob expansion - simple variable assignment doesn't expand globs the same way
+	local package_paths=("$winget_dir"/${package_name}_*)
+	if [[ -d "${package_paths}" ]]; then
+		export PATH="$PATH:${package_paths}"
 		return 0
 	else
-		echo "Could not find $package_name in WindowsApps"
+		echo "Could not find $package_name in WinGet packages"
+		return 1
 	fi
-
-	return 1
 }
 
 add_utf16_wrapper() {
@@ -86,7 +86,7 @@ docker_path="$windows_root/Program Files/Docker/Docker/resources/bin"
 if [[ -d "$docker_path" ]]; then
 	export PATH="$PATH:$docker_path"
 
-	if docker info >/dev/null 2>&1; then
+	if [[ -S /var/run/docker.sock ]]; then
 		eval "$(docker completion zsh)"
 	else
 		echo "⚠️  Docker Desktop doesn’t seem to be running, completion may not work."
