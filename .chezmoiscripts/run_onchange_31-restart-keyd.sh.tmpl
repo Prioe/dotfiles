@@ -3,6 +3,16 @@ set -euo pipefail
 {{ template "scriptLogging" . }}
 
 {{- if lookPath "keyd" }}
+# hash: {{ include "dot_config/keyd/default.conf" | sha256sum }}
+
+if cmp -s "{{ joinPath .chezmoi.sourceDir "dot_config/keyd/default.conf" }}" "/etc/keyd/default.conf"; then
+  info "keyd configuration is unchanged, skipping restart"
+  exit 0
+fi
+
+info "keyd configuration has changed, restarting service"
+sudo cp "{{ joinPath .chezmoi.sourceDir "dot_config/keyd/default.conf" }}" "/etc/keyd/default.conf"
+
 if [[ "$(systemctl is-enabled keyd)" != "enabled" ]]; then
   info "Enabling keyd service"
   sudo systemctl enable keyd
