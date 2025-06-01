@@ -2,9 +2,7 @@
 set -euo pipefail
 {{ template "scriptLogging" . }}
 
-{{- range glob (joinPath .chezmoi.homeDir ".config/bat/**/*") }}
-# hash({{ . }}): {{ . | sha256sum }}
-{{- end }}
+{{- template "hashList" glob ".config/bat/**/*" }}
 
 {{- if lookPath "bat" }}
 info "Rebuilding bat cache"
