@@ -1,0 +1,4 @@
+# vi:ft=bash.chezmoitmpl
+{{- range . }}
+{{ sha256sum . | printf "# hash(%s): %s" . }}
+{{- end }}

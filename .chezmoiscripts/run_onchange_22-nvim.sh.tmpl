@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+{{ includeTemplate "scriptLogging" }}
+
+{{ includeTemplate "hashList" (glob ".config/nvim/**/*") }}
+
+nvim --headless \
+  -c "Lazy restore" \
+  -c "qall"
