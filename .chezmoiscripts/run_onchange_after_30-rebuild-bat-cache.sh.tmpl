@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-{{ template "scriptLogging" . }}
 
-{{- template "hashList" glob ".config/bat/**/*" }}
+{{ template "scriptLogging" . }}
+{{ template "hashList" (glob (joinPath .chezmoi.homeDir ".config/bat/**/*")) }}
 
 {{- if lookPath "bat" }}
 info "Rebuilding bat cache"

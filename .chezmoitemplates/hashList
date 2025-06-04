@@ -1,4 +1,8 @@
 # vi:ft=bash.chezmoitmpl
+
 {{- range . }}
-{{ sha256sum . | printf "# hash(%s): %s" . }}
+{{- $stat := lstat . }}
+{{- if and $stat (not $stat.isDir) }}
+{{ include . | sha256sum | printf "# hash(%s): %s" . }}
+{{- end }}
 {{- end }}
