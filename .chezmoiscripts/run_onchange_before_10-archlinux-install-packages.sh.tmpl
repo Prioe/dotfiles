@@ -11,7 +11,7 @@ set -euo pipefail
 {{- end }}
 
 info "Installing packages using paru"
-paru -S --needed {{ quoteList $packages | join " " }}
+paru -S --needed ${CI:+--noconfirm} {{ quoteList $packages | join " " }}
 
 {{ end -}}
 

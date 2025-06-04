@@ -1,6 +1,7 @@
 [tools]
 node = 'lts'
 rust = { version = "stable", profile = "minimal" }
+pnpm = 'latest'
 
 [settings]
 experimental = true

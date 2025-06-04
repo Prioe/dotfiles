@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-{{ template "scriptLogging" . }}
-
-info "Installing pnpm using corepack"
-corepack install -g pnpm@latest-10
-corepack enable pnpm

@@ -6,14 +6,14 @@ set -euo pipefail
 {{- if lookPath "paru" | not }}
 info "Installing paru AUR helper"
 
-sudo pacman -S --needed git base-devel
+sudo pacman -S --needed ${CI:+--noconfirm} git base-devel
 
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
 git clone https://aur.archlinux.org/paru-bin.git "$tmpdir/paru-bin"
 cd "$tmpdir/paru-bin" || exit 1
-makepkg -si
+makepkg -si ${CI:+--noconfirm}
 
 {{- else }}
 info "paru is already installed, skipping installation"

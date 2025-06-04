@@ -11,6 +11,7 @@ COPY --chown=eve:eve . /home/eve/.local/share/chezmoi
 USER eve
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 RUN \
   --mount=type=cache,target=/var/cache/pacman/pkg \
   --mount=type=cache,target=/home/eve/.cache \
@@ -24,5 +25,8 @@ sudo chown eve:eve /home/eve/.cache
 . /home/eve/.local/share/chezmoi/dot_config/zsh/dot_zshenv
 unset PAGER
 
-yes | chezmoi apply --force --verbose || exit 0
+# Our chezmoi config knows about the CI environment and will not prompt
+export CI=1
+
+chezmoi apply --force --verbose
 EOF
