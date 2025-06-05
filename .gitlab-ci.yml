@@ -1,0 +1,22 @@
+image: docker:24.0
+services:
+  - docker:24.0-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+  - build
+
+build:
+  stage: build
+  cache:
+    key: buildx-cache
+    paths:
+      - .buildx-cache
+  script:
+    - docker buildx create --use
+    - docker buildx build --cache-from=type=local,src=.buildx-cache \
+                        --cache-to=type=local,dest=.buildx-cache,mode=max \
+                        -t dotfiles .
