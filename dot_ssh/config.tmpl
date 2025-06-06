@@ -1,0 +1,8 @@
+{{- if lookPath "op" }}
+Host *
+  IdentityAgent ~/.1password/agent.sock
+
+Host geonosis
+    HostName {{ (onepasswordRead "op://Private/geonosis/ip") }}
+    Port {{ (onepasswordRead "op://Private/geonosis/port") }}
+{{- end }}
