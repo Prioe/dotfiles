@@ -30,6 +30,7 @@ packages:
       - starship
       - tmux
       - zoxide
+      - git-delta
       - zsh-autosuggestions
       - zsh-completions
       - zsh-syntax-highlighting
