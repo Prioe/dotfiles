@@ -73,10 +73,8 @@ if add_winget_package_path 'AgileBits.1Password.CLI'; then
 		export PATH="$PATH:$ssh_path"
 		export GIT_SSH="ssh.exe"
 
-		# This is used for 1password support
 		# See: https://developer.1password.com/docs/ssh/integrations/wsl/#optional-add-an-alias-for-ssh-commands
-		alias ssh='ssh.exe'
-		alias ssh-add='ssh-add.exe'
+		# See: ./dot_local/bin/wsl/executable_{scp,ssh}
 	fi
 fi
 

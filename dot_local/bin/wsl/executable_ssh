@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Forward everything over to the Windows ssh.exe
+ssh.exe "$@"
