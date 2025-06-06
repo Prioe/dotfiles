@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Check for staged changes
+diff=$(git diff --cached | head -n 10)
+if [ -z "$diff" ]; then
+  echo "No changes in staging. Add changes first."
+  exit 1
+fi
+
+COMMITS_TO_SUGGEST=5 # Required quantity per final example
+
+pnpm dlx @anthropic-ai/claude-code -p "
+You are an expert at writing Git commits. Your job is to write a short clear commit message that summarizes the changes.
+
+General Git style rules:
+- Try to limit the subject line to 70 characters
+- Never exceed 72 characters in the subject
+- Capitalize the subject line
+- Do not end the subject line with any punctuation
+- Use the imperative mood in the subject line
+- Explain 'what' and 'why', not 'how'
+
+Only return the commit message(s) in your response. Do not include any additional meta-commentary.
+Generate $COMMITS_TO_SUGGEST different commit suggestions.
+
+IMPORTANT: Do not wrap your response in markdown code blocks. Do not use \`\`\` in your response at all.
+Just list each commit message directly, one per line.
+
+Here is an some info on current state of the repository:
+
+<git_status>
+$(git status)
+</git_status>
+
+<git_log>
+$(git log --oneline -10)
+</git_log>
+
+Here is the diff:
+
+<git_diff>
+$(git diff --staged)
+</git_diff>
+
+If you need more context, you can also look at the staged files by running git commands yourself.
+"
