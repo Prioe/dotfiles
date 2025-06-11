@@ -1,0 +1,26 @@
+tools/ # a directory for custom scripts and tools
+Dockerfile
+CLAUDE.md
+README.md
+
+{{- /* Ignore these if not on Arch Linux */ -}} 
+{{- if ne .chezmoi.osRelease.id "arch" }}
+.config/paru
+{{- end }}
+
+
+{{- /* Ignore these if not in WSL */ -}} 
+{{- if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+.local/bin/wsl
+{{- end }}
+
+{{- /* Ignore these if gui is not enabled */ -}} 
+{{- if not .gui }}
+.config/autostart
+.config/ghostty
+.config/hypr
+.config/kitty
+.config/swaylock
+.config/waybar
+.config/spotify-launcher.conf
+{{- end }}

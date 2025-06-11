@@ -28,5 +28,5 @@ unset PAGER
 # Our chezmoi config knows about the CI environment and will not prompt
 export CI=1
 
-chezmoi apply --force --verbose
+chezmoi apply --init --force --verbose
 EOF

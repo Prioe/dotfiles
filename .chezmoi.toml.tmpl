@@ -1,0 +1,13 @@
+# Set the defaults
+{{ $email := "michael@prio.one" }}
+{{ $gui := false }}
+
+# If we're interactive, prompt
+{{ if stdinIsATTY }}
+{{   $email = promptStringOnce . "email" "What is your email address" $email }}
+{{   $gui = promptBoolOnce . "gui" "Do you want to include gui applications" $gui }}
+{{ end }}
+
+[data]
+email = {{ $email | quote }}
+gui = {{ $gui }}
