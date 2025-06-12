@@ -9,7 +9,6 @@ return {
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.motion.leap-nvim" },
-  { import = "astrocommunity.note-taking.obsidian-nvim" },
   { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
 
   --  { import = "astrocommunity.git.neogit" },
