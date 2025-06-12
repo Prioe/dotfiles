@@ -3,11 +3,14 @@ return {
   "obsidian-nvim/obsidian.nvim",
   event = {
     "BufReadPre */notes/**.md",
+    "BufNewFile */notes/**.md",
     "VeryLazy",
   },
   dependencies = {
     "nvim-lua/plenary.nvim",
     { "hrsh7th/nvim-cmp", optional = true },
+    { "Saghen/blink.cmp", optional = true },
+    { "folke/snacks.nvim", optional = true },
     {
       "AstroNvim/astrocore",
       ---@type AstroCoreOpts
@@ -39,39 +42,35 @@ return {
       },
     },
   },
-  ---@type obsidian.config.ClientOpts | table<string, any>
   opts = function(_, opts)
     local astrocore = require "astrocore"
-    return astrocore.extend_tbl(opts, {
-      -- default astrocommunity config sets this to a path which i dont use
-      dir = vim.NIL,
+    ---@type obsidian.config.ClientOpts | table<string, any>
+    local obsidian_opts = {
       workspaces = {
         {
           name = "personal",
           path = "~/notes",
         },
       },
-      finder = (astrocore.is_available "snacks.pick" and "snacks.pick")
-        or (astrocore.is_available "telescope.nvim" and "telescope.nvim")
-        or (astrocore.is_available "fzf-lua" and "fzf-lua")
-        or (astrocore.is_available "mini.pick" and "mini.pick"),
+      notes_subdir = "notes",
+      new_notes_location = "notes_subdir",
+      ---@type obsidian.config.DailyNotesOpts | table<string, any>
+      daily_notes = {
+        folder = "notes/dailies",
+      },
 
+      ---@type obsidian.config.TemplateOpts | table<string, any>
       templates = {
         subdir = "templates",
         date_format = "%Y-%m-%d-%a",
         time_format = "%H:%M",
       },
-      notes_subdir = "notes",
-      new_notes_location = "notes_subdir",
-      daily_notes = {
-        folder = "notes/dailies",
-      },
+
       ---@type obsidian.config.CompletionOpts | table<string, any>
       completion = {
         min_chars = 1,
-        nvim_cmp = astrocore.is_available "nvim-cmp",
-        blink = astrocore.is_available "blink",
       },
+
       note_frontmatter_func = function(note)
         -- This is equivalent to the default frontmatter function.
         local out = { id = note.id, aliases = note.aliases, tags = note.tags }
@@ -89,6 +88,8 @@ return {
       -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
       -- URL it will be ignored but you can customize this behavior here.
       follow_url_func = vim.ui.open,
-    })
+    }
+
+    return astrocore.extend_tbl(opts, obsidian_opts)
   end,
 }
