@@ -1,28 +1,27 @@
 FROM archlinux:base-devel
 
+ARG USER_UID=1000
+ARG USER_GID=1000
+ARG USER_NAME=eve
+
 RUN --mount=type=cache,target=/var/cache/pacman/pkg \
   pacman -Sy --needed --noconfirm chezmoi git
 
 RUN \
-  useradd -m -G wheel eve; \
-  echo "eve ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/eve
+  groupadd -g ${USER_GID} ${USER_NAME}; \
+  useradd -l -m -u ${USER_UID} -g ${USER_GID} -G wheel ${USER_NAME}; \
+  echo "${USER_NAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER_NAME}
 
-COPY --chown=eve:eve . /home/eve/.local/share/chezmoi
-USER eve
-
-SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+COPY --chown=${USER_UID}:${USER_GID} . /home/${USER_NAME}/.local/share/chezmoi
+USER ${USER_NAME}
 
 RUN \
   --mount=type=cache,target=/var/cache/pacman/pkg \
-  --mount=type=cache,target=/home/eve/.cache \
-  <<EOF
-# Apply chezmoi!
-
-# Docker bind-mounts are always owned by root, so we need to fix the ownership
-sudo chown eve:eve /home/eve/.cache
+  --mount=type=cache,target=/home/${USER_NAME}/.cache,uid=${USER_UID},gid=${USER_GID} \
+  <<EOF /bin/bash -euo pipefail
 
 # Apply our fixed zshenv so everything is set up correctly
-. /home/eve/.local/share/chezmoi/dot_config/zsh/dot_zshenv
+. /home/${USER_NAME}/.local/share/chezmoi/dot_config/zsh/dot_zshenv
 unset PAGER
 
 # Our chezmoi config knows about the CI environment and will not prompt
