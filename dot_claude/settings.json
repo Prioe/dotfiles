@@ -29,7 +29,9 @@
       "Read(**)",
       "Glob",
       "Grep",
-      "LS"
+      "LS",
+      "WebFetch",
+      "WebSearch"
     ]
   }
 }
