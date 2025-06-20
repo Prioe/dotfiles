@@ -5,6 +5,7 @@ Perform systematic proofreading focused on grammar, mechanics, and consistency. 
 ## Primary Focus Areas
 
 ### 1. Grammar & Mechanics
+
 - Grammatical errors (subject-verb agreement, tense consistency, etc.)
 - Spelling mistakes and typos
 - Punctuation errors (commas, semicolons, apostrophes, etc.)
@@ -12,6 +13,7 @@ Perform systematic proofreading focused on grammar, mechanics, and consistency. 
 - Sentence structure problems
 
 ### 2. Consistency Issues
+
 - Inconsistent terminology or word usage
 - Inconsistent formatting (headings, lists, emphasis)
 - Inconsistent style conventions
@@ -19,6 +21,7 @@ Perform systematic proofreading focused on grammar, mechanics, and consistency. 
 - Inconsistent abbreviations or acronyms
 
 ### 3. Technical Writing Standards
+
 - Proper use of academic/professional conventions
 - Citation format consistency (if applicable)
 - Consistent use of active vs. passive voice
@@ -41,6 +44,7 @@ Perform systematic proofreading focused on grammar, mechanics, and consistency. 
 ## Todo Item Format
 
 Each todo should include:
+
 - **Issue Type**: [Grammar/Spelling/Punctuation/Consistency]
 - **Location**: Line number or section reference
 - **Problem**: Specific issue identified
