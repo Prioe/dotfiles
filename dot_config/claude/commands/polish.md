@@ -1,6 +1,6 @@
 # Polish Writing
 
-Transform draft text, bulletpoints, and rough content into polished, well-structured writing that matches the appropriate style for the project context. Automatically detects whether to use academic or technical documentation style.
+Transform draft text into polished writing. Detects academic vs technical context automatically.
 
 ## Command Usage
 
@@ -13,7 +13,7 @@ Transform draft text, bulletpoints, and rough content into polished, well-struct
 
 ## Project Context Detection
 
-The command intelligently determines the appropriate writing style by analyzing the project:
+Determines writing style by analyzing project:
 
 ### Academic Context Indicators
 
@@ -35,72 +35,73 @@ The command intelligently determines the appropriate writing style by analyzing 
 
 ## Instructions
 
-1. **Analyze Project Context**: Examine the codebase/project structure to determine writing context using $ARGUMENTS
-2. **Style Detection**: Read existing similar documents to understand:
-   - Tone and voice (formal academic vs. practical technical)
-   - Terminology patterns and vocabulary
-   - Sentence structure preferences
-   - Formatting conventions
-   - Citation style (if academic)
-3. **Content Analysis**: Read the target file/section to understand:
-   - Current draft state and structure
-   - Key points and information to preserve
-   - Areas needing expansion or clarification
-4. **Create Enhancement Plan**: Use TodoWrite to create actionable items for polishing
-5. **Transform Content**: Work systematically through todos to enhance the writing
+1. **Analyze Project Context**: Examine project structure using $ARGUMENTS
+2. **Style Detection**: Read existing documents for tone, terminology, formatting
+3. **Content Analysis**: Read target file/section for structure and key points
+4. **Create Enhancement Plan**: Use TodoWrite for actionable polishing items
+5. **Transform Content**: Work through todos systematically
+
+**CRITICAL: Eliminate fluff and filler words from output. Remove unnecessary qualifiers, redundant phrases, and wordy constructions. Prioritize conciseness over elaboration.**
 
 ## Style Guidelines
 
 ### Academic Writing Style
 
 - Formal, objective tone
-- Complex sentence structures with clear logical flow
-- Precise technical terminology
-- Proper citation integration
-- Abstract concepts clearly explained
-- Methodical argumentation and evidence presentation
-- Avoiding contractions and colloquialisms
+- Precise terminology
+- Proper citations
+- Clear argumentation
+- No contractions
+- **Concise sentences - eliminate unnecessary words**
 
 ### Technical Documentation Style
 
-- Clear, concise, and practical tone
-- Direct instructions and explanations
+- Clear, practical tone
+- Direct instructions
 - User-focused language
-- Code examples and practical applications
+- Code examples
 - Step-by-step procedures
-- Troubleshooting and FAQ sections
-- Accessible to target technical audience
+- **Minimal fluff - every word serves a purpose**
 
 ## Workflow Process
 
-1. **Project Analysis**: Determine academic vs. technical context
-2. **Style Sampling**: Analyze existing documents for style patterns
-3. **Content Review**: Understand current draft state and requirements
-4. **Enhancement Planning**: Create comprehensive todo list for improvements
-5. **Systematic Polishing**: Transform content section by section
-6. **Consistency Check**: Ensure style consistency throughout
-7. **Quality Review**: Final review for clarity and completeness
+1. **Project Analysis**: Determine context
+2. **Style Sampling**: Analyze existing documents
+3. **Content Review**: Read current draft
+4. **Enhancement Planning**: Create todo list
+5. **Transform**: Polish content systematically
+6. **Review**: Check consistency and clarity
 
 ## Todo Item Categories
 
-Each enhancement todo should specify:
+Each todo should specify:
 
-- **Enhancement Type**: [Expansion/Restructure/Clarification/Style/Terminology]
-- **Location**: Specific section, paragraph, or line reference
-- **Current State**: What exists now (draft bullets, rough text, etc.)
-- **Target State**: What the polished version should achieve
-- **Style Context**: Academic or technical approach to apply
-- **Priority**: [High/Medium/Low] based on impact on clarity and completeness
+- **Type**: [Expansion/Restructure/Clarification/Style/Terminology]
+- **Location**: Section/paragraph/line reference
+- **Current**: What exists now
+- **Target**: What to achieve
+- **Context**: Academic or technical
+- **Priority**: [High/Medium/Low]
 
 ## Quality Standards
 
-The polished output should demonstrate:
+## Conciseness Priority
 
-- **Clarity**: Complex ideas expressed clearly and logically
-- **Consistency**: Uniform style, terminology, and formatting throughout
-- **Completeness**: All key points fully developed and explained
-- **Appropriateness**: Style matches project context and audience needs
-- **Flow**: Smooth transitions and logical progression of ideas
-- **Precision**: Accurate use of terminology and concepts
+**Eliminate these filler words/phrases:**
 
-Focus on creating publication-ready or documentation-ready content that maintains the author's intent while significantly improving clarity, style, and professional presentation.
+- "very", "quite", "rather", "somewhat"
+- "it is important to note that", "it should be mentioned"
+- "in order to" (use "to")
+- "due to the fact that" (use "because")
+- "at this point in time" (use "now")
+- "for the purpose of" (use "for" or "to")
+
+## Output Requirements
+
+- **Clarity**: Ideas expressed directly
+- **Consistency**: Uniform style and terminology
+- **Completeness**: Key points developed
+- **Conciseness**: No unnecessary words
+- **Precision**: Accurate terminology
+
+Create content that maintains author intent while maximizing information density.
