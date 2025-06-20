@@ -18,6 +18,7 @@
       "Bash(uname *)",
       "Bash(which *)",
       "Bash(type *)",
+      "Bash(languagetool *)",
       "Bash(git status)",
       "Bash(git log *)",
       "Bash(git diff *)",

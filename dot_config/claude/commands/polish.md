@@ -67,6 +67,7 @@ the sections start and end.
      content
    - **Exclude Child Sections**: Do not polish any subsections (deeper heading levels)
 4. **Transform Content**: Work through the content systematically
+5. **Post-Processing**: Perform post processing steps
 
 ### Workflow
 
@@ -75,6 +76,17 @@ the sections start and end.
 3. **Content Review**: Read current draft
 4. **Transform**: Polish content systematically
 5. **Review**: Check consistency and clarity
+
+## Post-Processing Steps
+
+1. Run the updated content through the `languagetool` library for grammar and style checks
+
+   - Analyze its output for any remaining issues
+   - Make final adjustments based on suggestions
+
+   <langaugetool-example>
+   Bash(languagetool --language de-DE --encoding utf-8 <(echo "$new_content")
+   </langaugetool-example>
 
 ## Style Guidelines
 
