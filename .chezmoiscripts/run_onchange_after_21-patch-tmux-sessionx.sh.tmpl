@@ -10,6 +10,13 @@ if [[ -z "${TMUX_PLUGIN_MANAGER_PATH:-}" ]]; then
   exit 0
 fi
 
+TMUX_SESSIONX_PATH="$TMUX_PLUGIN_MANAGER_PATH/tmux-sessionx"
+
+if [[ ! -d "$TMUX_SESSIONX_PATH" ]]; then
+  warn "tmux-sessionx is not installed at $TMUX_SESSIONX_PATH. Skipping patch."
+  exit 0
+fi
+
 # See: https://github.com/omerxx/tmux-sessionx/issues/172
 read -r -d '' enable_zoxide_mode <<'EOF'
 diff --git a/scripts/sessionx.sh b/scripts/sessionx.sh
@@ -27,7 +34,7 @@ index 2a5cc9d..e0926a4 100755
  source "$CURRENT_DIR/fzf-marks.sh"
 EOF
 
-if ! git -C "$TMUX_PLUGIN_MANAGER_PATH/tmux-sessionx" apply --reverse --check <<<"$enable_zoxide_mode"; then
+if ! git -C "$TMUX_SESSIONX_PATH" apply --reverse --check <<<"$enable_zoxide_mode"; then
   info "Applying patch to enable zoxide mode in tmux-sessionx"
-  git -C "$TMUX_PLUGIN_MANAGER_PATH/tmux-sessionx" apply <<<"$enable_zoxide_mode"
+  git -C "$TMUX_SESSIONX_PATH" apply <<<"$enable_zoxide_mode"
 fi

@@ -4,7 +4,11 @@ set -euo pipefail
 
 # hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 
+{{ if lookPath "mise" }}
 info "Syncing mise configuration"
 mise install --cd ~
 mise prune --cd ~ --yes
 mise reshim
+{{ else }}
+warn "mise not found in PATH, skipping mise installation"
+{{ end }}
