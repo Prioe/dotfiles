@@ -2,20 +2,28 @@
 
 Transform draft text into polished writing. Detects academic vs technical context automatically.
 
-## Command Usage
+## Command Usage and Arguments
 
 ```
 /polish <filepath> [section]
 ```
 
 - `filepath`: Path to the file containing draft content to polish
-- `section` (optional): Specific section within the file to focus on
+- `section` (optional): Exact section to polish (only that section, not child sections)
 
-## Project Context Detection
+Below are the arguments provided by the user:
+
+<arguments usage="<filepath> [section]">
+$ARGUMENTS
+</arguments>
+
+## Building the Context
+
+### Project Context Detection
 
 Determines writing style by analyzing project:
 
-### Academic Context Indicators
+#### Academic Context Indicators
 
 - Presence of `.tex`, `.bib`, `.cls` files
 - Academic terminology and references
@@ -24,7 +32,7 @@ Determines writing style by analyzing project:
 - Mathematical notation and formulas
 - Journal or conference paper formatting
 
-### Technical Documentation Context Indicators
+#### Technical Documentation Context Indicators
 
 - Presence of `README.md`, API documentation, technical specs
 - Code examples and snippets
@@ -33,17 +41,53 @@ Determines writing style by analyzing project:
 - Version information and changelogs
 - Issue tracking and contribution guidelines
 
+### Section Targeting
+
+**When section is specified in the arguments, polish only the direct content:**
+
+- Include: Text immediately under the specified heading
+- Include: Lists, paragraphs, and content at that heading level
+- **Exclude: Any deeper heading levels (child sections)**
+- **Exclude: Content under subsections**
+
+Stop polishing when encountering:
+
+- Same or higher heading level (end of section)
+- Deeper heading level (child section - skip entirely)
+
+To ensure the correct section is targeted, find the section boundaries by creating and remembering the line-numbers of
+the sections start and end.
+
 ## Instructions
 
-1. **Analyze Project Context**: Examine project structure using $ARGUMENTS
+1. **Analyze Project Context**: Examine project structure using the arguments
 2. **Style Detection**: Read existing documents for tone, terminology, formatting
 3. **Content Analysis**: Read target file/section for structure and key points
-4. **Create Enhancement Plan**: Use TodoWrite for actionable polishing items
-5. **Transform Content**: Work through todos systematically
+   - **Section Targeting**: If section specified, identify exact boundaries and polish ONLY that section's direct
+     content
+   - **Exclude Child Sections**: Do not polish any subsections (deeper heading levels)
+4. **Transform Content**: Work through the content systematically
 
-**CRITICAL: Eliminate fluff and filler words from output. Remove unnecessary qualifiers, redundant phrases, and wordy constructions. Prioritize conciseness over elaboration.**
+### Workflow
+
+1. **Project Analysis**: Determine context
+2. **Style Sampling**: Analyze existing documents
+3. **Content Review**: Read current draft
+4. **Transform**: Polish content systematically
+5. **Review**: Check consistency and clarity
 
 ## Style Guidelines
+
+Avoid fluff and filler words from output. Remove unnecessary qualifiers, redundant phrases, and wordy constructions.
+Prioritize conciseness over elaboration.
+
+- **Clarity**: Ideas expressed directly
+- **Consistency**: Uniform style and terminology
+- **Completeness**: Key points developed
+- **Conciseness**: No unnecessary words
+- **Precision**: Accurate terminology
+
+Create content that maintains author intent while maximizing information density.
 
 ### Academic Writing Style
 
@@ -62,46 +106,3 @@ Determines writing style by analyzing project:
 - Code examples
 - Step-by-step procedures
 - **Minimal fluff - every word serves a purpose**
-
-## Workflow Process
-
-1. **Project Analysis**: Determine context
-2. **Style Sampling**: Analyze existing documents
-3. **Content Review**: Read current draft
-4. **Enhancement Planning**: Create todo list
-5. **Transform**: Polish content systematically
-6. **Review**: Check consistency and clarity
-
-## Todo Item Categories
-
-Each todo should specify:
-
-- **Type**: [Expansion/Restructure/Clarification/Style/Terminology]
-- **Location**: Section/paragraph/line reference
-- **Current**: What exists now
-- **Target**: What to achieve
-- **Context**: Academic or technical
-- **Priority**: [High/Medium/Low]
-
-## Quality Standards
-
-## Conciseness Priority
-
-**Eliminate these filler words/phrases:**
-
-- "very", "quite", "rather", "somewhat"
-- "it is important to note that", "it should be mentioned"
-- "in order to" (use "to")
-- "due to the fact that" (use "because")
-- "at this point in time" (use "now")
-- "for the purpose of" (use "for" or "to")
-
-## Output Requirements
-
-- **Clarity**: Ideas expressed directly
-- **Consistency**: Uniform style and terminology
-- **Completeness**: Key points developed
-- **Conciseness**: No unnecessary words
-- **Precision**: Accurate terminology
-
-Create content that maintains author intent while maximizing information density.
