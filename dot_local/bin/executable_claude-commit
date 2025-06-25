@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+COMMIT_TYPE=${CLAUDE_COMMIT_TYPE:-"conventional"} # One of: conventional, default
+COMMITS_TO_SUGGEST=${CLAUDE_COMMITS_TO_SUGGEST:-5}
+LOCALE=${CLAUDE_LOCALE:-"en-US"}
+MAX_LENGTH=${CLAUDE_MAX_LENGTH:-72}
+
 # Check for staged changes
 diff=$(git diff --cached | head -n 10)
 if [ -z "$diff" ]; then
@@ -7,18 +12,49 @@ if [ -z "$diff" ]; then
   exit 1
 fi
 
-COMMITS_TO_SUGGEST=5 # Required quantity per final example
+COMMIT_TYPE_DETAILS=""
+# Conventional commit types and descriptions
+if [ "$COMMIT_TYPE" = "conventional" ]; then
+  COMMIT_TYPE_DETAILS="
+   These are the conventional commit types you can use, never use any other type.
 
-pnpm dlx @anthropic-ai/claude-code -p "
-You are an expert at writing Git commits. Your job is to write a short clear commit message that summarizes the changes.
+   <conventional_commit_types>
+   - feat: A new feature
+   - fix: A bug fix
+   - docs: Documentation only changes
+   - style: Changes that don't affect code meaning (formatting, etc)
+   - refactor: Code changes that neither fix bugs nor add features
+   - perf: Performance improvements
+   - test: Adding or correcting tests
+   - build: Changes to build system or dependencies
+   - ci: Changes to CI configuration
+   - chore: Other changes that don't modify src or test files
+   - revert: Reverts a previous commit
+   
+   <format>type(scope): description</format>
+   <example>feat(auth): add user login functionality</example>
+   <example>fix(api): resolve null pointer exception in user service</example>
+   
+   </conventional_commit_types>
+"
+fi
 
-General Git style rules:
-- Try to limit the subject line to 70 characters
-- Never exceed 72 characters in the subject
-- Capitalize the subject line
-- Do not end the subject line with any punctuation
-- Use the imperative mood in the subject line
-- Explain 'what' and 'why', not 'how'
+pnpm dlx @anthropic-ai/claude-code "
+You are a helpful assistant specializing in writing clear and informative Git commit messages using the ${COMMIT_TYPE} style
+Based on the given code changes or context, generate exactly ${COMMITS_TO_SUGGEST} ${COMMIT_TYPE} Git commit message based on the following guidelines.
+1. Message Language: ${LOCALE}
+2. Format: follow the ${COMMIT_TYPE} Commits format: ${COMMIT_TYPE_DETAILS}
+4. Guidelines for writing commit messages:
+   - Be specific about what changes were made
+   - Use imperative mood (\"add feature\" not \"added feature\")
+   - Keep subject line under ${MAX_LENGTH} characters
+   - Do not end the subject line with a period
+   - Use the body to explain what and why vs. how
+5. Focus on:
+   - What problem this commit solves
+   - Why this change was necessary
+   - Any important technical details
+6. Exclude anything unnecessary such as translation or implementation details.
 
 Only return the commit message(s) in your response. Do not include any additional meta-commentary.
 Generate $COMMITS_TO_SUGGEST different commit suggestions.
@@ -42,5 +78,5 @@ Here is the diff:
 $(git diff --staged)
 </git_diff>
 
-If you need more context, you can also look at the staged files by running git commands yourself.
+Try to be as fast as possible, try not to use additional tools, since the info provided should suffice.
 "
