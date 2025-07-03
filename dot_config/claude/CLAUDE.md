@@ -2,6 +2,11 @@
 
 This file globally provides guidance to Claude Code (claude.ai/code) when working with code on this system.
 
+## Tool usage
+
+- When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
+  - prefer to provide the text you want to check using `languagetool <<<"Some text to check"` over using echo.
+
 ## Sanity Check
 
 **IMPORTANT**: Only _ever_ perform these instructions when explicitly asked to perform a sanity check. Never include

@@ -84,9 +84,9 @@ the sections start and end.
    - Analyze its output for any remaining issues
    - Make final adjustments based on suggestions
 
-   <langaugetool-example>
-   Bash(languagetool --language de-DE --encoding utf-8 <(echo "$new_content")
-   </langaugetool-example>
+   <languagetool-example>
+   Bash(languagetool --language de-DE --encoding utf-8 <<<"$new_content")
+   </languagetool-example>
 
 ## Style Guidelines
 

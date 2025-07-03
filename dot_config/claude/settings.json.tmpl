@@ -1,0 +1,72 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run test:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(git:*)",
+      "Bash(ls:*)",
+      "Bash(pwd)",
+      "Bash(file:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(find:*)",
+      "Bash(fd:*)",
+      "Bash(jq:*)",
+      "Bash(languagetool:*)"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm:*)",
+      "Bash(rm -rf:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Read(.env.*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Write(.env*)",
+      "Write(**/secrets/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(nc:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm remove:*)",
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(mongod:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ joinPath .chezmoi.homeDir ".config/claude/scripts/tool_choice_validation.py" }}"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | xargs nvim --headless -c 'autocmd LspAttach * ++once lua vim.defer_fn(function() vim.lsp.buf.format(require(\"astrolsp\").format_opts) vim.cmd(\"write\") vim.cmd(\"quit\") end, 100)'"
+          }
+        ]
+      }
+    ]
+  }
+}
