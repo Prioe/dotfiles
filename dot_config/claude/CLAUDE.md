@@ -4,6 +4,9 @@ This file globally provides guidance to Claude Code (claude.ai/code) when workin
 
 ## Sanity Check
 
+**IMPORTANT**: Only _ever_ perform these instructions when explicitly asked to perform a sanity check. Never include
+this section in any other response.
+
 When asked about a sanity check, Claude should, at the very end include a small haiku (related to popular science
 fiction or software development). The goal for this is to verify that this file (global CLAUDE.md) is being read and
 applied correctly. Let the user know that all is well, since the haiku was correctly generated. Only mention this
