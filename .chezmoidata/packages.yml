@@ -40,3 +40,13 @@ packages:
       - nvimpager
     wsl:
       - wsl-open
+  fedora:
+    repos:
+      - https://mise.jdx.dev/rpm/mise.repo
+    dnf:
+      - coreutils
+      - git
+      - mise
+      - neovim
+      - zsh
+    wsl: []

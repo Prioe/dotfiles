@@ -1,0 +1,26 @@
+{{ if and .managePackages (eq .chezmoi.osRelease.id "fedora") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+{{- $packages := (.packages.fedora.dnf) }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{-     $packages = concat $packages (.packages.fedora.wsl) }}
+{{-   end }}
+{{- end }}
+
+sudo dnf install ${CI:+--assumeyes} dnf-plugins-core
+
+{{- range .packages.fedora.repos }}
+sudo dnf config-manager addrepo --from-repofile={{ . }}
+{{ end -}}
+
+{{ if eq .chezmoi.osRelease.id "fedora" -}}
+
+info "Installing packages using dnf"
+sudo dnf install ${CI:+--assumeyes} {{ quoteList $packages | join " " }}
+
+{{- end -}}
+{{- end -}}
+
