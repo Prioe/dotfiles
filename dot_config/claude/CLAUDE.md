@@ -7,6 +7,23 @@ This file globally provides guidance to Claude Code (claude.ai/code) when workin
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
   - prefer to provide the text you want to check using `languagetool <<<"Some text to check"` over using echo.
 
+### Python
+
+- Always check Python version first with `python --version`, fallback to Python 3.12 if command fails
+- Use `uv` as the preferred package manager (assume it's installed)
+- For single-file scripts, use uv's inline dependency feature with script metadata:
+  ```python
+  # /// script
+  # requires-python = ">=3.12"
+  # dependencies = [
+  #   "requests<3",
+  #   "package-name"
+  # ]
+  # ///
+  ```
+- Use uv shebang for executable scripts: `#!/usr/bin/env -S uv run --script`
+- Run scripts with `uv run script.py` to automatically handle dependencies
+
 ## Sanity Check
 
 **IMPORTANT**: Only _ever_ perform these instructions when explicitly asked to perform a sanity check. Never include
