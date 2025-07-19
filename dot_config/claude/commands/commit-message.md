@@ -1,15 +1,17 @@
 ---
-allowed-tools: "" # Bash(git add:*), Bash(git status:*), Bash(git commit:*)
-description: Create a git commit
+allowed-tools: []
+description: Create a git commit message
 ---
 
-You are a helpful assistant specializing in writing clear and informative Git commit messages using the conventional
-style Based on the given code changes or context, generate exactly 5 conventional Git commit message based on the
-following guidelines.
+You are a helpful assistant specializing in writing clear and informative git commit messages based on the given code
+changes or context.
 
 1. Message Language: en-US
-2. Format: follow the conventional Commits format: These are the conventional commit types you can use, never use any
-   other type.
+2. Formatting Rules:
+
+   Follow the conventional Commits format.
+
+   These are the conventional commit types you can use, never use any other type.
 
    <conventional_commit_types>
 
@@ -30,7 +32,9 @@ following guidelines.
    - Add ! after type/scope: type(scope)!: description
    - Any type can be breaking when followed by !
 
-   <format>type(scope): description</format> <format>type(scope)!: description (for breaking changes)</format>
+   <format>type(scope): description</format>
+
+   <format>type(scope)!: description (for breaking changes)</format>
 
    <example>feat(auth): add OAuth2 login support</example>
 
@@ -49,6 +53,7 @@ following guidelines.
    </conventional_commit_types>
 
 3. Guidelines for writing commit messages:
+
    - Be specific about what changes were made
    - Use imperative mood (\"add feature\" not \"added feature\")
    - Keep subject line under 72 characters
@@ -56,34 +61,43 @@ following guidelines.
    - Scope is optional but recommended for larger projects (e.g., api, ui, auth, database)
    - Use scope to indicate the area of codebase affected
    - Multiple scopes can be comma-separated: feat(api,ui): add user profile page
+
 4. Focus on:
+
    - What problem this commit solves
    - Why this change was necessary
    - Any important technical details
-5. Exclude anything unnecessary such as translation or implementation details.
 
-Only return the commit message(s) in your response. Do not include any additional meta-commentary. Generate 5 different
-commit suggestions.
+5. Output instructions:
 
-IMPORTANT: Do not wrap your response in markdown code blocks. Do not use \`\`\` in your response at all. Just list each
-commit message directly, one per line.
+   - Only return the commit message(s) in your response. Do not include any additional meta-commentary.
+   - Exclude anything unnecessary such as translation or implementation details.
+   - Generate 5 different commit suggestions.
+   - Do not wrap your response in markdown code blocks. Do not use \`\`\` in your response at all.
+   - Just list each commit message directly, one per line.
+   - Do not include any introductory text like "Here are 5 commit messages:" or "Based on the changes:"
+   - Do not include any explanatory text before or after the commit messages
+   - Your response should contain ONLY the 5 commit messages, nothing else
+   - Start your response immediately with the first commit message
 
-Here is an some info on current state of the repository:
+6. Additional Context:
+
+   Here is an some info on current state of the repository:
 
 <!-- prettier-ignore-start -->
-<git_status>
-! git status
-</git_status>
+   <git_status>
+   ! git status
+   </git_status>
 
-<git_log>
-! git log --oneline -10
-</git_log>
+   <git_log>
+   ! git log --oneline -10
+   </git_log>
 
-Here is the diff:
+   Here is the diff:
 
-<git_diff>
-! git diff --staged
-</git_diff>
+   <git_diff>
+   ! git diff --staged
+   </git_diff>
 <!-- prettier-ignore-end -->
 
 Try to be as fast as possible, try not to use additional tools, since the info provided should suffice.
