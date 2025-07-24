@@ -25,7 +25,7 @@ return {
             ["gf"] = {
               function()
                 if require("obsidian").util.cursor_on_markdown_link() then
-                  return "<Cmd>ObsidianFollowLink<CR>"
+                  return "<Cmd>Obsidian follow_link<CR>"
                 else
                   return "gf"
                 end
@@ -33,10 +33,10 @@ return {
               desc = "Obsidian Follow Link",
             },
             ["<leader>N"] = { name = "󱓧 Notes" },
-            ["<leader>Nn"] = { ":ObsidianNew<CR>", desc = "[N]ew note" },
-            ["<leader>Nt"] = { ":ObsidianToday<CR>", desc = "Open [t]odays daily note" },
-            ["<leader>No"] = { ":ObsidianOpen<CR>", desc = "[O]pen current note" },
-            ["<leader>Nf"] = { ":ObsidianSearch<CR>", desc = "[F]ind Notes" },
+            ["<leader>Nn"] = { ":Obsidian new<CR>", desc = "[N]ew note" },
+            ["<leader>Nt"] = { ":Obsidian today<CR>", desc = "Open [t]odays daily note" },
+            ["<leader>No"] = { ":Obsidian open<CR>", desc = "[O]pen current note" },
+            ["<leader>Nf"] = { ":Obsidian search<CR>", desc = "[F]ind Notes" },
           },
         },
       },
@@ -46,6 +46,7 @@ return {
     local astrocore = require "astrocore"
     ---@type obsidian.config.ClientOpts | table<string, any>
     local obsidian_opts = {
+      legacy_commands = false,
       workspaces = {
         {
           name = "personal",
@@ -54,6 +55,9 @@ return {
       },
       notes_subdir = "notes",
       new_notes_location = "notes_subdir",
+      open = {
+        use_advanced_uri = true,
+      },
       ---@type obsidian.config.DailyNotesOpts | table<string, any>
       daily_notes = {
         folder = "notes/dailies",
@@ -84,7 +88,6 @@ return {
         return out
       end,
 
-      use_advanced_uri = true,
       -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
       -- URL it will be ignored but you can customize this behavior here.
       follow_url_func = vim.ui.open,
