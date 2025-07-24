@@ -30,10 +30,77 @@ This file globally provides guidance to Claude Code (claude.ai/code) when workin
 
 ## Sanity Check
 
-**IMPORTANT**: Only _ever_ perform these instructions when explicitly asked to perform a sanity check. Never include
-this section in any other response.
+> **IMPORTANT**: Only _ever_ perform these instructions when explicitly asked to perform a sanity check. Never include
+> this section in any other response.
 
 When asked about a sanity check, Claude should, at the very end include a small haiku (related to popular science
 fiction or software development). The goal for this is to verify that this file (global CLAUDE.md) is being read and
 applied correctly. Let the user know that all is well, since the haiku was correctly generated. Only mention this
 section when generating the haiku.
+
+## Git commits
+
+> **IMPORTANT**: Never EVER just commit by yourself, only commit if explicitly asked to do so by the user.
+
+1. Message Language: en-US
+2. Formatting Rules:
+
+   Follow the conventional Commits format.
+
+   These are the conventional commit types you can use, never use any other type.
+
+   <conventional_commit_types>
+
+   - feat: A new feature (MINOR version bump)
+   - fix: A bug fix (PATCH version bump)
+   - docs: Documentation only changes
+   - style: Changes that don't affect code meaning (formatting, etc)
+   - refactor: Code changes that neither fix bugs nor add features
+   - perf: Performance improvements
+   - test: Adding or correcting tests
+   - build: Changes to build system or dependencies
+   - ci: Changes to CI configuration
+   - chore: Other changes that don't modify src or test files
+   - revert: Reverts a previous commit
+
+   Breaking changes (MAJOR version bump):
+
+   - Add ! after type/scope: type(scope)!: description
+   - Any type can be breaking when followed by !
+
+   <format>type(scope): description</format>
+
+   <format>type(scope)!: description (for breaking changes)</format>
+
+   <example>feat(auth): add OAuth2 login support</example>
+
+   <example>fix(api): resolve memory leak in user cache</example>
+
+   <example>feat(core)!: remove deprecated v1 API endpoints</example>
+
+   <example>docs(readme): update installation instructions</example>
+
+   <example>perf(database): optimize user query with indexing</example>
+
+   <example>refactor(parser): simplify token validation logic</example>
+
+   <example>test(auth): add comprehensive login flow tests</example>
+
+   </conventional_commit_types>
+
+3. Guidelines for writing commit messages:
+
+   - Be specific about what changes were made
+   - Use imperative mood (\"add feature\" not \"added feature\")
+   - Keep subject line under 72 characters
+   - Do not end the subject line with a period
+   - Scope is optional but recommended for larger projects (e.g., api, ui, auth, database)
+   - Use scope to indicate the area of codebase affected
+   - Multiple scopes can be comma-separated: feat(api,ui): add user profile page
+   - Only include a body if the commit is very complex or requires additional context
+
+4. Focus on:
+
+   - What problem this commit solves
+   - Why this change was necessary
+   - Any important technical details
