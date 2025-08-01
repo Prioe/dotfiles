@@ -2,6 +2,10 @@
 
 This file globally provides guidance to Claude Code (claude.ai/code) when working with code on this system.
 
+## General Rules
+
+- when the user requests code examples, setup or configuration steps, or library/API documentation use **context7 mcp**
+
 ## Tool usage
 
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
