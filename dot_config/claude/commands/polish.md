@@ -1,3 +1,9 @@
+---
+allowed-tools: [Bash(languagetool), Bash(rg)]
+description: Create a git commit
+argument-hint: <filepath> [section]
+---
+
 # Polish Writing
 
 Transform draft text into polished writing. Detects academic vs technical context automatically.
@@ -57,6 +63,8 @@ Stop polishing when encountering:
 
 To ensure the correct section is targeted, find the section boundaries by creating and remembering the line-numbers of
 the sections start and end.
+
+Sections can also be provided as line numbers, e.g. `1-10` for lines 1 to 10.
 
 ## Instructions
 
@@ -118,3 +126,21 @@ Create content that maintains author intent while maximizing information density
 - Code examples
 - Step-by-step procedures
 - **Minimal fluff - every word serves a purpose**
+
+### Citation and References
+
+- Paraphrase direct quotes
+
+## Markup Guidelines
+
+### Markdown
+
+If the file is in Markdown format, ensure:
+
+- Don't use bold to emphasize text, use italics instead
+- Don't introduce new headings
+- Don't introduce new lists
+
+### Preserve Original Content
+
+Ensure to always preserve the original text by keeping it in a comment block before the polished content.
