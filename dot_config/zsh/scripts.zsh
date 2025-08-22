@@ -5,18 +5,14 @@
 push_notes() {
 	# format: 12.02.2024, 16:06
 	T="$(date +'%d.%m.%Y, %H:%M')"
-	H="$(hostname)"
-	cd ~/notes || exit
-	git add .
-	git commit -m "Pushing notes from $H at $T"
-	git push
-	cd - || exit
+	H="$(hostnamectl hostname)"
+	git -C ~/notes add .
+	git -C ~/notes commit -m "Pushing notes from $H at $T"
+	git -C ~/notes push
 }
 
 pull_notes() {
-	cd ~/notes || exit
-	git pull
-	cd - || exit
+	git -C ~/notes pull --rebase
 }
 
 sync_notes() {
@@ -51,6 +47,11 @@ clear_nvim_config() {
 			mv "$dir" "$dir.bak"
 		fi
 	done
+}
+
+update_nvim() {
+	nvim --headless "+Lazy! sync" ":MasonToolsUpdateSync" +qa
+	chezmoi re-add "$HOME/.config/nvim"
 }
 
 dotfiles() {
