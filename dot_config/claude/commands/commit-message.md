@@ -86,17 +86,17 @@ changes or context.
 
 <!-- prettier-ignore-start -->
    <git_status>
-   ! git status
+   !`git status`
    </git_status>
 
    <git_log>
-   ! git log --oneline -10
+   !`git log --oneline -10`
    </git_log>
 
    Here is the diff:
 
    <git_diff>
-   ! git diff --staged
+   !`git diff --staged`
    </git_diff>
 <!-- prettier-ignore-end -->
 
