@@ -1,0 +1,1 @@
+../../claude/commands/sanity-check.md
