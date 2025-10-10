@@ -5,6 +5,14 @@ pnpm = 'latest'
 python = { version = "3.12", profile = "minimal" }
 uv = 'latest'
 claude = 'latest'
+prettier = "latest"
+go = "latest"
+typstyle = "latest"
+typst = "latest"
+watchexec = "latest"
+"npm:@openai/codex" = "latest"
+"npm:@zed-industries/claude-code-acp" = "latest"
+opencode = "latest"
 
 [settings]
 experimental = true
