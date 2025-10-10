@@ -54,6 +54,11 @@ update_nvim() {
 	chezmoi re-add "$HOME/.config/nvim"
 }
 
+prepare_edit_claude_code_src() {
+	cd $(dirname $(readlink -f $(which claude)))
+	mise x npm:prettier@latest -- prettier cli.js --write --log-level debug
+}
+
 dotfiles() {
 	ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $HOME/.dotfiles/ansible/dotfiles.yml "$@" --ask-become-pass
 }
