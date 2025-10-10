@@ -1,6 +1,6 @@
 ---
 description: Polish academic text by transforming draft content into concise, well-structured writing.
-argument-hint: <filepath> [section]
+argument-hint: <filepath> [locator] [additional_instructions]
 ---
 
 # Polish Writing
@@ -12,21 +12,24 @@ overall quality while preserving the original content and intent.
 ## Command Usage and Arguments
 
 ```
-/polish-v2 <filepath> [section]
+/polish-v2 <filepath> [locator] [additional_instructions]
 ```
 
 - `filepath`: Path to the file containing draft content to polish
-- `section` (optional): Exact section to polish (only that section, not child sections)
+- `locator` (optional): Details on how to locate the targeted text, can be a header-section, line numbers or an
+  explanation of the target
+- `additional_instructions` (optional): Any specific instructions or context for the polishing task - following these
+  user provided instructions is crucial
 
 Below are the arguments provided by the user:
 
-<arguments usage="<filepath> [section]">
+<arguments usage="<filepath> [locator] [additional_instructions]">
 $ARGUMENTS
 </arguments>
 
 ## Locating user input
 
-**When section is specified in the arguments, polish only the direct content:**
+**When a section header is specified in the arguments, polish only the direct content:**
 
 - Include: Text immediately under the specified heading
 - Include: Lists, paragraphs, and content at that heading level
@@ -43,12 +46,12 @@ the sections start and end.
 
 Sections can also be provided as line numbers, e.g. `1-10` for lines 1 to 10.
 
-Remeber the located user input as <user_input>.
+Remember the located user input as <user_input>.
 
 ## Instructions
 
-Before composing the final refined text, analyze the input and plan your approach. In <academic_refinement_process> tags
-inside your thinking block:
+Before composing the final refined text, analyze the input and plan your approach. Use the todo list and the TodoWrite
+tool.
 
 1. Analyze the user input:
 
@@ -109,10 +112,10 @@ After completing your analysis and planning, compose the refined academic text f
 10. Focus on polishing and condensing the provided content rather than significantly expanding it.
 11. Ensure that the language of your output matches the language of the original user input.
 
-Your final output should be the refined academic text in markdown format, without including the analysis and planning or
-any other notes. Begin your response with <academic_text> and end it with </academic_text>.
+Your final setp should be to update the file specified by the `filepath` argument with the refined academic text,
+without including the analysis and planning or any other notes. Ensure to keep the original input text near the relevant
+ouput by commenting it out.
 
 Remember, your task is to polish and improve the existing text without introducing new sections or significantly
 altering its structure. Focus on enhancing clarity, academic tone, and overall quality while preserving the original
-content and intent. Your final output should consist only of the refined academic text and should not duplicate or
-rehash any of the work you did in the thinking block.
+content and intent.
