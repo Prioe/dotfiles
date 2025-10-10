@@ -7,12 +7,12 @@ import sys
 # Define validation rules as a list of (regex pattern, message) tuples
 VALIDATION_RULES = [
     (
-        r"\bgrep\b(?!.*\|)",
-        "Use 'rg' (ripgrep) instead of 'grep' for better performance and features",
+        r"\b(npm|npx|yarn)\b",
+        "Use 'pnpm' instead of 'npm', 'npx', or 'yarn' for better performance and disk efficiency (use 'pnpm dlx' instead of 'npx')",
     ),
     (
-        r"\bfind\s+\S+\s+-name\b",
-        "Use 'rg --files | rg pattern' or 'rg --files -g pattern' instead of 'find -name' for better performance",
+        r"(?<!uv )\b(pip|poetry)\b",
+        "Use 'uv' instead of 'pip' or 'poetry' for faster Python package management (use 'uv pip' for pip commands, 'uv run' for scripts)",
     ),
 ]
 
