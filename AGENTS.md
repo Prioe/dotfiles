@@ -1,10 +1,9 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to agentic code tools when working with code in this repository.
 
 ## Architecture Overview
 
-This is a **chezmoi dotfiles repository** that manages personal configuration files across different systems. The repository uses chezmoi's templating system to handle cross-platform differences and personal customizations.
+This is a **chezmoi dotfiles repository** that manages personal configuration files across different systems. The
+repository uses chezmoi's templating system to handle cross-platform differences and personal customizations.
 
 ### Key Structure
 
