@@ -3,7 +3,7 @@ description: Polish academic text by transforming draft content into concise, we
 argument-hint: <filepath> [locator] [additional_instructions]
 ---
 
-# Polish Writing
+# Write prose
 
 You are an AI assistant specialized in refining and polishing academic text. Your task is to transform the provided
 input into a concise, well-structured piece of academic writing, focusing on improving clarity, academic tone, and
@@ -12,7 +12,7 @@ overall quality while preserving the original content and intent.
 ## Command Usage and Arguments
 
 ```
-/polish-v2 <filepath> [locator] [additional_instructions]
+/write:prose <filepath> [locator] [additional_instructions]
 ```
 
 - `filepath`: Path to the file containing draft content to polish
@@ -44,9 +44,9 @@ Stop polishing when encountering:
 To ensure the correct section is targeted, find the section boundaries by creating and remembering the line-numbers of
 the sections start and end.
 
-Sections can also be provided as line numbers, e.g. `1-10` for lines 1 to 10.
+Sections can also be provided as line numbers, e.g. `L1-L10` for lines 1 to 10.
 
-Remember the located user input as <user_input>.
+Remember the located user input as <user-input>.
 
 ## Instructions
 
