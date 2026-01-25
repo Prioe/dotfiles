@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "includeCoAuthoredBy": false,
+  "forceLoginMethod": "claudeai",
   "permissions": {
     "allow": [
       "Bash(npm run build)",
@@ -19,22 +19,28 @@
       "Bash(find:*)",
       "Bash(fd:*)",
       "Bash(jq:*)",
-      "Bash(languagetool:*)"
+      "Bash(languagetool:*)",
+      "mcp__context7__get-library-docs",
+      "mcp__context7__resolve-library-id",
+      "Bash(* --version)",
+      "Bash(* --help)"
     ],
     "deny": [
       "Bash(sudo:*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)"
+     ],
+    "ask": [
       "Bash(rm:*)",
       "Bash(rm -rf:*)",
       "Bash(git push:*)",
       "Bash(git reset:*)",
       "Bash(git rebase:*)",
-      "Read(.env.*)",
-      "Read(id_rsa)",
-      "Read(id_ed25519)",
-      "Read(**/*token*)",
-      "Read(**/*key*)",
+      "Bash(git commit:*)",
+      "Read(.env*)",
       "Write(.env*)",
-      "Write(**/secrets/**)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "Bash(nc:*)",
@@ -44,30 +50,15 @@
     ]
   },
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ joinPath .chezmoi.homeDir ".config/claude/scripts/tool_choice_validation.py" }}"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs nvim --headless -c 'autocmd LspAttach * ++once lua vim.defer_fn(function() vim.lsp.buf.format(require(\"astrolsp\").format_opts) vim.cmd(\"write\") vim.cmd(\"quit\") end, 100)'"
-          }
-        ]
-      }
-    ]
+    "PreToolUse": [],
+    "PostToolUse": []
   },
+  "attribution": {"commit": "", "pr": ""},
   "alwaysThinkingEnabled": true,
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
+  },
+  "model": "opus",
   "feedbackSurveyState": {
     "lastShownTime": 1754055893862
   }
