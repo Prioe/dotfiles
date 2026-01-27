@@ -84,9 +84,19 @@ docker_path="$windows_root/Program Files/Docker/Docker/resources/bin"
 if [[ -d "$docker_path" ]]; then
 	export PATH="$PATH:$docker_path"
 
+	local docker_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/docker_completion.zsh"
+
 	if [[ -S /var/run/docker.sock ]]; then
-		eval "$(docker completion zsh)"
-	else
-		echo "⚠️  Docker Desktop doesn’t seem to be running, completion may not work."
+		local docker_comp_tmp="$(mktemp)"
+		if docker completion zsh >"$docker_comp_tmp" 2>/dev/null; then
+			mkdir -p "${docker_comp_cache:h}"
+			mv "$docker_comp_tmp" "$docker_comp_cache"
+		else
+			rm -f "$docker_comp_tmp"
+		fi
+	fi
+
+	if [[ -f "$docker_comp_cache" ]]; then
+		source "$docker_comp_cache"
 	fi
 fi
