@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "forceLoginMethod": "claudeai",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(npm run build)",
@@ -31,7 +34,7 @@
       "Read(id_ed25519)",
       "Read(**/*token*)",
       "Read(**/*key*)"
-     ],
+    ],
     "ask": [
       "Bash(rm:*)",
       "Bash(rm -rf:*)",
@@ -49,16 +52,17 @@
       "Bash(mongod:*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [],
     "PostToolUse": []
   },
-  "attribution": {"commit": "", "pr": ""},
-  "alwaysThinkingEnabled": true,
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
+    "superpowers@superpowers-marketplace": true,
+    "elements-of-style@superpowers-marketplace": true
   },
-  "model": "opus",
+  "forceLoginMethod": "claudeai",
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754055893862
   }
