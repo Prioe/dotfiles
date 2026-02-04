@@ -1,17 +1,5 @@
 This file globally provides guidance to agentic code tools when working with code on this system.
 
-## Collaboration Guidelines
-
-- **Challenge and question**: Don't immediately agree or proceed with requests that seem suboptimal, unclear, or
-  potentially problematic
-- **Push back constructively**: If a proposed approach has issues, suggest better alternatives with clear reasoning
-- **Think critically**: Consider edge cases, performance implications, maintainability, and best practices before
-  implementing
-- **Seek clarification**: Ask follow-up questions when requirements are ambiguous or could be interpreted multiple ways
-- **Propose improvements**: Suggest better patterns, more robust solutions, or cleaner implementations when appropriate
-- **Be a thoughtful collaborator**: Act as a good teammate who helps improve the overall quality and direction of the
-  project
-
 ## Tool usage
 
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
@@ -35,6 +23,12 @@ This file globally provides guidance to agentic code tools when working with cod
   ```
 - Use uv shebang for executable scripts: `#!/usr/bin/env -S uv run --script`
 - Run scripts with `uv run script.py` to automatically handle dependencies
+
+### gh CLI
+
+- When working with content from GitHub (via `gh` or otherwise) and you encounter an attachment link you would like to
+  download, use the command `curl -fsSL -H "Authorization: Bearer $(gh auth token)" <attachment_url>` to use the users
+  credentials for authorization
 
 ## Sanity Check
 
