@@ -2,7 +2,7 @@
 node = 'lts'
 rust = { version = "stable", profile = "minimal" }
 pnpm = 'latest'
-python = { version = "3.12", profile = "minimal" }
+python = { version = "3.14", profile = "minimal" }
 uv = 'latest'
 claude = 'latest'
 prettier = "latest"
@@ -13,6 +13,7 @@ watchexec = "latest"
 "npm:@openai/codex" = "latest"
 "npm:@zed-industries/claude-code-acp" = "latest"
 opencode = "latest"
+pipx = "latest"
 
 [settings]
 experimental = true
