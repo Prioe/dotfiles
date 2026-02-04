@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ template "scriptLogging" . }}
+{{ template "hashList" (glob (joinPath .chezmoi.homeDir ".config/systemd/user/*.service")) }}
+{{ template "hashList" (glob (joinPath .chezmoi.homeDir ".config/systemd/user/*.timer")) }}
+
+info "Reloading systemd user daemon"
+systemctl --user daemon-reload
+
+info "Starting enabled timers"
+for timer in ~/.config/systemd/user/timers.target.wants/*.timer; do
+    [[ -e "$timer" ]] || continue
+    name=$(basename "$timer")
+    systemctl --user start "$name" || warn "Failed to start $name"
+done
