@@ -5,12 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-Environment=GIT_SSH=ssh.exe
-Environment=PATH=/mnt/c/Windows/System32/OpenSSH:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
-{{- else }}
-Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
-{{- end }}
+Environment=GIT_SSH_COMMAND=ssh -i %h/.ssh/notes-deploy-key -o IdentitiesOnly=yes
 ExecStart=/bin/bash -c 'cd ~/notes && git add . && git commit -m "Sync from $(hostnamectl hostname) at $(date +\"%%d.%%m.%%Y, %%H:%%M\")" || true && git pull --rebase --autostash && git push'
 
 [Install]

@@ -15,3 +15,9 @@ email = {{ $email | quote }}
 gui = {{ $gui }}
 managePackages = {{ $managePackages }}
 
+{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+
+[onepassword]
+command = "op.exe"
+{{- end }}
+
