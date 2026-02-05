@@ -71,8 +71,6 @@ if add_winget_package_path 'AgileBits.1Password.CLI'; then
 
 	if [ -d "$ssh_path" ]; then
 		export PATH="$PATH:$ssh_path"
-		export GIT_SSH="ssh.exe"
-
 		# See: https://developer.1password.com/docs/ssh/integrations/wsl/#optional-add-an-alias-for-ssh-commands
 		# See: ./dot_local/bin/wsl/executable_{scp,ssh}
 	fi

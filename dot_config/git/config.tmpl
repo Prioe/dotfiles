@@ -21,6 +21,9 @@
 
 [core]
     pager = delta
+{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+    sshCommand = ssh.exe
+{{- end }}
 
 [interactive]
     diffFilter = delta --color-only
