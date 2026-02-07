@@ -5,7 +5,13 @@ set -euo pipefail
 {{ template "hashList" (glob (joinPath .chezmoi.homeDir ".config/nvim/**/*")) }}
 
 {{ if lookPath "nvim" }}
+# Restore plugins
 nvim --headless "+Lazy! restore" +qa
+# Install mason tools - quit when MasonToolsUpdateCompleted fires
+nvim --headless \
+  -c "lua vim.notify = function(msg) io.write(msg .. '\n') io.flush() end" \
+  -c "autocmd User MasonToolsUpdateCompleted qall" \
+  -c "MasonToolsInstall"
 {{ else }}
 warn "nvim not found in PATH. Skipping Lazy restore."
 {{ end }}

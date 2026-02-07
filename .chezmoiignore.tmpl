@@ -1,8 +1,10 @@
 tools/ # a directory for custom scripts and tools
 Dockerfile
 CLAUDE.md
+AGENTS.md
 README.md
 .prettierrc.yaml
+.gitignore
 
 {{- /* Ignore these if not on Arch Linux */ -}} 
 {{- if ne .chezmoi.osRelease.id "arch" }}
@@ -10,9 +12,14 @@ README.md
 {{- end }}
 
 
-{{- /* Ignore these if not in WSL */ -}} 
-{{- if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{- /* Ignore these if not in WSL */ -}}
+{{- if not .isWSL }}
 .local/bin/wsl
+{{- end }}
+
+{{- /* Ignore these if systemd is not available */ -}}
+{{- if not (stat "/run/systemd/system") }}
+.config/systemd
 {{- end }}
 
 {{- /* Ignore these if gui is not enabled */ -}} 

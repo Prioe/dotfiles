@@ -1,3 +1,4 @@
+{{- if .isWSL -}}
 #!/usr/bin/env bash
 set -euo pipefail
 {{ template "scriptLogging" . }}
@@ -6,3 +7,4 @@ mkdir -p ~/.local/share/fonts
 ln -sf /mnt/c/Windows/Fonts ~/.local/share/fonts/windows
 
 fc-cache -f
+{{- end }}

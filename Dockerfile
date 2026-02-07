@@ -35,22 +35,39 @@ ARG USER_UID
 ARG USER_GID
 ARG USER_NAME
 
-COPY --chown=${USER_UID}:${USER_GID} . /home/${USER_NAME}/.local/share/chezmoi
 USER ${USER_NAME}
 
+ENV CI=1 \
+  CHEZMOI_MANAGE_PACKAGES=1 \
+  PAGER= \
+  MISE_HTTP_RETRIES=5
+
+# Install paru early (cached layer - bind mount only needed files)
+RUN \
+  --mount=type=bind,source=.chezmoi.toml.tmpl,target=/tmp/src/.chezmoi.toml.tmpl \
+  --mount=type=bind,source=dot_config/zsh/dot_zshenv,target=/tmp/src/dot_config/zsh/dot_zshenv \
+  --mount=type=bind,source=.chezmoiscripts/run_onchange_before_05-archlinux-install-paru.sh.tmpl,target=/tmp/src/.chezmoiscripts/run_onchange_before_05-archlinux-install-paru.sh.tmpl \
+  --mount=type=cache,target=/var/cache/pacman/pkg \
+  --mount=type=cache,target=/home/${USER_NAME}/.cache,uid=${USER_UID},gid=${USER_GID} \
+  --mount=type=cache,target=/home/${USER_NAME}/.local/share/cargo,uid=${USER_UID},gid=${USER_GID} \
+  BASH_ENV=/tmp/src/dot_config/zsh/dot_zshenv \
+  chezmoi execute-template --source /tmp/src \
+  < /tmp/src/.chezmoiscripts/run_onchange_before_05-archlinux-install-paru.sh.tmpl \
+  | bash
+
+# Copy full source and apply all dotfiles
+COPY --chown=${USER_UID}:${USER_GID} . /home/${USER_NAME}/.local/share/chezmoi
+
+ENV BASH_ENV=/home/${USER_NAME}/.local/share/chezmoi/dot_config/zsh/dot_zshenv
+
+RUN chezmoi init && mkdir -p ~/.local/share/mise ~/.cache ~/.npm
 RUN \
   --mount=type=cache,target=/var/cache/pacman/pkg \
   --mount=type=cache,target=/var/cache/dnf \
   --mount=type=cache,target=/home/${USER_NAME}/.cache,uid=${USER_UID},gid=${USER_GID} \
-  <<EOF /bin/bash -euo pipefail
+  --mount=type=cache,target=/home/${USER_NAME}/.npm,uid=${USER_UID},gid=${USER_GID} \
+  --mount=type=cache,target=/home/${USER_NAME}/.local/share/mise/downloads,uid=${USER_UID},gid=${USER_GID} \
+  --mount=type=cache,target=/home/${USER_NAME}/.local/share/mise/http-tarballs,uid=${USER_UID},gid=${USER_GID} \
+  chezmoi apply --force
 
-# Apply our fixed zshenv so everything is set up correctly
-. /home/${USER_NAME}/.local/share/chezmoi/dot_config/zsh/dot_zshenv
-unset PAGER
-
-# Our chezmoi config knows about the CI environment and will not prompt
-export CI=1
-
-chezmoi init --promptBool managePackages=true
-chezmoi apply --force --verbose
-EOF
+CMD ["zsh"]

@@ -1,9 +1,15 @@
 # Set the defaults
 {{- $email := "michael@prio.one" }}
 {{- $gui := false }}
-{{- $managePackages := false }}
+{{- $managePackages := env "CHEZMOI_MANAGE_PACKAGES" | not | not }}
 
-# If we're interactive, prompt
+# Detect environment (used as defaults)
+{{- $isContainer := or (stat "/.dockerenv") (stat "/run/.containerenv") (eq .chezmoi.hostname "buildkitsandbox") | not | not }}
+{{- $hasOP := or (lookPath "op") (lookPath "op.exe") | not | not }}
+
+# Prompt for configurable values (uses defaults if non-interactive)
+{{- $isWSL := and (not $isContainer) (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+
 {{- if stdinIsATTY }}
 {{-   $email = promptStringOnce . "email" "What is your email address" $email }}
 {{-   $gui = promptBoolOnce . "gui" "Do you want to include gui applications" $gui }}
@@ -14,8 +20,11 @@
 email = {{ $email | quote }}
 gui = {{ $gui }}
 managePackages = {{ $managePackages }}
+isContainer = {{ $isContainer }}
+isWSL = {{ $isWSL }}
+hasOP = {{ $hasOP }}
 
-{{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{- if $isWSL }}
 
 [onepassword]
 command = "op.exe"

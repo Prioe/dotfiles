@@ -1,8 +1,10 @@
-{{- if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{- if not .isWSL }}
 Host *
   IdentityAgent ~/.1password/agent.sock
 
 {{ end -}}
+{{- if .hasOP }}
 Host geonosis
-    HostName {{ (onepasswordRead "op://Private/geonosis/ip") }}
-    Port {{ (onepasswordRead "op://Private/geonosis/port") }}
+    HostName {{ onepasswordRead "op://Private/geonosis/ip" }}
+    Port {{ onepasswordRead "op://Private/geonosis/port" }}
+{{ end -}}

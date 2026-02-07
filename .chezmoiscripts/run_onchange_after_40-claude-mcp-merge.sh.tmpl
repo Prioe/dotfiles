@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-set -x
 
 {{ template "scriptLogging" . }}
 
@@ -15,7 +14,6 @@ CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/.claude.json"
 {{ if lookPath "jq" }}
 info "Merging Claude MCP configuration"
 
-
 # Create .claude directory if it doesn't exist
 mkdir -p "$CLAUDE_CONFIG_DIR"
 
@@ -23,7 +21,7 @@ mkdir -p "$CLAUDE_CONFIG_DIR"
 if [[ -f "$CLAUDE_CONFIG_FILE" ]]; then
     info "Merging with existing Claude configuration"
     # Merge configurations: keep existing config but replace mcpServers section
-    jq -s '.[0] * .[1]' "$CLAUDE_CONFIG_FILE" "$MCP_SOURCE" > "$CLAUDE_CONFIG_FILE.tmp"
+    jq -s '.[0] * .[1]' "$CLAUDE_CONFIG_FILE" "$MCP_SOURCE" >"$CLAUDE_CONFIG_FILE.tmp"
     mv "$CLAUDE_CONFIG_FILE.tmp" "$CLAUDE_CONFIG_FILE"
 else
     info "Creating new Claude configuration"

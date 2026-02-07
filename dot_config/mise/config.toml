@@ -10,8 +10,6 @@ go = "latest"
 typstyle = "latest"
 typst = "latest"
 watchexec = "latest"
-"npm:@openai/codex" = "latest"
-"npm:@zed-industries/claude-code-acp" = "latest"
 opencode = "latest"
 pipx = "latest"
 

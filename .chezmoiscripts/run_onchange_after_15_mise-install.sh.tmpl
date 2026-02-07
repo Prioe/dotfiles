@@ -6,6 +6,7 @@ set -euo pipefail
 
 {{ if lookPath "mise" }}
 info "Syncing mise configuration"
+mise use -g node@lts
 mise install --cd ~
 mise prune --cd ~ --yes
 mise reshim

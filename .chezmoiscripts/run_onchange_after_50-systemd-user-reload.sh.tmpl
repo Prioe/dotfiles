@@ -1,3 +1,4 @@
+{{- if stat "/run/systemd/system" -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -14,3 +15,4 @@ for timer in ~/.config/systemd/user/timers.target.wants/*.timer; do
     name=$(basename "$timer")
     systemctl --user start "$name" || warn "Failed to start $name"
 done
+{{- end }}
