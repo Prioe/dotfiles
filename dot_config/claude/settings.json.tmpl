@@ -26,7 +26,10 @@
       "mcp__context7__get-library-docs",
       "mcp__context7__resolve-library-id",
       "Bash(* --version)",
-      "Bash(* --help)"
+      "Bash(* --help)",
+      "Skill(creating-zettel)",
+      "Skill(managing-daily-notes)",
+      "Skill(searching-zettel)"
     ],
     "deny": [
       "Bash(sudo:*)",
@@ -65,5 +68,9 @@
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754055893862
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); dir=$(echo \"$input\" | jq -r '.workspace.current_dir' | sed \"s|$HOME|~|\"); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); ctx=''; [ -n \"$remaining\" ] && ctx=\" | ctx: ${remaining}%\"; printf \"\\033[2m%s in %s%s\\033[0m\" \"$model\" \"$dir\" \"$ctx\""
   }
 }

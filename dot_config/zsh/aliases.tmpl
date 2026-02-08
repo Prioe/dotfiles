@@ -30,6 +30,9 @@ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 # fastfetch
 alias fetch='fastfetch'
 
+# claude code - load notes vault skills globally
+alias claude='claude --add-dir ~/notes'
+
 {{- if eq .chezmoi.osRelease.id "arch" }}
 #Search repos with 'paru' and 'fzf'
 alias parus="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"

@@ -29,6 +29,12 @@ This file globally provides guidance to agentic code tools when working with cod
 - When working with content from GitHub (via `gh` or otherwise) and you encounter an attachment link you would like to
   download, use the command `curl -fsSL -H "Authorization: Bearer $(gh auth token)" <attachment_url>` to use the users
   credentials for authorization
+- **GitHub URLs**: Always prefer `gh` CLI to fetch raw content or metadata from GitHub links. Do NOT use Playwright MCP
+  for GitHub URLs.
+
+## Writing Style
+
+- Never use the em dash character (—). Use alternatives like periods, commas, or rephrasing instead.
 
 ## Sanity Check
 
