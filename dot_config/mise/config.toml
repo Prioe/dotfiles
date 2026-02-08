@@ -1,5 +1,5 @@
 [tools]
-node = 'lts'
+node = "lts"
 rust = { version = "stable", profile = "minimal" }
 pnpm = 'latest'
 python = { version = "3.14", profile = "minimal" }
