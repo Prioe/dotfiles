@@ -43,7 +43,7 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_CONFIG_HOME/tmux/plugins"
 
 # Add all directories in `~/.local/bin` to $PATH
 if [[ -d ~/.local/bin ]]; then
-  export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
+  export PATH="$(find ~/.local/bin -type d | paste -sd ':' -):$PATH"
 fi
 
 if [[ -d /home/linuxbrew/.linuxbrew ]]; then
