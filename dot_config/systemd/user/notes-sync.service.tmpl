@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-Environment=GIT_SSH_COMMAND=ssh -i %h/.ssh/notes-deploy-key -o IdentitiesOnly=yes
+Environment="GIT_SSH_COMMAND=ssh -i %h/.ssh/notes-deploy-key -o IdentitiesOnly=yes"
 ExecStart=/bin/bash -c 'cd ~/notes && git add . && git commit -m "Sync from $(hostnamectl hostname) at $(date +\"%%d.%%m.%%Y, %%H:%%M\")" || true && git pull --rebase --autostash && git push'
 
 [Install]
