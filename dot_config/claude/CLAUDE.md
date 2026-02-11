@@ -5,7 +5,8 @@ This file globally provides guidance to agentic code tools when working with cod
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
   - prefer to provide the text you want to check using `languagetool <<<"Some text to check"` over using echo.
 - when the user requests code examples, setup or configuration steps, or library/API documentation use **context7 mcp**
-- when the user requests to read documentation from an url, use the **playwright mcp** to fetch and parse the url
+- Query gitlab issues and mrs via the commands `glab [mr|issue] list`; inspect issue and mr details using
+  `glab [mr|issue] view (--comments|--system-logs)`
 
 ### Python
 
@@ -49,3 +50,6 @@ section when generating the haiku.
 ## Git commits
 
 > **IMPORTANT**: Never EVER just commit by yourself, only commit if explicitly asked to do so by the user.
+
+- When committing, prefer keeping the message to summary only. Only add a description if it really adds something. Keep
+  it concise
