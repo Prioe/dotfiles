@@ -4,7 +4,7 @@
 # - https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
 # - https://github.com/Phantas0s/.dotfiles/blob/master/zsh/zshenv
 
-export DOTFILES="$HOME/.dotfiles"
+export DOTFILES="$HOME/.local/share/chezmoi"
 
 export EDITOR="nvim"
 export VISUAL="nvim"

@@ -59,6 +59,60 @@ prepare_edit_claude_code_src() {
 	mise x npm:prettier@latest -- prettier cli.js --write --log-level debug
 }
 
-dotfiles() {
-	ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook $HOME/.dotfiles/ansible/dotfiles.yml "$@" --ask-become-pass
+# Tmux session management
+
+tmux-session-details() {
+	for session in $(tmux list-sessions -F '#{session_name}'); do
+		echo "=== $session ==="
+		tmux list-windows -t "$session" -F '#{window_index}: #{window_name} - #{pane_current_command} in #{pane_current_path}'
+	done
+}
+
+tmux-cleanup-windows-dry() {
+	local active_session=$(tmux list-sessions -F '#{session_name} #{session_attached}' | awk '$2 == "1" {print $1}')
+	echo "Active session: $active_session"
+	echo
+
+	for session in $(tmux list-sessions -F '#{session_name}' | grep -v "^${active_session}$"); do
+		echo "=== Session: $session ==="
+		tmux list-windows -t "$session" -F '#{window_index}: #{window_name}' | while read line; do
+			local window_idx=$(echo "$line" | cut -d: -f1)
+			if [ "$window_idx" != "1" ]; then
+				echo "  [WOULD KILL] Window $line"
+			else
+				echo "  [KEEP] Window $line"
+			fi
+		done
+		echo
+	done
+}
+
+tmux-cleanup-windows() {
+	local active_session=$(tmux list-sessions -F '#{session_name} #{session_attached}' | awk '$2 == "1" {print $1}')
+	echo "Active session: $active_session (keeping all windows)"
+	echo
+
+	for session in $(tmux list-sessions -F '#{session_name}' | grep -v "^${active_session}$"); do
+		echo "=== Session: $session ==="
+		tmux list-windows -t "$session" -F '#{window_index}: #{window_name}' | while read line; do
+			local window_idx=$(echo "$line" | cut -d: -f1)
+			if [ "$window_idx" != "1" ]; then
+				echo "  [KILLING] Window $line"
+				tmux kill-window -t "${session}:${window_idx}"
+			else
+				echo "  [KEEPING] Window $line"
+			fi
+		done
+		echo
+	done
+
+	echo "Cleanup complete!"
+}
+
+# Apply all chezmoi layers
+chezmoi-apply-all() {
+	chezmoi apply "$@"
+	if [[ -d "$HOME/.local/share/chezmoi-work" ]]; then
+		chezmoi apply --source "$HOME/.local/share/chezmoi-work" "$@"
+	fi
 }

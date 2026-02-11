@@ -12,6 +12,7 @@ typst = "latest"
 watchexec = "latest"
 opencode = "latest"
 pipx = "latest"
+lazygit = "0.59.0"
 
 [settings]
 experimental = true

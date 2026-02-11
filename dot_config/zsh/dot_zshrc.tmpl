@@ -102,4 +102,9 @@ source $ZDOTDIR/wsl.zsh
 # Atuin
 eval "$(atuin init zsh)"
 
+# Work layer extensions (applied separately, only present on work machines)
+[[ -f "$ZDOTDIR/zshenv-work" ]] && source "$ZDOTDIR/zshenv-work"
+[[ -f "$ZDOTDIR/aliases-work" ]] && source "$ZDOTDIR/aliases-work"
+[[ -f "$ZDOTDIR/scripts-work.zsh" ]] && source "$ZDOTDIR/scripts-work.zsh"
+
 # zprof
