@@ -2,6 +2,7 @@
 {{- $email := "michael@prio.one" }}
 {{- $gui := false }}
 {{- $managePackages := env "CHEZMOI_MANAGE_PACKAGES" | not | not }}
+{{- $notesRepoUrl := "" }}
 
 # Detect environment (used as defaults)
 {{- $isContainer := or (stat "/.dockerenv") (stat "/run/.containerenv") (eq .chezmoi.hostname "buildkitsandbox") | not | not }}
@@ -14,6 +15,7 @@
 {{-   $email = promptStringOnce . "email" "What is your email address" $email }}
 {{-   $gui = promptBoolOnce . "gui" "Do you want to include gui applications" $gui }}
 {{-   $managePackages = promptBoolOnce . "managePackages" "Do you want chezmoi to manage your system-packages?" $managePackages }}
+{{-   $notesRepoUrl = promptStringOnce . "notesRepoUrl" "Git URL for notes repo (leave empty to skip)" }}
 {{- end }}
 
 [data]
@@ -23,6 +25,7 @@ managePackages = {{ $managePackages }}
 isContainer = {{ $isContainer }}
 isWSL = {{ $isWSL }}
 hasOP = {{ $hasOP }}
+notesRepoUrl = {{ $notesRepoUrl | quote }}
 
 {{- if $isWSL }}
 

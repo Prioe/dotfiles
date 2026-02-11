@@ -12,3 +12,9 @@ refreshPeriod = "168h"
 type = "file"
 url = "https://github.com/catppuccin/delta/raw/refs/heads/main/catppuccin.gitconfig"
 refreshPeriod = "168h"
+
+{{ if .notesRepoUrl -}}
+["notes"]
+type = "git-repo"
+url = {{ .notesRepoUrl | quote }}
+{{- end }}
