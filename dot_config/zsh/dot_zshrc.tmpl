@@ -102,6 +102,9 @@ source $ZDOTDIR/wsl.zsh
 # Atuin
 eval "$(atuin init zsh)"
 
+# Chezmoi
+eval "$(chezmoi completion zsh)"
+
 # Work layer extensions (applied separately, only present on work machines)
 [[ -f "$ZDOTDIR/zshenv-work" ]] && source "$ZDOTDIR/zshenv-work"
 [[ -f "$ZDOTDIR/aliases-work" ]] && source "$ZDOTDIR/aliases-work"

@@ -13,6 +13,7 @@ watchexec = "latest"
 opencode = "latest"
 pipx = "latest"
 lazygit = "0.59.0"
+glab = { version = "latest", provider = "gitlab", exe = "glab" }
 
 [settings]
 experimental = true

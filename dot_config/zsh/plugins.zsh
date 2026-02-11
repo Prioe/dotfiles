@@ -3,6 +3,7 @@
 local plugin_paths=(
   $ZDOTDIR/plugins
   /usr/share/zsh/plugins
+  /usr/share
   $HOME/.local/share/zsh-plugins
   $HOME/.local/share/oh-my-zsh
 )

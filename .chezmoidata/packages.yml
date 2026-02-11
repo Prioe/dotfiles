@@ -49,4 +49,6 @@ packages:
       - mise
       - neovim
       - zsh
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
     wsl: []
