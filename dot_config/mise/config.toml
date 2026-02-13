@@ -14,6 +14,7 @@ opencode = "latest"
 pipx = "latest"
 lazygit = "0.59.0"
 glab = { version = "latest", provider = "gitlab", exe = "glab" }
+"pipx:git-filter-repo" = "latest"
 
 [settings]
 experimental = true
