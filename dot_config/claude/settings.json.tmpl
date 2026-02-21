@@ -13,7 +13,24 @@
       "Bash(tail:*)",
       "Bash(tree:*)",
       "Bash(wc:*)",
-      "Bash(git:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git stash:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git reflog:*)",
+      "Bash(git remote:*)",
+      "Bash(git fetch:*)",
+      "Bash(git tag:*)",
+      "Bash(git lfs:*)",
+      "Bash(git config:*)",
+      "Bash(gh:*)",
       "Bash(ls:*)",
       "Bash(pwd)",
       "Bash(file:*)",
@@ -45,6 +62,10 @@
       "Bash(git reset:*)",
       "Bash(git rebase:*)",
       "Bash(git commit:*)",
+      "Bash(git -C*commit:*)",
+      "Bash(git -C*push:*)",
+      "Bash(git -C*reset:*)",
+      "Bash(git -C*rebase:*)",
       "Read(.env*)",
       "Write(.env*)",
       "Bash(curl:*)",
@@ -60,6 +81,10 @@
     "PreToolUse": [],
     "PostToolUse": []
   },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); dir=$(echo \"$input\" | jq -r '.workspace.current_dir' | sed \"s|$HOME|~|\"); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); ctx=''; [ -n \"$remaining\" ] && ctx=\" | ctx: ${remaining}%\"; printf \"\\033[2m%s in %s%s\\033[0m\" \"$model\" \"$dir\" \"$ctx\""
+  },
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
     "elements-of-style@superpowers-marketplace": true
@@ -69,8 +94,5 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754055893862
   },
-  "statusLine": {
-    "type": "command",
-    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); dir=$(echo \"$input\" | jq -r '.workspace.current_dir' | sed \"s|$HOME|~|\"); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); ctx=''; [ -n \"$remaining\" ] && ctx=\" | ctx: ${remaining}%\"; printf \"\\033[2m%s in %s%s\\033[0m\" \"$model\" \"$dir\" \"$ctx\""
-  }
+  "effortLevel": "high"
 }
