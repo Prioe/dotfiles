@@ -12,9 +12,10 @@ typst = "latest"
 watchexec = "latest"
 opencode = "latest"
 pipx = "latest"
-lazygit = "0.59.0"
 glab = { version = "latest", provider = "gitlab", exe = "glab" }
 "pipx:git-filter-repo" = "latest"
+github-cli = "latest"
+lazygit = "latest"
 
 [settings]
 experimental = true
