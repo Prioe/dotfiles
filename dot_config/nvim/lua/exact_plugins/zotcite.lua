@@ -14,6 +14,7 @@ return {
         mappings = {
           n = {
             ["<leader>z"] = { name = " Zotero" },
+            ["gx"] = { "<Plug>ZOpenAttachment", desc = "Open attachment (Zotero)" },
             ["<leader>zo"] = { "<Plug>ZOpenAttachment", desc = "[O]pen attachment" },
             ["<leader>zi"] = { "<Plug>ZCitationInfo", desc = "Citation [i]nfo" },
             ["<leader>za"] = { "<Plug>ZCitationCompleteInfo", desc = "[A]ll reference fields" },
