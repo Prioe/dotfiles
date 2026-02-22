@@ -76,6 +76,11 @@ if add_winget_package_path 'AgileBits.1Password.CLI'; then
 	fi
 fi
 
+# win32yank
+if add_winget_package_path 'GDRETools.gdsdecomp'; then
+	alias gdre_tools='gdre_tools.exe'
+fi
+
 # Docker
 docker_path="$windows_root/Program Files/Docker/Docker/resources/bin"
 
