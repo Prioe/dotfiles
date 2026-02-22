@@ -53,6 +53,10 @@ Chezmoi built-ins: `.chezmoi.os`, `.chezmoi.osRelease.id`, `.chezmoi.kernel.osre
 - **Always edit files in this repository**, never directly in `~/`. After making changes, run `chezmoi apply` to deploy.
 - When tasked to modify configuration that is **not yet tracked** by chezmoi, ask the user whether it should be added to
   the repository before making changes.
+- **Neovim plugins**: Before setting up a new plugin, check `~/.local/share/nvim/lazy/astrocommunity` for a
+  preconfigured community setup. Prefer using AstroCommunity imports over manual configuration.
+- **Neovim changes**: Prefer AstroNvim options and APIs. Reference `~/.local/share/nvim/lazy/astrocore` for available
+  configuration patterns.
 
 ## Commands
 
