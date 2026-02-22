@@ -1,84 +1,68 @@
-This file provides guidance to agentic code tools when working with code in this repository.
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Architecture Overview
 
-This is a **chezmoi dotfiles repository** that manages personal configuration files across different systems. The
-repository uses chezmoi's templating system to handle cross-platform differences and personal customizations.
+This is a **chezmoi dotfiles repository** managing configuration files primarily for Arch Linux (including WSL). Fedora
+is partially supported as a work OS. Chezmoi's templating system handles environment differences.
 
-### Key Structure
+### Repository Layout
 
-- `dot_config/` - Contains all configuration files that will be symlinked to `~/.config/`
-- Templates use `.tmpl` extension and support Go templating with chezmoi variables
-- `Dockerfile` provides a containerized environment for testing dotfile application
+- `dot_config/` -> `~/.config/`, `dot_ssh/` -> `~/.ssh/`, `dot_local/` -> `~/.local/`, `dot_zshenv` -> `~/.zshenv`
+- `.chezmoiscripts/` - Numbered hook scripts (run before/after `chezmoi apply`)
+- `.chezmoidata/packages.yml` - Master package list per distribution
+- `.chezmoitemplates/` - Reusable templates (`scriptLogging` for colored log output, `hashList` for change detection)
+- `.chezmoi.toml.tmpl` - Chezmoi config with interactive prompts for email, gui, managePackages, notesRepoUrl
 
-### Core Components
+### Chezmoi Naming Conventions
 
-- **Shell Environment**: zsh with custom configuration, aliases, and plugins
-- **Development Tools**: mise for runtime management, starship prompt, atuin for shell history
-- **Editors**: Neovim with Lua configuration using lazy.nvim
-- **Desktop Environment**: Hyprland wayland compositor with waybar and related tools
-- **Terminal**: Ghostty and Kitty terminal emulators with Catppuccin theme
+- `dot_` prefix -> dot-prefixed target (e.g. `dot_config/` -> `.config/`)
+- `exact_` prefix -> chezmoi removes files in the target directory not managed by chezmoi
+- `executable_` prefix -> target file gets executable permission
+- `private_` prefix -> target file gets restricted permissions (0600)
+- `.tmpl` suffix -> processed as Go template before writing
+- `run_onchange_before_` / `run_onchange_after_` -> hook scripts ordered by numeric prefix (04, 05, 10, 15, 20...)
 
-## Common Commands
+### Template Data Variables
 
-### Chezmoi Operations
+Defined in `.chezmoi.toml.tmpl` (prompted on first run):
+
+| Variable          | Type   | Purpose                                                   |
+| ----------------- | ------ | --------------------------------------------------------- |
+| `.email`          | string | User email                                                |
+| `.gui`            | bool   | Include GUI apps (Hyprland, Ghostty, Kitty, Waybar, etc.) |
+| `.managePackages` | bool   | Let chezmoi install system packages                       |
+| `.isWSL`          | bool   | Auto-detected WSL environment                             |
+| `.isContainer`    | bool   | Auto-detected container (Docker/Podman)                   |
+| `.hasOP`          | bool   | 1Password CLI available                                   |
+| `.notesRepoUrl`   | string | Git URL for notes repository                              |
+
+Chezmoi built-ins: `.chezmoi.os`, `.chezmoi.osRelease.id`, `.chezmoi.kernel.osrelease`, `.chezmoi.hostname`
+
+### Key Subsystems
+
+- **Neovim** (`dot_config/nvim/`): AstroNvim v4+ with lazy.nvim. Plugins in `lua/exact_plugins/` (the `exact_` prefix
+  means chezmoi will remove unmanaged plugin files).
+- **Zsh** (`dot_config/zsh/`): oh-my-zsh with custom aliases, scripts, bindings, completion, vi-mode plugin. Supports
+  work-layer extensions (`*-work` files).
+- **Hyprland** (`dot_config/hypr/`): Wayland compositor with waybar, swaylock (GUI-only).
+
+## Commands
 
 ```bash
-# Apply all dotfiles to system
-chezmoi apply
-
-# Apply with force (overwrite existing files)
-chezmoi apply --force
-
 # Preview changes before applying
 chezmoi diff
+
+# Apply dotfiles to system
+chezmoi apply
 
 # Add a new file to chezmoi management
 chezmoi add ~/.config/newfile
 
-# Edit a managed file
-chezmoi edit ~/.config/somefile
+# Lint (Prettier formatting check)
+mise run lint
 
-# Update chezmoi repository
-chezmoi git pull && chezmoi apply
+# Container testing
+docker build -t dotfiles-test . && docker run --rm -it dotfiles-test
 ```
-
-### Development Environment
-
-```bash
-# Install runtime versions defined in mise config
-mise install
-
-# Update all mise tools
-mise upgrade
-
-# Sync shell environment after changes
-source ~/.zshenv && source ~/.zshrc
-```
-
-### Container Testing
-
-```bash
-# Build and test dotfiles in container
-docker build -t dotfiles-test .
-docker run --rm -it dotfiles-test
-```
-
-## Templating System
-
-Files with `.tmpl` extension use Go templating with chezmoi data:
-
-- `.chezmoi.os` - Operating system (linux, darwin, etc.)
-- `.chezmoi.osRelease.id` - Distribution ID (arch, ubuntu, etc.)
-- `.chezmoi.kernel.osrelease` - Kernel release info
-- WSL detection via kernel release containing "microsoft"
-
-## Tool Ecosystem
-
-The dotfiles configure an integrated development environment:
-
-- **Package Management**: paru (Arch), homebrew (macOS)
-- **Shell**: zsh with oh-my-zsh plugins, syntax highlighting, autosuggestions
-- **Navigation**: zoxide for smart directory jumping, eza for enhanced ls
-- **Development**: mise for runtime versions, tmux for multiplexing
-- **Editor**: Neovim with LSP, copilot, and extensive plugin ecosystem
