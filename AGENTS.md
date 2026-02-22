@@ -48,6 +48,12 @@ Chezmoi built-ins: `.chezmoi.os`, `.chezmoi.osRelease.id`, `.chezmoi.kernel.osre
   work-layer extensions (`*-work` files).
 - **Hyprland** (`dot_config/hypr/`): Wayland compositor with waybar, swaylock (GUI-only).
 
+## Workflow Rules
+
+- **Always edit files in this repository**, never directly in `~/`. After making changes, run `chezmoi apply` to deploy.
+- When tasked to modify configuration that is **not yet tracked** by chezmoi, ask the user whether it should be added to
+  the repository before making changes.
+
 ## Commands
 
 ```bash
