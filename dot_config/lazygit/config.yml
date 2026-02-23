@@ -7,13 +7,26 @@ git:
     - colorArg: always
       pager: delta --dark --paging=never
 customCommands:
+  # - key: <c-a>
+  #   description: Pick AI commit
+  #   context: global
+  #   prompts:
+  #     - type: menuFromCommand
+  #       title: Select AI Commit Message
+  #       key: CommitMsg
+  #       command: claude --model sonnet -p "/commit-message"
+  #   command: echo "{{.Form.CommitMsg}}" > .git/LAZYGIT_PENDING_COMMIT
+  #   output: terminal
   - key: <c-a>
-    description: Pick AI commit
-    context: global
+    context: "files"
+    description: "AI commit message"
     prompts:
       - type: menuFromCommand
-        title: Select AI Commit Message
+        title: "Select commit message"
         key: CommitMsg
-        command: claude --model sonnet -p "/commit-message"
-    command: echo "{{.Form.CommitMsg}}" > .git/LAZYGIT_PENDING_COMMIT
-    output: terminal
+        command: claude-commit-message
+      - type: input
+        title: "Edit commit message"
+        key: FinalMsg
+        initialValue: "{{.Form.CommitMsg}}"
+    command: "git commit -m {{.Form.FinalMsg | quote}}"
