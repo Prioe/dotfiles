@@ -30,8 +30,7 @@ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 # fastfetch
 alias fetch='fastfetch'
 
-# claude code - load notes vault skills globally
-alias claude='claude --add-dir ~/notes'
+alias chezmoi-work='chezmoi --config "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.toml" --persistent-state "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.boltdb" --source "$XDG_DATA_HOME/chezmoi-work"'
 
 {{- if eq .chezmoi.osRelease.id "arch" }}
 #Search repos with 'paru' and 'fzf'
