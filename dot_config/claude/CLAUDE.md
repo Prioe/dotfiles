@@ -1,5 +1,7 @@
 This file globally provides guidance to agentic code tools when working with code on this system.
 
+@CLAUDE.work.md
+
 ## Tool usage
 
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
