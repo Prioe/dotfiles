@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+bold='\033[1m'
+dim='\033[2m'
+reset='\033[0m'
+
+echo -e "${bold}Disk usage overview${reset}"
+df -h / | tail -1 | awk '{printf "  %s used of %s (%s)\n", $3, $2, $5}'
+echo
+
+# Each entry: description, size command, cleanup command
+# We collect results and sort by size descending at the end
+results=()
+
+check() {
+  local name=$1 path=$2 cleanup=$3
+  if [[ -e "$path" ]]; then
+    printf "  Checking %s...\r" "$name" >&2
+    local size
+    size=$(du -sh "$path" 2>/dev/null | cut -f1)
+    results+=("$(numfmt --from=iec "${size%[[:space:]]*}" 2>/dev/null || echo 0)|${size}|${name}|${cleanup}")
+  fi
+}
+
+# Container runtimes
+check "Podman containers/images/volumes" \
+  "$HOME/.local/share/containers" \
+  "podman system prune -a --volumes"
+
+check "Docker data" \
+  "/var/lib/docker" \
+  "docker system prune -a --volumes"
+
+# Caches
+check "Go build cache" \
+  "$HOME/.cache/go-build" \
+  "go clean -cache"
+
+check "pnpm cache" \
+  "$HOME/.cache/pnpm" \
+  "pnpm store prune"
+
+check "pnpm cache (backup)" \
+  "$HOME/.cache/pnpm.bak" \
+  "rm -rf ~/.cache/pnpm.bak"
+
+check "Yarn cache" \
+  "$HOME/.cache/yarn" \
+  "yarn cache clean"
+
+check "pip cache" \
+  "$HOME/.cache/pip" \
+  "pip cache purge"
+
+check "uv cache" \
+  "$HOME/.cache/uv" \
+  "uv cache prune"
+
+check "Poetry cache" \
+  "$HOME/.cache/pypoetry" \
+  "poetry cache clear --all ."
+
+check "pre-commit environments" \
+  "$HOME/.cache/pre-commit" \
+  "pre-commit clean"
+
+check "Playwright browsers" \
+  "$HOME/.cache/ms-playwright" \
+  "rm -rf ~/.cache/ms-playwright"
+
+check "Cypress cache" \
+  "$HOME/.cache/Cypress" \
+  "rm -rf ~/.cache/Cypress"
+
+check "Trivy DB cache" \
+  "$HOME/.cache/trivy" \
+  "rm -rf ~/.cache/trivy"
+
+check "Grype DB cache" \
+  "$HOME/.cache/grype" \
+  "rm -rf ~/.cache/grype"
+
+check "Chromium cache" \
+  "$HOME/.cache/chromium" \
+  "rm -rf ~/.cache/chromium"
+
+# Package managers / toolchains
+check "mise tool versions" \
+  "$HOME/.local/share/mise" \
+  "mise prune"
+
+check "pnpm global store" \
+  "$HOME/.local/share/pnpm" \
+  "pnpm store prune"
+
+check "Rustup toolchains" \
+  "$HOME/.local/share/rustup" \
+  "rustup toolchain list  # then: rustup toolchain remove <old>"
+
+check "Neovim data" \
+  "$HOME/.local/share/nvim" \
+  "# review lazy.nvim lockfile, then: nvim --headless '+Lazy clean' +q"
+
+check "Neovim data (backup)" \
+  "$HOME/.local/share/nvim.bak" \
+  "rm -rf ~/.local/share/nvim.bak"
+
+# System
+check "Trash" \
+  "$HOME/.local/share/Trash" \
+  "gio trash --empty"
+
+check "Journal logs" \
+  "/var/log/journal" \
+  "sudo journalctl --vacuum-size=500M"
+
+check "Pacman package cache" \
+  "/var/cache/pacman/pkg" \
+  "sudo paccache -rk2  # keep last 2 versions"
+
+check "Espressif SDK cache" \
+  "$HOME/.cache/Espressif" \
+  "rm -rf ~/.cache/Espressif"
+
+check "libvirt images" \
+  "$HOME/.local/share/libvirt" \
+  "# review VMs: virsh list --all"
+
+# Sort by size (first field is bytes) descending, then print
+IFS=$'\n' sorted=($(printf '%s\n' "${results[@]}" | sort -t'|' -k1 -rn))
+unset IFS
+
+for entry in "${sorted[@]}"; do
+  IFS='|' read -r _bytes size name cleanup <<< "$entry"
+  printf "  ${bold}%7s${reset}  %s\n" "$size" "$name"
+  printf "         ${dim}%s${reset}\n" "$cleanup"
+done
