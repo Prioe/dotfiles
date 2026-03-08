@@ -18,6 +18,32 @@ type = "file"
 url = "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm"
 refreshPeriod = "168h"
 
+[".config/zellij/plugins/zjstatus.wasm"]
+type = "file"
+url = "https://github.com/dj95/zjstatus/releases/download/v0.22.0/zjstatus.wasm"
+refreshPeriod = "168h"
+
+[".config/zellij/plugins/zjstatus-hints.wasm"]
+type = "file"
+url = "https://github.com/b0o/zjstatus-hints/releases/download/v0.1.4/zjstatus-hints.wasm"
+refreshPeriod = "168h"
+
+[".config/zellij/plugins/zellij-forgot.wasm"]
+type = "file"
+url = "https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm"
+refreshPeriod = "168h"
+
+[".config/zellij/plugins/zellij-switch.wasm"]
+type = "file"
+url = "https://github.com/mostafaqanbaryan/zellij-switch/releases/download/0.2.1/zellij-switch.wasm"
+refreshPeriod = "168h"
+
+# zellij-autolock: uncomment to enable auto-locking for nvim/fzf/atuin
+# [".config/zellij/plugins/zellij-autolock.wasm"]
+# type = "file"
+# url = "https://github.com/fresh2dev/zellij-autolock/releases/download/0.2.2/zellij-autolock.wasm"
+# refreshPeriod = "168h"
+
 {{ if .notesRepoUrl -}}
 ["notes"]
 type = "git-repo"
