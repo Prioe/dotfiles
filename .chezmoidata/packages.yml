@@ -29,6 +29,7 @@ packages:
       - rust
       - starship
       - tmux
+      - zellij
       - zoxide
       - git-delta
       - zsh-autosuggestions
