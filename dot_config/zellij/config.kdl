@@ -1,11 +1,6 @@
 keybinds clear-defaults=true {
     normal {
         bind "Ctrl Space" { SwitchToMode "Tmux"; }
-        // Quick pane navigation without prefix (like vim-tmux-navigator)
-        bind "Alt h" { MoveFocus "Left"; }
-        bind "Alt j" { MoveFocus "Down"; }
-        bind "Alt k" { MoveFocus "Up"; }
-        bind "Alt l" { MoveFocus "Right"; }
     }
 
     locked {
@@ -123,6 +118,38 @@ keybinds clear-defaults=true {
     renametab {
         bind "Esc" { UndoRenameTab; SwitchToMode "Normal"; }
         bind "Enter" { SwitchToMode "Normal"; }
+    }
+
+    // Pane navigation via vim-zellij-navigator (works with smart-splits.nvim)
+    shared_except "locked" {
+        bind "Ctrl h" {
+            MessagePlugin "file:~/.config/zellij/plugins/vim-zellij-navigator.wasm" {
+                name "move_focus";
+                payload "left";
+                move_mod "ctrl";
+            };
+        }
+        bind "Ctrl j" {
+            MessagePlugin "file:~/.config/zellij/plugins/vim-zellij-navigator.wasm" {
+                name "move_focus";
+                payload "down";
+                move_mod "ctrl";
+            };
+        }
+        bind "Ctrl k" {
+            MessagePlugin "file:~/.config/zellij/plugins/vim-zellij-navigator.wasm" {
+                name "move_focus";
+                payload "up";
+                move_mod "ctrl";
+            };
+        }
+        bind "Ctrl l" {
+            MessagePlugin "file:~/.config/zellij/plugins/vim-zellij-navigator.wasm" {
+                name "move_focus";
+                payload "right";
+                move_mod "ctrl";
+            };
+        }
     }
 }
 
