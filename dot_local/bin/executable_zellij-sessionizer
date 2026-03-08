@@ -149,8 +149,14 @@ rm -f "$temp_script"
 selected_dir=$(resolve_path "$selected_display")
 session_name=$(basename "$selected_dir")
 
+# Check for project-specific layout
+layout_arg=""
+if [[ -f "$selected_dir/.zellij.kdl" ]]; then
+  layout_arg="--layout $selected_dir/.zellij.kdl"
+fi
+
 if [[ -n "$ZELLIJ" ]]; then
-  zellij pipe --plugin "$ZELLIJ_SWITCH_PLUGIN" -- "--session $session_name --cwd $selected_dir"
+  zellij pipe --plugin "$ZELLIJ_SWITCH_PLUGIN" -- "--session $session_name --cwd $selected_dir $layout_arg"
 else
-  cd "$selected_dir" && zellij attach "$session_name" --create
+  cd "$selected_dir" && zellij attach "$session_name" --create ${layout_arg:+$layout_arg}
 fi
