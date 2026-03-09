@@ -14,8 +14,14 @@ opencode = "latest"
 pipx = "latest"
 glab = { version = "latest", provider = "gitlab", exe = "glab" }
 "pipx:git-filter-repo" = "latest"
+"npm:gitlab-ci-local" = "latest"
+pre-commit = "latest"
+golangci-lint = "latest"
+yazi = "latest"
 github-cli = "latest"
 lazygit = "latest"
+zellij = "latest"
+"go:github.com/jorgerojas26/lazysql" = "latest"
 
 [settings]
 experimental = true
