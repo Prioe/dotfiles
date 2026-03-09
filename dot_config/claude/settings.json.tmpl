@@ -86,7 +86,6 @@
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); dir=$(echo \"$input\" | jq -r '.workspace.current_dir' | sed \"s|$HOME|~|\"); remaining=$(echo \"$input\" | jq -r '.context_window.remaining_percentage // empty'); ctx=''; [ -n \"$remaining\" ] && ctx=\" | ctx: ${remaining}%\"; printf \"\\033[2m%s in %s%s\\033[0m\" \"$model\" \"$dir\" \"$ctx\""
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true,
     "elements-of-style@superpowers-marketplace": true
   },
   "forceLoginMethod": "claudeai",
