@@ -99,8 +99,12 @@ keybinds clear-defaults=true {
         bind "z" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
         bind "f" { ToggleFloatingPanes; SwitchToMode "Locked"; }
 
+        // Move tab left/right
+        bind "[" { MoveTab "Left"; }
+        bind "]" { MoveTab "Right"; }
+
         // Scroll mode
-        bind "[" { SwitchToMode "Scroll"; }
+        bind "&" { SwitchToMode "Scroll"; }
 
         // Rename tab
         bind "," { SwitchToMode "RenameTab"; TabNameInput 0; }
