@@ -8,3 +8,5 @@ Host geonosis
     HostName {{ onepasswordRead "op://Private/geonosis/ip" }}
     Port {{ onepasswordRead "op://Private/geonosis/port" }}
 {{ end -}}
+
+Include ~/.ssh/config.local
