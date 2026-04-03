@@ -2,4 +2,44 @@ theme = Catppuccin Mocha
 font-family = Iosevka Medium
 font-family-bold = Iosevka Semibold
 font-size = 13
-window-decoration = false
+window-theme = ghostty
+quit-after-last-window-closed = true
+quit-after-last-window-closed-delay = 5m
+# window-decoration = server
+gtk-titlebar-style = tabs
+
+# Tmux-style keybindings (prefix: ctrl+space)
+# Splits
+keybind = ctrl+space>v=new_split:right
+keybind = ctrl+space>ctrl+v=new_split:right
+keybind = ctrl+space>s=new_split:down
+keybind = ctrl+space>ctrl+s=new_split:down
+
+# Tabs
+keybind = ctrl+space>c=new_tab
+
+# Close
+keybind = ctrl+space>ctrl+d=close_surface
+
+# Navigate splits
+keybind = ctrl+space>h=goto_split:left
+keybind = ctrl+space>j=goto_split:down
+keybind = ctrl+space>k=goto_split:up
+keybind = ctrl+space>l=goto_split:right
+
+# Switch tabs
+keybind = ctrl+space>1=goto_tab:1
+keybind = ctrl+space>2=goto_tab:2
+keybind = ctrl+space>3=goto_tab:3
+keybind = ctrl+space>4=goto_tab:4
+keybind = ctrl+space>5=goto_tab:5
+keybind = ctrl+space>6=goto_tab:6
+keybind = ctrl+space>7=goto_tab:7
+keybind = ctrl+space>8=goto_tab:8
+keybind = ctrl+space>9=goto_tab:9
+
+# Resize splits
+keybind = ctrl+space>shift+h=resize_split:left,50
+keybind = ctrl+space>shift+j=resize_split:down,50
+keybind = ctrl+space>shift+k=resize_split:up,50
+keybind = ctrl+space>shift+l=resize_split:right,50

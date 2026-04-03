@@ -10,7 +10,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term ghostty
+set $term ghostty +new-window
 # Your preferred application launcher
 set $menu rofi -show combi
 
