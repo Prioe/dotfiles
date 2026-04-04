@@ -10,9 +10,9 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term ghostty +new-window
+set $term exec uwsm app -- ghostty +new-window
 # Your preferred application launcher
-set $menu rofi -show combi
+set $menu exec uwsm app -- rofi -show combi
 
 ### Output configuration
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
@@ -66,7 +66,7 @@ input type:touchpad {
     bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'uwsm stop'
 #
 # Moving around:
 #
@@ -193,7 +193,7 @@ bindsym $mod+r mode "resize"
     # Caps lock OSD
     bindsym --locked Caps_Lock exec swayosd-client --caps-lock
     # Screenshot
-    bindsym Print exec grim
+    bindsym Print exec exec uwsm app -- grim
 
 #
 # Status Bar:
@@ -228,7 +228,6 @@ bar {
     }
 }
 
-exec dex --autostart
-exec swayosd-server
+exec exec uwsm finalize
 
 include /etc/sway/config.d/*

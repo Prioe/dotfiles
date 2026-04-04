@@ -1,0 +1,27 @@
+{{ if and .gui .managePackages (eq .chezmoi.osRelease.id "arch") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+# {{ include ".chezmoidata/packages.yml" | sha256sum }}
+
+if ! command -v uwsm &>/dev/null; then
+    warn "uwsm not found, skipping session entry installation"
+    exit 0
+fi
+
+session_dir="/usr/local/share/wayland-sessions"
+session_file="${session_dir}/sway-uwsm.desktop"
+
+info "Installing sway-uwsm session entry"
+sudo mkdir -p "$session_dir"
+sudo tee "$session_file" >/dev/null <<'DESKTOP'
+[Desktop Entry]
+Name=Sway (uwsm-managed)
+Comment=Sway Wayland compositor with systemd session management
+Exec=uwsm start -- sway.desktop
+TryExec=uwsm
+DesktopNames=sway
+Type=Application
+DESKTOP
+{{ end -}}

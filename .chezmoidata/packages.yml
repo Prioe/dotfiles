@@ -39,6 +39,9 @@ packages:
       - tmux-plugin-manager
       - lazydocker-bin
       - nvimpager
+    gui:
+      - swayosd
+      - uwsm
     wsl:
       - wsl-open
   fedora:
