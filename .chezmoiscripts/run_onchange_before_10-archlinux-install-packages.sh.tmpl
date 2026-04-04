@@ -4,6 +4,9 @@ set -euo pipefail
 {{ template "scriptLogging" . }}
 
 {{- $packages := concat (.packages.archlinux.pacman) (.packages.archlinux.aur) }}
+{{- if .gui }}
+{{-   $packages = concat $packages (.packages.archlinux.gui) }}
+{{- end }}
 {{- if eq .chezmoi.os "linux" }}
 {{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 {{-     $packages = concat $packages (.packages.archlinux.wsl) }}
