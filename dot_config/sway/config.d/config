@@ -1,4 +1,4 @@
-include catppuccin-mocha
+include ../catppuccin-mocha
 
 ### Variables
 #
@@ -20,17 +20,7 @@ output * scale 1
 output eDP-1 scale 1.25
 
 ### Idle configuration
-#
-# Example configuration:
-#
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
+# Managed by systemd: swayidle.service
 
 ### Input configuration
 input type:keyboard {
@@ -207,27 +197,6 @@ client.urgent            $peach    $base $peach $overlay0  $peach
 client.placeholder       $overlay0 $base $text  $overlay0  $overlay0
 client.background        $base
 
-bar {
-    position top
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-
-    colors {
-        background         $base
-        statusline         $text
-        focused_statusline $text
-        focused_separator  $base
-
-        # target           border bg        text
-        focused_workspace  $base  $mauve    $crust
-        active_workspace   $base  $surface2 $text
-        inactive_workspace $base  $base     $text
-        urgent_workspace   $base  $red      $crust
-    }
-}
-
 exec exec uwsm finalize
 
-include /etc/sway/config.d/*
+# vi:ft=swayconfig
