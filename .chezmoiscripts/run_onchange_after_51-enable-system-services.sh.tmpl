@@ -1,0 +1,20 @@
+{{ if and .gui .managePackages (eq .chezmoi.osRelease.id "arch") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+# {{ include ".chezmoidata/packages.yml" | sha256sum }}
+
+services=(
+    swayosd-libinput-backend.service
+)
+
+for svc in "${services[@]}"; do
+    if systemctl list-unit-files "$svc" &>/dev/null; then
+        info "Enabling $svc"
+        sudo systemctl enable --now "$svc"
+    else
+        warn "$svc not found, skipping"
+    fi
+done
+{{ end -}}

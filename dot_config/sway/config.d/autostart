@@ -1,0 +1,5 @@
+# Idle managed by systemd: swayidle.service
+
+exec exec uwsm finalize
+
+# vi:ft=swayconfig

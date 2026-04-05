@@ -7,6 +7,7 @@ quit-after-last-window-closed = true
 quit-after-last-window-closed-delay = 5m
 # window-decoration = server
 gtk-titlebar-style = tabs
+copy-on-select = true
 
 # Tmux-style keybindings (prefix: ctrl+space)
 # Splits
