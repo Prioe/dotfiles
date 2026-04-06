@@ -8,7 +8,7 @@ README.md
 .gitignore
 
 {{- /* Ignore these if not on Arch Linux */ -}} 
-{{- if ne .chezmoi.osRelease.id "arch" }}
+{{- if ne .chezmoi.osRelease.idLike "arch" }}
 .config/paru
 {{- end }}
 

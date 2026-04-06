@@ -32,7 +32,7 @@ alias fetch='fastfetch'
 
 alias chezmoi-work='chezmoi --config "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.toml" --persistent-state "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.boltdb" --source "$XDG_DATA_HOME/chezmoi-work"'
 
-{{- if eq .chezmoi.osRelease.id "arch" }}
+{{- if eq .chezmoi.osRelease.idLike "arch" }}
 #Search repos with 'paru' and 'fzf'
 alias parus="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
 

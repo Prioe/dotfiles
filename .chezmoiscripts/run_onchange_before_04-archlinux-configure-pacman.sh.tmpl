@@ -1,4 +1,4 @@
-{{ if eq .chezmoi.osRelease.id "arch" -}}
+{{ if eq .chezmoi.osRelease.idLike "arch" -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -7,4 +7,3 @@ set -euo pipefail
 info "Enabling colors in pacman output"
 sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
 {{ end -}}
-
