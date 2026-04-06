@@ -41,6 +41,7 @@ packages:
       - nvimpager
     gui:
       - swayosd
+      - swaync
       - uwsm
     wsl:
       - wsl-open

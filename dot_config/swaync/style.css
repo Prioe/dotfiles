@@ -1,0 +1,200 @@
+/* Catppuccin Mocha color palette */
+/* https://github.com/catppuccin/catppuccin */
+
+* {
+  font-family: "Cantarell", sans-serif;
+  font-size: 13px;
+  transition: none;
+  box-shadow: none;
+}
+
+.control-center {
+  background-color: #1e1e2e; /* Base */
+  border-radius: 8px;
+  border: 1px solid #313244; /* Surface0 */
+  padding: 8px;
+}
+
+.control-center-list {
+  background-color: transparent;
+}
+
+.control-center-list-placeholder {
+  opacity: 0.5;
+}
+
+.floating-notifications {
+  background-color: transparent;
+}
+
+/* Notification popups */
+.notification-row {
+  outline: none;
+  margin: 4px;
+  padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  opacity: 1;
+  background-color: transparent;
+}
+
+.notification-row .notification-background {
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.notification {
+  border-radius: 8px;
+  border: 1px solid #313244; /* Surface0 */
+  padding: 8px;
+  background-color: #1e1e2e; /* Base */
+  min-height: 60px;
+  margin: 0;
+}
+
+.notification .notification-content {
+  padding: 4px;
+}
+
+.notification .notification-default-action,
+.notification .notification-action {
+  border-radius: 8px;
+  padding: 4px;
+  background-color: transparent;
+  color: #cdd6f4; /* Text */
+}
+
+.notification .notification-default-action:hover,
+.notification .notification-action:hover {
+  background-color: #313244; /* Surface0 */
+}
+
+.notification .notification-default-action {
+  border-radius: 8px;
+}
+
+.notification .notification-action {
+  border-top: 1px solid #313244; /* Surface0 */
+  border-radius: 0 0 8px 8px;
+}
+
+.close-button {
+  background-color: #f38ba8; /* Red */
+  color: #1e1e2e; /* Base */
+  text-shadow: none;
+  padding: 0;
+  border-radius: 100%;
+  margin-top: 4px;
+  margin-right: 4px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.close-button:hover {
+  background-color: #f5e0dc; /* Rosewater */
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+  color: #cdd6f4; /* Text */
+  background-color: #313244; /* Surface0 */
+}
+
+.notification-default-action {
+  margin: 0;
+  padding: 4px;
+  background-color: transparent;
+  border-radius: 8px;
+  color: #cdd6f4; /* Text */
+}
+
+.notification-action {
+  margin: 0;
+  padding: 4px;
+  background-color: #181825; /* Mantle */
+  border-radius: 8px;
+  color: #cdd6f4; /* Text */
+}
+
+/* Notification content */
+.summary {
+  font-size: 14px;
+  font-weight: bold;
+  color: #cdd6f4; /* Text */
+}
+
+.time {
+  font-size: 11px;
+  color: #a6adc8; /* Subtext0 */
+  margin-right: 4px;
+}
+
+.body {
+  font-size: 12px;
+  font-weight: normal;
+  color: #cdd6f4; /* Text */
+}
+
+/* Control center widgets */
+.widget-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #cdd6f4; /* Text */
+  padding: 8px;
+}
+
+.widget-title > button {
+  font-size: 13px;
+  font-weight: bold;
+  background-color: #313244; /* Surface0 */
+  color: #cdd6f4; /* Text */
+  border-radius: 8px;
+  border: none;
+  padding: 4px 8px;
+}
+
+.widget-title > button:hover {
+  background-color: #45475a; /* Surface1 */
+}
+
+.widget-dnd {
+  padding: 8px;
+  font-size: 14px;
+  color: #cdd6f4; /* Text */
+}
+
+.widget-dnd > switch {
+  border-radius: 100px;
+  background-color: #313244; /* Surface0 */
+  border: none;
+}
+
+.widget-dnd > switch:checked {
+  background-color: #f5e0dc; /* Rosewater */
+}
+
+.widget-dnd > switch slider {
+  background-color: #cdd6f4; /* Text */
+  border-radius: 100px;
+}
+
+/* Urgency colors */
+.low {
+  background-color: #1e1e2e; /* Base */
+  border: 1px solid #313244; /* Surface0 */
+  color: #cdd6f4; /* Text */
+}
+
+.normal {
+  background-color: #1e1e2e; /* Base */
+  border: 1px solid #313244; /* Surface0 */
+  color: #cdd6f4; /* Text */
+}
+
+.critical {
+  background-color: #1e1e2e; /* Base */
+  border: 1px solid #f38ba8; /* Red */
+  color: #cdd6f4; /* Text */
+}
