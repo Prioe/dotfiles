@@ -39,6 +39,7 @@ input type:keyboard {
 
 input type:touchpad {
     tap enabled
+    drag_lock disabled
     natural_scroll enabled
 }
 
