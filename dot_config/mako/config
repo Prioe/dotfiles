@@ -1,0 +1,22 @@
+font=Iosevka 12
+
+# Catppuccin Mocha colors
+background-color=#1e1e2eee
+text-color=#cdd6f4
+border-color=#b4befe
+progress-color=over #313244
+
+width=315
+height=200
+padding=10
+margin=10
+border-size=2
+border-radius=8
+max-icon-size=70
+layer=overlay
+
+default-timeout=5000
+
+[urgency=high]
+border-color=#f38ba8
+ignore-timeout=1

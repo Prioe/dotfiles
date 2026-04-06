@@ -2,26 +2,35 @@
 {
   "layer": "top",
   "position": "top",
-  "spacing": 4,
+  "spacing": 8,
 
-  "modules-left": ["sway/workspaces", "sway/mode"],
-  "modules-center": ["sway/window"],
-  "modules-right": [
-    "idle_inhibitor",
-    "cpu",
-    "memory",
-    "backlight",
-    "pulseaudio",
-    "network",
-    "battery",
-    "clock",
-    "tray"
-  ],
+  // -- Left -------------------------------------------------------------------
+  "modules-left": ["custom/main-menu", "sway/workspaces", "sway/mode", "sway/window"],
+
+  "custom/main-menu": {
+    "format": "󰍜",
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/main_menu.xml",
+    "menu-actions": {
+      "keyhints": "~/.config/waybar/scripts/keyhint.sh"
+    },
+    "tooltip": false
+  },
 
   "sway/workspaces": {
     "disable-scroll": true,
     "all-outputs": true,
-    "format": "{name}"
+    "format": "{icon}",
+    "format-icons": {
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10"
+    }
   },
 
   "sway/mode": {
@@ -34,11 +43,39 @@
     "max-length": 120
   },
 
+  // -- Center -----------------------------------------------------------------
+  "modules-center": [],
+
+  "network": {
+    "format-disabled": " Disabled",
+    "format-wifi": " {bandwidthDownBits:>} 󰶡 {bandwidthUpBits:>} 󰶣",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}",
+    "format-ethernet": "󰈀 {bandwidthDownBits:>} 󰶡 {bandwidthUpBits:>} 󰶣",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}\nvia {gwaddr}",
+    "format-disconnected": " Disconnected",
+    "on-click": "ghostty -e nmtui",
+    "interval": 2
+  },
+
+  // -- Right ------------------------------------------------------------------
+  "modules-right": [
+    "idle_inhibitor",
+    "cpu",
+    "memory",
+    "backlight",
+    "pulseaudio",
+    "network",
+    "battery",
+    "clock",
+    "tray",
+    "custom/power"
+  ],
+
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
-      "activated": "",
-      "deactivated": ""
+      "activated": "󰅶",
+      "deactivated": "󰛊"
     },
     "tooltip-format-activated": "Idle inhibitor active",
     "tooltip-format-deactivated": "Idle inhibitor inactive"
@@ -46,7 +83,7 @@
 
   "cpu": {
     "interval": 5,
-    "format": " {usage}%",
+    "format": "{usage:>3}%",
     "states": {
       "warning": 70,
       "critical": 90
@@ -56,7 +93,7 @@
 
   "memory": {
     "interval": 5,
-    "format": " {}%",
+    "format": "{:>3}%",
     "states": {
       "warning": 70,
       "critical": 90
@@ -67,7 +104,7 @@
   "backlight": {
     "format": "{icon} {percent}%",
     "format-icons": ["󰃞", "󰃟", "󰃠"],
-    "tooltip-format": "Brightness: {percent}%",
+    "tooltip-format": "Brightness (scroll): {percent}%",
     "on-scroll-down": "brightnessctl -c backlight set 5%-",
     "on-scroll-up": "brightnessctl -c backlight set +5%"
   },
@@ -88,15 +125,6 @@
     "on-click": "pavucontrol"
   },
 
-  "network": {
-    "format-wifi": " {essid}",
-    "format-ethernet": "󰈀 {ipaddr}/{cidr}",
-    "format-disconnected": " Disconnected",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}",
-    "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}\nvia {gwaddr}",
-    "on-click": "ghostty -e nmtui"
-  },
-
   "battery": {
     "states": {
       "warning": 30,
@@ -105,13 +133,13 @@
     "format": "{icon} {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰂄 {capacity}%",
-    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    "format-icons": ["", "", "", "", ""]
   },
 
   "clock": {
-    "format": " {:%H:%M}",
-    "format-alt": " {:%A, %d %B %Y}",
-    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "format": "󰅐 {:%H:%M}",
+    "format-alt": "󰅐 {:%A, %d %B %Y}",
+    "tooltip-format": " {:%A %d/%m}\n\n<tt><small>{calendar}</small></tt>",
     "calendar": {
       "on-scroll": 1,
       "format": {
@@ -131,5 +159,20 @@
   "tray": {
     "icon-size": 16,
     "spacing": 10
+  },
+
+  "custom/power": {
+    "format": "⏻",
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/power_menu.xml",
+    "menu-actions": {
+      "lock": "swaylock",
+      "suspend": "systemctl suspend",
+      "logout": "uwsm stop",
+      "reboot": "systemctl reboot",
+      "uefi": "systemctl reboot --firmware-setup",
+      "shutdown": "systemctl poweroff"
+    },
+    "tooltip": false
   }
 }

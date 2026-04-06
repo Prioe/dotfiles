@@ -1,0 +1,14 @@
+[Unit]
+Description=Mako notification daemon
+Documentation=man:mako(1)
+After=graphical-session.target
+
+[Service]
+Type=exec
+ExecCondition=/lib/systemd/systemd-xdg-autostart-condition "wlroots:sway" ""
+ExecStart=/usr/bin/mako
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

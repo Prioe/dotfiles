@@ -40,8 +40,42 @@ packages:
       - lazydocker-bin
       - nvimpager
     gui:
-      - swayosd
+      # Sway core
+      - sway
+      - swaybg
+      - swayidle
+      - swaylock-effects-git
+      - waybar
+      - xdg-desktop-portal-wlr
+      - xorg-xwayland
+      # Session management
       - uwsm
+      # Notifications
+      - mako
+      # Utilities
+      - swayosd
+      - autotiling
+      - wl-clipboard
+      - cliphist
+      - polkit-gnome
+      - network-manager-applet
+      # Screenshots
+      - grim
+      - slurp
+      - swappy
+      # Media/hardware controls
+      - brightnessctl
+      - pamixer
+      - playerctl
+      - pavucontrol
+      # GTK theming
+      - gnome-themes-extra
+      - papirus-icon-theme
+      - nwg-look
+      # Fonts
+      - ttf-nerd-fonts-symbols
+      - otf-font-awesome
+      # Tools
       - yad
     wsl:
       - wsl-open

@@ -20,8 +20,8 @@ golangci-lint = "latest"
 yazi = "latest"
 github-cli = "latest"
 lazygit = "latest"
-zellij = "latest"
 "go:github.com/jorgerojas26/lazysql" = "latest"
+"github:anomalyco/opencode" = "latest"
 
 [settings]
 experimental = true

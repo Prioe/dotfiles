@@ -1,5 +1,19 @@
-# Idle managed by systemd: swayidle.service
-
+# Signal uwsm that the session is ready
 exec exec uwsm finalize
+
+# Idle/lock managed by systemd units: swayidle.service, swayosd-server.service
+
+# Auth with polkit
+exec exec uwsm app -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# Autotiling (auto-set split direction based on window dimensions)
+exec exec uwsm app -- autotiling
+
+# Clipboard history
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store
+
+# Network applet
+exec exec uwsm app -- nm-applet --indicator
 
 # vi:ft=swayconfig

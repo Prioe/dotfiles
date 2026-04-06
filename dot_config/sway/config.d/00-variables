@@ -1,11 +1,17 @@
 include ../catppuccin-mocha
 
+# Logo key (Mod4 = Super). Use Mod1 for Alt.
 set $mod Mod4
+
+# Vim key support
 set $left h
 set $down j
 set $up k
 set $right l
-set $term exec uwsm app -- ghostty +new-window
-set $menu exec uwsm app -- rofi -show combi
+
+# Default applications (uwsm app -- ensures proper systemd scoping)
+set $term uwsm app -- ghostty +new-window
+set $menu uwsm app -- rofi -show combi
+set $powermenu ~/.config/sway/scripts/power_menu.sh
 
 # vi:ft=swayconfig
