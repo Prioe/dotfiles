@@ -1,0 +1,22 @@
+{{ if and .gui .managePackages (eq .chezmoi.osRelease.idLike "arch") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+ly_config="/etc/ly/config.ini"
+
+if [[ ! -f "$ly_config" ]]; then
+    warn "ly config not found, skipping"
+    exit 0
+fi
+
+desired="waylandsessions = /usr/share/wayland-sessions:/usr/local/share/wayland-sessions"
+
+if grep -qxF "$desired" "$ly_config"; then
+    info "ly wayland-sessions path already configured"
+    exit 0
+fi
+
+info "Adding /usr/local/share/wayland-sessions to ly config"
+sudo sed -i 's|^waylandsessions = .*|'"$desired"'|' "$ly_config"
+{{ end -}}
