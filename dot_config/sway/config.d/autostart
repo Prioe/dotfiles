@@ -6,6 +6,8 @@ exec exec uwsm finalize
 # Auth with polkit
 exec exec uwsm app -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
+# Dynamic output management via systemd: kanshi.service
+
 # Autotiling (auto-set split direction based on window dimensions)
 exec exec uwsm app -- autotiling
 

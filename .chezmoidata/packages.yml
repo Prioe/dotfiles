@@ -54,6 +54,7 @@ packages:
       - mako
       # Utilities
       - swayosd
+      - kanshi
       - autotiling
       - wl-clipboard
       - cliphist

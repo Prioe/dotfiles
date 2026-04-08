@@ -1,0 +1,16 @@
+output "LG Electronics LG ULTRAGEAR 312NTCZE2739" alias $coruscant_portrait
+output "LG Electronics LG ULTRAGEAR 311NTABA3392" alias $coruscant_landscape
+
+profile coruscant {
+    output $coruscant_portrait {
+        mode 2560x1440
+        position 0,-560
+        transform 90
+    }
+    output $coruscant_landscape {
+        mode 2560x1440
+        position 1440,0
+    }
+}
+
+# vi:ft=config
