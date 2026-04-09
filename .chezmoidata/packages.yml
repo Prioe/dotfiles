@@ -77,6 +77,7 @@ packages:
       - gnome-themes-extra
       - papirus-icon-theme
       - nwg-look
+      - gnome-keyring
       # Fonts
       - ttf-nerd-fonts-symbols
       - otf-font-awesome
