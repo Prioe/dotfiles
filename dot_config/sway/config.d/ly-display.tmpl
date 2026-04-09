@@ -1,0 +1,5 @@
+{{ if eq .chezmoi.hostname "coruscant" -}}
+# Re-enable portrait monitor that was disabled for ly single-display login
+exec sudo /usr/local/bin/ly-drm-ctl detect 312NTCZE2739
+{{ end -}}
+# vi:ft=swayconfig
