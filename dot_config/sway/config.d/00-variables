@@ -14,4 +14,8 @@ set $term uwsm app -- ghostty +new-window
 set $menu uwsm app -- rofi -show combi
 set $powermenu ~/.config/sway/scripts/power_menu.sh
 
+# Monitor aliases (kept in sync with kanshi config)
+set $coruscant_portrait "LG Electronics LG ULTRAGEAR 312NTCZE2739"
+set $coruscant_landscape "LG Electronics LG ULTRAGEAR 311NTABA3392"
+
 # vi:ft=swayconfig
