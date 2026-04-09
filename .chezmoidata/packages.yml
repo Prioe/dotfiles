@@ -60,6 +60,10 @@ packages:
       - cliphist
       - polkit-gnome
       - network-manager-applet
+      # Desktop apps
+      - spotify
+      - 1password
+      - 1password-cli
       # Screenshots
       - grim
       - slurp

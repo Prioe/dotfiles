@@ -1,0 +1,11 @@
+{{ if and .managePackages .gui (eq .chezmoi.osRelease.idLike "arch") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+info "Importing AUR GPG keys"
+
+curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.gpg | gpg --import -
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
+
+{{ end -}}
