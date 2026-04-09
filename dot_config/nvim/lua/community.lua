@@ -16,8 +16,8 @@ return {
   --  { import = "astrocommunity.git.diffview-nvim" },
 
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
-  { import = "astrocommunity.pack.rust" },
   { import = "astrocommunity.pack.lua" },
+  { import = "astrocommunity.pack.rust" },
   { import = "astrocommunity.pack.python" },
   { import = "astrocommunity.pack.python.ruff" },
   { import = "astrocommunity.pack.bash" },

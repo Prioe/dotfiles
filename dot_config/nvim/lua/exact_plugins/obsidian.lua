@@ -9,7 +9,7 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
     { "hrsh7th/nvim-cmp", optional = true },
-    { "Saghen/blink.cmp", optional = true },
+    { "saghen/blink.cmp", optional = true },
     { "folke/snacks.nvim", optional = true },
     {
       "AstroNvim/astrocore",
