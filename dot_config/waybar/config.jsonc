@@ -12,7 +12,8 @@
     "menu": "on-click",
     "menu-file": "~/.config/waybar/main_menu.xml",
     "menu-actions": {
-      "keyhints": "~/.config/waybar/scripts/keyhint.sh"
+      "keyhints": "~/.config/waybar/scripts/keyhint.sh",
+      "restore-vertical-layout": "~/.config/sway/scripts/restore-vertical-layout.sh"
     },
     "tooltip": false
   },

@@ -6,5 +6,10 @@
         <property name="label">Show keyhints</property>
       </object>
     </child>
+    <child>
+      <object class="GtkMenuItem" id="restore-vertical-layout">
+        <property name="label">Restore vertical layout</property>
+      </object>
+    </child>
   </object>
 </interface>

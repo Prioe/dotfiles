@@ -27,6 +27,9 @@ for_window [app_id="google-chrome"] inhibit_idle fullscreen
 # Prefer the landscape LG display for workspace 5; fall back to eDP-1.
 workspace number 5 output $coruscant_landscape eDP-1
 
+# Vertical monitor workspace
+workspace number 6 output $coruscant_portrait eDP-1
+
 assign [class="Steam"] workspace number 4
 assign [class="steam"] workspace number 4
 assign [class="Lutris"] workspace number 4
