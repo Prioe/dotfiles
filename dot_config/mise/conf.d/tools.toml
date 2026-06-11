@@ -20,8 +20,15 @@ golangci-lint = "latest"
 yazi = "latest"
 github-cli = "latest"
 lazygit = "latest"
+zellij = "latest"
 "go:github.com/jorgerojas26/lazysql" = "latest"
 "github:anomalyco/opencode" = "latest"
+usage = "latest"
+"npm:@playwright/cli" = "latest"
+age = "latest"
+gotestsum = "latest"
+yq = "latest"
 
 [settings]
 experimental = true
+lockfile = true

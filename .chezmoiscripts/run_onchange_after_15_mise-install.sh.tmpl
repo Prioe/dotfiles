@@ -2,11 +2,10 @@
 set -euo pipefail
 {{ template "scriptLogging" . }}
 
-# hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+# hash: {{ include "dot_config/mise/conf.d/tools.toml" | sha256sum }}
 
 {{ if lookPath "mise" }}
 info "Syncing mise configuration"
-mise use -g node@lts
 mise install --cd ~
 mise prune --cd ~ --yes
 mise reshim
