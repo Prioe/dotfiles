@@ -3,6 +3,8 @@ gui:
 os:
   editPreset: "nvim-remote"
 git:
+  diff:
+    ignoreWhitespaceInDiffView: true
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never
