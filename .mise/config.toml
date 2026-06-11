@@ -1,5 +1,5 @@
 [tools]
-lua = "5.4.6"
+lua = "5.5.0"
 "npm:prettier" = "latest"
 
 [task_config]
