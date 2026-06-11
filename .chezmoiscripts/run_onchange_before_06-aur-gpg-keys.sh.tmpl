@@ -1,4 +1,4 @@
-{{ if and .managePackages .gui (eq .chezmoi.osRelease.idLike "arch") -}}
+{{ if and .managePackages .gui (or (eq (get .chezmoi.osRelease "id") "arch") (eq (get .chezmoi.osRelease "idLike") "arch")) -}}
 #!/usr/bin/env bash
 set -euo pipefail
 {{ template "scriptLogging" . }}

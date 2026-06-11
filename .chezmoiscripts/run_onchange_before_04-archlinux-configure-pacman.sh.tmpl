@@ -1,4 +1,4 @@
-{{ if eq .chezmoi.osRelease.idLike "arch" -}}
+{{ if or (eq (get .chezmoi.osRelease "id") "arch") (eq (get .chezmoi.osRelease "idLike") "arch") -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
