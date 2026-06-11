@@ -22,7 +22,7 @@ return {
   { import = "astrocommunity.pack.python.ruff" },
   { import = "astrocommunity.pack.bash" },
   { import = "astrocommunity.pack.docker" },
-  { import = "astrocommunity.pack.typescript-all-in-one" },
+  { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.pack.biome" },
   { import = "astrocommunity.pack.prettier" },
   { import = "astrocommunity.pack.html-css" },
