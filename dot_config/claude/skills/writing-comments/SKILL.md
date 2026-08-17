@@ -13,6 +13,9 @@ those can hold.
 
 Track record to calibrate against: in every review so far, comments were **cut, never requested**. When unsure, delete.
 
+Wording is governed by the `simplifying-prose` skill: load it alongside this one. It applies to every comment that
+survives the test below and to any prose you write (docs, commit messages, issue descriptions, notes).
+
 ## The single test
 
 > Delete the comment. Could someone editing this exact spot now silently break something they could not have seen?
