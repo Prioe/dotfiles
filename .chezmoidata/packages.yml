@@ -9,6 +9,7 @@ packages:
       - unzip
       - neovim
       - zsh
+      - fish
       - atuin
       - bat
       - btop
@@ -94,6 +95,7 @@ packages:
       - mise
       - neovim
       - zsh
+      - fish
       - zsh-autosuggestions
       - zsh-syntax-highlighting
     wsl: []

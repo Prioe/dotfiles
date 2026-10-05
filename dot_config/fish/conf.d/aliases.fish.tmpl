@@ -1,0 +1,48 @@
+# Aliases (port of zsh/aliases)
+
+# Git
+alias gc 'git commit'
+alias gp 'git push'
+
+# Folders (zsh relied on AUTO_CD, fish needs an explicit cd)
+alias dot 'cd $DOTFILES'
+alias code 'cd $HOME/code'
+alias notes 'cd $HOME/notes'
+
+# Quick access to some config files
+alias ev 'nvim $XDG_CONFIG_HOME/nvim'
+alias et 'nvim $XDG_CONFIG_HOME/tmux'
+
+# Eza
+alias ls 'eza --icons --git'
+alias l 'eza -l --icons --git -a'
+alias lt 'eza --tree --level=2 --long --icons --git'
+
+# zoxide provides cd via `zoxide init --cmd cd` in config.fish
+
+# bat
+alias cat 'bat --paging=never --style=plain'
+# colorize help pages
+# fish has no global aliases; this abbreviation expands anywhere on the line.
+# No equivalent for plain -h, an anywhere-abbr would also mangle e.g. `du -h`.
+abbr --add bathelp --position anywhere --regex '\-\-help' -- '--help 2>&1 | bat --language=help --style=plain'
+
+# fastfetch
+alias fetch fastfetch
+
+alias chezmoi-work 'chezmoi --config "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.toml" --persistent-state "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.boltdb" --source "$XDG_DATA_HOME/chezmoi-work"'
+
+{{- if or (eq (get .chezmoi.osRelease "id") "arch") (eq (get .chezmoi.osRelease "idLike") "arch") }}
+
+#Search repos with 'paru' and 'fzf'
+alias parus "paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
+
+#Search locally installed packages with 'paru', 'fzf' and 'bat'
+alias parup "paru -Qq | fzf --preview 'paru -Qil {}' --layout=reverse --bind 'enter:execute(paru -Qil {} | bat)'"
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# Homebrew
+alias bbd 'brew bundle dump --tap --formula --cleanup --force --verbose --file=$DOTFILES/Brewfile && brew bundle install --file=$DOTFILES/Brewfile'
+{{- end }}
