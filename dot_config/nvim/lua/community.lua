@@ -18,7 +18,8 @@ return {
   -- language packs: https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/pack
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.rust" },
-  { import = "astrocommunity.pack.python" },
+  { import = "astrocommunity.pack.python.base" },
+  { import = "astrocommunity.pack.python.basedpyright" },
   { import = "astrocommunity.pack.python.ruff" },
   { import = "astrocommunity.pack.bash" },
   { import = "astrocommunity.pack.docker" },
