@@ -1,81 +1,56 @@
+local vault = vim.fn.expand "~/notes"
+
 ---@type LazySpec
 return {
   "obsidian-nvim/obsidian.nvim",
+  cmd = "Obsidian",
   event = {
-    "BufReadPre */notes/**.md",
-    "BufNewFile */notes/**.md",
-    "VeryLazy",
+    "BufReadPre " .. vault .. "/**.md",
+    "BufNewFile " .. vault .. "/**.md",
   },
   dependencies = {
-    "nvim-lua/plenary.nvim",
-    { "hrsh7th/nvim-cmp", optional = true },
     { "saghen/blink.cmp", optional = true },
-    { "folke/snacks.nvim", optional = true },
     {
       "AstroNvim/astrocore",
       ---@type AstroCoreOpts
       opts = {
-        options = {
-          opt = {
-            conceallevel = 1,
-          },
-        },
         mappings = {
           n = {
-            ["gf"] = {
-              function()
-                if require("obsidian").util.cursor_on_markdown_link() then
-                  return "<Cmd>Obsidian follow_link<CR>"
-                else
-                  return "gf"
-                end
-              end,
-              desc = "Obsidian Follow Link",
-            },
-            ["<leader>N"] = { name = "󱓧 Notes" },
-            ["<leader>Nn"] = { ":Obsidian new<CR>", desc = "[N]ew note" },
-            ["<leader>Nt"] = { ":Obsidian today<CR>", desc = "Open [t]odays daily note" },
-            ["<leader>No"] = { ":Obsidian open<CR>", desc = "[O]pen current note" },
-            ["<leader>Nf"] = { ":Obsidian search<CR>", desc = "[F]ind Notes" },
+            ["<leader>N"] = { desc = "󱓧 Notes" },
+            ["<leader>Nn"] = { "<Cmd>Obsidian new<CR>", desc = "[N]ew note" },
+            ["<leader>Nt"] = { "<Cmd>Obsidian today<CR>", desc = "Open [t]odays daily note" },
+            ["<leader>No"] = { "<Cmd>Obsidian open<CR>", desc = "[O]pen current note" },
+            ["<leader>Nf"] = { "<Cmd>Obsidian search<CR>", desc = "[F]ind Notes" },
           },
         },
       },
     },
   },
-  opts = function(_, opts)
-    local astrocore = require "astrocore"
-    ---@type obsidian.config.ClientOpts | table<string, any>
-    local obsidian_opts = {
-      legacy_commands = false,
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/notes",
-        },
-      },
-      notes_subdir = "notes",
-      new_notes_location = "notes_subdir",
-      open = {
-        use_advanced_uri = true,
-      },
-      ---@type obsidian.config.DailyNotesOpts | table<string, any>
-      daily_notes = {
-        folder = "notes/dailies",
-      },
-
-      ---@type obsidian.config.TemplateOpts | table<string, any>
-      templates = {
-        subdir = "templates",
-        date_format = "%Y-%m-%d-%a",
-        time_format = "%H:%M",
-      },
-
-      ---@type obsidian.config.CompletionOpts | table<string, any>
-      completion = {
-        min_chars = 1,
-      },
-    }
-
-    return astrocore.extend_tbl(opts, obsidian_opts)
-  end,
+  ---@module "obsidian"
+  ---@type obsidian.config
+  opts = {
+    legacy_commands = false,
+    workspaces = {
+      { name = "personal", path = vault },
+    },
+    notes_subdir = "notes",
+    new_notes_location = "notes_subdir",
+    open = { use_advanced_uri = true },
+    daily_notes = { folder = "notes/dailies" },
+    templates = {
+      folder = "templates",
+      date_format = "%Y-%m-%d-%a",
+      time_format = "%H:%M",
+    },
+    completion = { min_chars = 1 },
+    callbacks = {
+      enter_note = function()
+        vim.opt_local.conceallevel = 1
+        vim.keymap.set("n", "gf", function()
+          if require("obsidian.api").cursor_link() then return "<Cmd>Obsidian follow_link<CR>" end
+          return "gf"
+        end, { buffer = true, expr = true, desc = "Obsidian Follow Link" })
+      end,
+    },
+  },
 }
