@@ -49,7 +49,6 @@
   "nvim-vtsls": { "branch": "main", "commit": "0b5f73c9e50ce95842ea07bb3f05c7d66d87d14a" },
   "nvim-window-picker": { "branch": "main", "commit": "6382540b2ae5de6c793d4aa2e3fe6dbb518505ec" },
   "obsidian.nvim": { "branch": "main", "commit": "1212014bb22a1f44a655e8e706659892b8e43e59" },
-  "opencode.nvim": { "branch": "main", "commit": "06770e2e3618b82703e3e7af1f2d5dc67bde0002" },
   "package-info.nvim": { "branch": "master", "commit": "b86cf49efc3855dd94afb33304b278f6f122bf1a" },
   "pkl-neovim": { "branch": "main", "commit": "20bfa7232262f36da45470170e7a954e487f4ac6" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
