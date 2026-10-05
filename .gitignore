@@ -1,2 +1,4 @@
 dive.json
 .claude/worktrees/
+.mise/mise.lock
+.mise/locks/
