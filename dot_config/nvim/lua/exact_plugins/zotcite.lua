@@ -6,9 +6,6 @@ return {
       or vim.fn.expand("~/.zotero/zotero/profiles.ini"),
     "r"
   ) or vim.uv.fs_access(vim.fn.expand("~/Library/Application Support/Zotero/profiles.ini"), "r") or false,
-  -- Zotero 8 moved citation keys from better-bibtex.sqlite into the main DB.
-  -- Remove this patch once https://github.com/jalvesaq/zotcite handles Zotero 8+ natively.
-  build = "git apply " .. vim.fn.stdpath("config") .. "/patches/zotcite-zotero8-citationkeys.patch",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "nvim-telescope/telescope.nvim",
@@ -18,7 +15,7 @@ return {
       opts = {
         mappings = {
           n = {
-            ["<leader>z"] = { name = " Zotero" },
+            ["<leader>z"] = { desc = " Zotero" },
             ["gx"] = { "<Plug>ZOpenAttachment", desc = "Open attachment (Zotero)" },
             ["<leader>zo"] = { "<Plug>ZOpenAttachment", desc = "[O]pen attachment" },
             ["<leader>zi"] = { "<Plug>ZCitationInfo", desc = "Citation [i]nfo" },
