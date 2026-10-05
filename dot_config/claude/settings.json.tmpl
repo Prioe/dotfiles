@@ -65,10 +65,10 @@
       "Bash(git reset:*)",
       "Bash(git rebase:*)",
       "Bash(git commit:*)",
-      "Bash(git -C*commit:*)",
-      "Bash(git -C*push:*)",
-      "Bash(git -C*reset:*)",
-      "Bash(git -C*rebase:*)",
+      "Bash(git -C*commit*)",
+      "Bash(git -C*push*)",
+      "Bash(git -C*reset*)",
+      "Bash(git -C*rebase*)",
       "Bash(glab mr create:*)",
       "Bash(glab mr update:*)",
       "Bash(glab mr note:*)",
@@ -79,6 +79,15 @@
       "Bash(glab issue note:*)",
       "Bash(glab issue close:*)",
       "Bash(glab release create:*)",
+      "Bash(glab ci run:*)",
+      "Bash(glab ci run-trig:*)",
+      "Bash(glab ci trigger:*)",
+      "Bash(glab ci retry:*)",
+      "Bash(glab ci cancel:*)",
+      "Bash(glab ci delete:*)",
+      "Bash(glab api:*)",
+      "Bash(glab graphql:*)",
+      "Bash(glab variable:*)",
       "Bash(gh pr create:*)",
       "Bash(gh pr edit:*)",
       "Bash(gh pr comment:*)",
@@ -88,7 +97,7 @@
       "Bash(gh issue comment:*)",
       "Bash(gh release create:*)",
       "Read(.env*)",
-      "Write(.env*)",
+      "Edit(.env*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "Bash(nc:*)",
@@ -97,7 +106,7 @@
       "Bash(mongod:*)"
     ]
   },
-  "model": "fable",
+  "model": "opus",
   "hooks": {
     "PreToolUse": [],
     "PostToolUse": [],
@@ -115,7 +124,8 @@
     "code-review@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": false,
-    "claude-hud@claude-hud": true
+    "claude-hud@claude-hud": true,
+    "cc-plugin-you-should-know@builtin": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
