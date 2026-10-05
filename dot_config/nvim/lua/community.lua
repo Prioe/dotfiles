@@ -10,6 +10,7 @@ return {
   { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.motion.leap-nvim" },
   { import = "astrocommunity.recipes.heirline-mode-text-statusline" },
+  { import = "astrocommunity.recipes.auto-session-restore" },
   { import = "astrocommunity.editing-support.conform-nvim" },
 
   --  { import = "astrocommunity.git.neogit" },
