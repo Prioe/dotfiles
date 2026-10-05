@@ -1,0 +1,2 @@
+# Agent guidance files live in the source repo only, never deployed to ~/
+.config/nvim/CLAUDE.md
