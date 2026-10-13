@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Discord
+Exec=/usr/bin/discord
+Icon=discord
+StartupWMClass=discord
+OnlyShowIn=GNOME;
+X-Placement-Monitor=DP-2
+X-Placement-Rect=0,0.3338,1,0.6662

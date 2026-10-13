@@ -1,0 +1,24 @@
+{{- if and .gui (lookPath "gnome-shell") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ template "scriptLogging" . }}
+
+extensions=(autoplace@prio.one)
+
+for uuid in "${extensions[@]}"; do
+  enabled=$(gsettings get org.gnome.shell enabled-extensions)
+  if [[ "$enabled" == *"'$uuid'"* ]]; then
+    debug "$uuid already enabled"
+    continue
+  fi
+
+  info "Enabling GNOME extension $uuid"
+  # Wayland only discovers new extensions at login, so write the setting directly
+  if [[ "$enabled" == "@as []" || "$enabled" == "[]" ]]; then
+    gsettings set org.gnome.shell enabled-extensions "['$uuid']"
+  else
+    gsettings set org.gnome.shell enabled-extensions "${enabled%]}, '$uuid']"
+  fi
+done
+{{- end }}

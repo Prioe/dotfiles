@@ -1,0 +1,6 @@
+{
+  "uuid": "autoplace@prio.one",
+  "name": "Autoplace",
+  "description": "Places windows of autostart apps according to X-Placement-* keys in ~/.config/autostart/*.desktop",
+  "shell-version": ["49", "50", "51"]
+}

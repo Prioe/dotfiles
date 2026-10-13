@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=YouTube
+Exec=/opt/brave-bin/brave --profile-directory=Default --app-id=agimnkijcaahngcdmfeangaknmldooml
+Icon=brave-agimnkijcaahngcdmfeangaknmldooml-Default
+StartupWMClass=crx_agimnkijcaahngcdmfeangaknmldooml
+OnlyShowIn=GNOME;
+X-Placement-Monitor=DP-2
+X-Placement-Rect=0,0,1,0.3338
+X-Placement-Match=brave-agimnkijcaahngcdmfeangaknmldooml-Default;
