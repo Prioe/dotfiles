@@ -65,6 +65,7 @@
   "effortLevel": "high",
   "advisorModel": "fable",
   "awaySummaryEnabled": false,
+  "idleCompaction": false,
   "tui": "fullscreen",
   "theme": "dark",
   "editorMode": "vim",
