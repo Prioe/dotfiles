@@ -113,6 +113,8 @@ tmux-cleanup-windows() {
 chezmoi-apply-all() {
 	chezmoi apply "$@"
 	if [[ -d "$HOME/.local/share/chezmoi-work" ]]; then
-		chezmoi apply --source "$HOME/.local/share/chezmoi-work" "$@"
+		chezmoi apply --config "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.toml" \
+			--persistent-state "$XDG_CONFIG_HOME/chezmoi-work/chezmoi.boltdb" \
+			--source "$HOME/.local/share/chezmoi-work" "$@"
 	fi
 }
