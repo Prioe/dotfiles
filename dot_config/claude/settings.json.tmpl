@@ -1,3 +1,9 @@
+{{- /* Work-only settings (autoMode, extra skillOverrides) live in settings.work.json, deployed by chezmoi-work */ -}}
+{{- $workFile := joinPath .chezmoi.homeDir ".config/claude/settings.work.json" -}}
+{{- $work := dict -}}
+{{- if stat $workFile -}}
+{{-   $work = include $workFile | fromJson -}}
+{{- end -}}
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "cleanupPeriodDays": 3650,
@@ -106,12 +112,20 @@
       "Bash(mongod:*)"
     ]
   },
-  "model": "opus",
+  "model": "claude-opus-5-5[1m]",
   "hooks": {
-    "PreToolUse": [],
-    "PostToolUse": [],
-    "Notification": [],
-    "Stop": []
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '{{ .chezmoi.homeDir }}/.config/claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
@@ -137,43 +151,43 @@
   },
   "forceLoginMethod": "claudeai",
   "alwaysThinkingEnabled": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1754055893862
-  },
   "effortLevel": "high",
   "advisorModel": "fable",
   "awaySummaryEnabled": false,
   "tui": "fullscreen",
+  "theme": "dark",
   "editorMode": "vim",
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "autoMode": {
+  "autoMode": {{ if hasKey $work "autoMode" }}{{ $work.autoMode | toPrettyJson | indent 2 | trim }}{{ else }}{
     "environment": [
       "### Org-wide",
-      "**Organization**: git.implen.net (self-hosted GitLab) — ImplenX / IT-DEV group",
+      "**Organization**: None configured",
       "**Cloud provider(s)**: None configured",
-      "**Repository visibility**: Not queryable via gh (self-hosted GitLab host, not github.com) — assume private (internal company GitLab, no public-visibility signal found)",
+      "**Repository visibility**: PUBLIC — prioe/dotfiles (github.com/prioe/dotfiles) is public; any push there is publishing",
       "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
       "**Secrets management**: None configured",
-      "**Default / protected branches**: main (default branch); protection status not queryable here (gh unsupported for this host) — treat main as protected by convention",
+      "**Default / protected branches**: main (default); no branch protection rules or rulesets listed via gh for prioe/dotfiles",
       "**CI/CD deploy targets**: None configured",
       "**Network posture**: None configured",
-      "**Source control**: git.implen.net/it/dev/implenx/ix-validation-app (origin) and git.implen.net/it/dev/implenx/ix-validation-daemon (daemon, no-push) — as scoped by Trusted repo and Repository visibility above",
-      "**Trusted internal domains**: git.implen.net",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine or CI runner with open internet",
+      "**Source control**: The trusted repo (prioe/dotfiles) and its remote(s) only — public, so only this repo's own work belongs there; secrets and sensitive data are never cleared into it by visibility",
+      "**Trusted internal domains**: None configured",
       "**Trusted cloud buckets**: None configured",
       "**Key internal services**: None configured",
-      "**Internal package registry**: git.implen.net (Go/module proxy source per config scan)",
-      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar; note internal/api/devel/devel_router_prod_stub.go as a prod-adjacent dev stub to treat carefully",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
       "**Data retention / declassification**: None configured",
-      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (e.g. matches `prod-db`, not `producer`); internal/api/devel/devel_router_prod_stub.go flagged as prod-named path",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
       "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
-      "**Primary use of Claude Code**: software development (Go backend + React frontend monorepo, ImplenX device validation app)",
-      "**Trusted repo**: /home/micha/code/IT/DEV/IMPLENX/ix-validation-app (working directory) and its remotes origin (git.implen.net/it/dev/implenx/ix-validation-app) and daemon (git.implen.net/it/dev/implenx/ix-validation-daemon, no-push) — treat as private; confidential material OK to commit, secrets never cleared by visibility",
-      "**Org-specific CLIs**: glab (GitLab CLI, used routinely for issues/MRs per CLAUDE.md and shell history)",
-      "routine under ix-validation-app/ prefix: git, make, go, pnpm build/test/dev targets are routine local operations"
+      "**Primary use of Claude Code**: personal dotfiles management (chezmoi-managed configuration repo)",
+      "**Trusted repo**: {{ .chezmoi.sourceDir }} (prioe/dotfiles, public — this repo's own work is OK to commit/push; secrets and personal data are never cleared into it by visibility)",
+      "**Org-specific CLIs**: None configured",
+      "routine under prioe/ prefix: none established beyond this repo (no corroborating org evidence)"
     ]
-  },
+  }{{ end }},
   "skillOverrides": {
     "caveman": "off",
     "diagnose": "off",
@@ -185,9 +199,12 @@
     "to-prd": "off",
     "zoom-out": "off",
     "setup-matt-pocock-skills": "off",
-    "write-a-skill": "off",
-    "sync-validation-progress": "off",
-    "preparing-standup": "off"
+    "write-a-skill": "off"
+{{- if hasKey $work "skillOverrides" }}
+{{-   range $name, $state := $work.skillOverrides }},
+    {{ $name | toJson }}: {{ $state | toJson }}
+{{-   end }}
+{{- end }}
   },
   "env": {
     "DISABLE_INSTALLATION_CHECKS": "1"
