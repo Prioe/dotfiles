@@ -13,6 +13,9 @@ is partially supported as a work OS. Chezmoi's templating system handles environ
 - `.chezmoiscripts/` - Numbered hook scripts (run before/after `chezmoi apply`)
 - `.chezmoidata/packages.yml` - Master package list per distribution
 - `.chezmoitemplates/` - Reusable templates (`scriptLogging` for colored log output, `hashList` for change detection)
+- `tools/` - Repo-only scripts (not deployed). `claude-cloud-install.sh` installs `dot_config/claude` (skills, commands,
+  CLAUDE.md) into Claude Code cloud sessions, where chezmoi does not run; call it from the cloud environment's setup
+  script. Keep it in sync when adding chezmoi attributes or `~/.config/claude` paths to that tree.
 - `.chezmoi.toml.tmpl` - Chezmoi config with interactive prompts for email, gui, managePackages, notesRepoUrl
 
 ### Template Data Variables
