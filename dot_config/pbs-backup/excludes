@@ -1,0 +1,18 @@
+# pxar exclude patterns for home.pxar, one per line. A leading / anchors to the archive root ($HOME),
+# patterns without it match at any depth, a trailing / matches directories only.
+/Games/
+/Downloads/
+/.cache/
+/.local/share/Steam/
+/.local/share/Trash/
+/.local/share/containers/
+/.cargo/registry/
+/.cargo/git/
+/.rustup/
+/.gradle/caches/
+/.npm/
+/go/pkg/
+/Projects/**/target/
+node_modules/
+.venv/
+.terraform/

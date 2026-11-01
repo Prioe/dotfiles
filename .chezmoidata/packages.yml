@@ -85,6 +85,8 @@ packages:
       - yad
     wsl:
       - wsl-open
+    pbsBackup:
+      - proxmox-backup-client
   fedora:
     repos:
       - https://mise.jdx.dev/rpm/mise.repo

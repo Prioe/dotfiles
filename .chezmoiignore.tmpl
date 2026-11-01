@@ -23,7 +23,17 @@ README.md
 .config/systemd
 {{- end }}
 
-{{- /* Ignore these if gui is not enabled */ -}} 
+{{- /* Ignore these if PBS backups are not enabled */ -}}
+{{- if not (get . "pbsBackup") }}
+.config/pbs-backup
+.config/systemd/user/pbs-backup.service
+.config/systemd/user/pbs-backup.service.d
+.config/systemd/user/pbs-backup.timer
+.config/systemd/user/timers.target.wants/pbs-backup.timer
+.local/bin/pbs-backup-home
+{{- end }}
+
+{{- /* Ignore these if gui is not enabled */ -}}
 {{- if not .gui }}
 .config/autostart
 .config/ghostty

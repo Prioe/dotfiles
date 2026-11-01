@@ -12,6 +12,9 @@ set -euo pipefail
 {{-     $packages = concat $packages (.packages.archlinux.wsl) }}
 {{-   end }}
 {{- end }}
+{{- if get . "pbsBackup" }}
+{{-   $packages = concat $packages (.packages.archlinux.pbsBackup) }}
+{{- end }}
 
 info "Installing packages using paru"
 paru -S --needed ${CI:+--noconfirm} {{ quoteList $packages | join " " }}

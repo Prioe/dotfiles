@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# --should-run is pbs-backup.service's ExecCondition: exit 1 skips the run without marking the unit failed.
+set -euo pipefail
+
+conf=${XDG_CONFIG_HOME:-$HOME/.config}/pbs-backup
+state=${XDG_STATE_HOME:-$HOME/.local/state}/pbs-backup
+stamp=$state/last-success
+: "${PBS_REPOSITORY:?not set, pbs-backup.service.d/credentials.conf provides it}"
+host=${PBS_REPOSITORY##*@}
+host=${host%%:*}
+
+if [[ ${1-} == --should-run ]]; then
+  if [[ -f $stamp ]] && (($(date +%s) - $(<"$stamp") < 20 * 3600)); then
+    echo "last backup is less than 20h old, skipping"
+    exit 1
+  fi
+  if ! timeout 5 bash -c ": </dev/tcp/$host/8007" 2>/dev/null; then
+    echo "PBS at $host is not reachable, skipping"
+    exit 1
+  fi
+  exit 0
+fi
+
+excludes=()
+while IFS= read -r line; do
+  [[ -z $line || $line == \#* ]] && continue
+  excludes+=(--exclude "$line")
+done <"$conf/excludes"
+
+pkgs=$(mktemp -d)
+trap 'rm -rf "$pkgs"' EXIT
+if command -v pacman >/dev/null; then
+  pacman -Qqe >"$pkgs/pacman-explicit.txt"
+  pacman -Qqem >"$pkgs/pacman-foreign.txt" || true
+fi
+
+proxmox-backup-client backup \
+  "home.pxar:$HOME" \
+  "packages.pxar:$pkgs" \
+  "${excludes[@]}" \
+  --ns "$PBS_NAMESPACE" \
+  --backup-id "$(uname -n)" \
+  --change-detection-mode metadata \
+  --crypt-mode none
+
+mkdir -p "$state"
+date +%s >"$stamp"

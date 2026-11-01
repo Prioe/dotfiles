@@ -3,6 +3,7 @@
 {{- $gui := false }}
 {{- $managePackages := env "CHEZMOI_MANAGE_PACKAGES" | not | not }}
 {{- $notesRepoUrl := "" }}
+{{- $pbsBackup := false }}
 
 # Detect environment (used as defaults)
 {{- $isContainer := or (stat "/.dockerenv") (stat "/run/.containerenv") (eq .chezmoi.hostname "buildkitsandbox") | not | not }}
@@ -16,6 +17,7 @@
 {{-   $gui = promptBoolOnce . "gui" "Do you want to include gui applications" $gui }}
 {{-   $managePackages = promptBoolOnce . "managePackages" "Do you want chezmoi to manage your system-packages?" $managePackages }}
 {{-   $notesRepoUrl = promptStringOnce . "notesRepoUrl" "Git URL for notes repo (leave empty to skip)" }}
+{{-   $pbsBackup = promptBoolOnce . "pbsBackup" "Back up /home daily to the homelab Proxmox Backup Server?" $pbsBackup }}
 {{- end }}
 
 [data]
@@ -26,6 +28,7 @@ isContainer = {{ $isContainer }}
 isWSL = {{ $isWSL }}
 hasOP = {{ $hasOP }}
 notesRepoUrl = {{ $notesRepoUrl | quote }}
+pbsBackup = {{ $pbsBackup }}
 
 {{- if $isWSL }}
 

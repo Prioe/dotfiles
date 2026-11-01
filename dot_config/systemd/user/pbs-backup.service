@@ -1,0 +1,9 @@
+[Unit]
+Description=Back up the home directory to the Proxmox Backup Server
+
+[Service]
+Type=oneshot
+ExecCondition=%h/.local/bin/pbs-backup-home --should-run
+ExecStart=%h/.local/bin/pbs-backup-home
+Nice=19
+IOSchedulingClass=idle
