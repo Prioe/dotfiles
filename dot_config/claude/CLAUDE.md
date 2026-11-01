@@ -16,8 +16,6 @@ This file globally provides guidance to agentic code tools when working with cod
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
   - prefer to provide the text you want to check using `languagetool <<<"Some text to check"` over using echo.
 - when the user requests code examples, setup or configuration steps, or library/API documentation use **context7 mcp**
-- Query gitlab issues and mrs via the commands `glab [mr|issue] list`; inspect issue and mr details using
-  `glab [mr|issue] view (--comments|--system-logs)`
 
 ### Python
 
@@ -49,21 +47,6 @@ This file globally provides guidance to agentic code tools when working with cod
 - **GitHub URLs**: Always prefer `gh` CLI to fetch raw content or metadata from GitHub links. Do NOT use Playwright MCP
   for GitHub URLs.
 
-## External writes
-
-> **IMPORTANT**: Never create or modify resources on shared external systems (GitLab, GitHub, Slack, ...) without
-> explicit approval for that exact action. This covers issues, MRs/PRs, comments/notes, labels, releases, and job
-> retries/cancels.
-
-- Approval covers exactly the named action on the named repo: "open the MR" does not cover follow-up notes, extra
-  issues, or resources on repos the user didn't name.
-- An in-chat draft the user has seen is a proposal, not approval. Show the final content/command and wait for the
-  go-ahead.
-- Put findings and summaries in the chat reply, not into issue/MR comments.
-- Never trigger release pipelines or create tags; the user cuts releases personally.
-- Keep issue/MR/PR descriptions short: a problem statement plus a compact list. Deep evidence stays in the chat or the
-  MR discussion.
-
 ## Collaboration
 
 - When the user proposes a simpler solution than yours, build and verify theirs first; add theorized guards only if
@@ -91,10 +74,6 @@ section when generating the haiku.
 
 ## Git commits
 
-> **IMPORTANT**: Never EVER just commit by yourself, only commit if explicitly asked to do so by the user.
-
-- Approval is per action: an earlier "commit it" or "push" does not authorize later commits, amends, or force-pushes.
-  Stop at the working-tree diff and ask.
 - Only operate on branches and worktrees that belong to the current task; others are read-only unless the user names
   them explicitly.
 - When committing, prefer keeping the message to summary only. Only add a description if it really adds something. Keep
