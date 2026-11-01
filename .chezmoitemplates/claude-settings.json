@@ -3,12 +3,22 @@
   "cleanupPeriodDays": 3650,
   "permissions": {
     "defaultMode": "auto",
-    "deny": ["Bash(sudo:*)", "Read(id_rsa)", "Read(id_ed25519)", "Read(**/*token*)", "Read(**/*key*)"],
+    "deny": [
+      "Bash(sudo:*)",
+      "Read(~/.ssh/id_rsa)",
+      "Read(~/.ssh/id_ed25519)",
+      "Read(~/.ssh/notes-deploy-key)",
+      "Read(~/.gnupg/private-keys-v1.d/**)",
+      "Read(~/.config/claude/.credentials.json)"
+    ],
     "ask": [
       "Bash(rm -rf:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
+      "Bash(op:*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
       "Read(.env*)",
       "Edit(.env*)"
     ]
