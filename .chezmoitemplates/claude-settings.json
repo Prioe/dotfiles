@@ -73,8 +73,8 @@
   "autoMode": {
     "environment": [
       "$defaults",
-      "Source control: github.com/Prioe (the user's personal account) and every repo under it",
-      "Secrets management: 1Password via the op CLI; secrets are never written into repos"
+      "Source control (overrides the default entry): github.com repos whose owner is exactly Prioe, the user's personal account. This grants ownership only: public Prioe repos are still publishing destinations, moving content from a private Prioe repo into a public one is publication, and forks of third-party projects under Prioe are not trusted code sources",
+      "Secrets management (overrides the default entry): 1Password via the op CLI. Secrets must never be written into repos; files containing only op:// references are fine to commit"
     ]
   },
   "skillOverrides": {
