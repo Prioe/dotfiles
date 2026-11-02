@@ -83,6 +83,8 @@ plugins=(
   zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   # oh-my-zsh
   lib/key-bindings.zsh
+  # vi-mode pipes yanks into clipcopy; without it Fedora's command-not-found handler hangs zle
+  lib/clipboard.zsh
   plugins/vi-mode/vi-mode.plugin.zsh
   plugins/zoxide/zoxide.plugin.zsh
   plugins/starship/starship.plugin.zsh
