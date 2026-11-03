@@ -1,0 +1,24 @@
+{
+  "name": "auto-rename",
+  "description": "Names the session after its main task: on demand with /auto-rename, and in the background every few prompts.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Michael Albertz"
+  },
+  "userConfig": {
+    "first_turn": {
+      "type": "number",
+      "title": "First automatic name",
+      "description": "Prompt number at which the hook names an unnamed session.",
+      "default": 2,
+      "min": 1
+    },
+    "interval": {
+      "type": "number",
+      "title": "Re-check interval",
+      "description": "Prompts between automatic re-checks of the name.",
+      "default": 10,
+      "min": 1
+    }
+  }
+}

@@ -1,0 +1,293 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Name the current Claude Code session after its main task.
+
+usage:
+  auto-rename hook          read a hook event on stdin, rename when due
+  auto-rename context       print the naming rules and session context
+  auto-rename apply <name>  rename now and hand naming back to the hook
+"""
+
+import fcntl
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+MAX_LEN = 48
+# Claude Code's own placeholder names look like "chezmoi-f3".
+DEFAULT_NAME = re.compile(r"^[a-z0-9._-]+-[0-9a-f]{2}$")
+
+
+def config_dir() -> Path:
+    return Path(os.environ.get("CLAUDE_CONFIG_DIR", "~/.claude")).expanduser()
+
+
+def data_dir() -> Path:
+    # Outside a hook (the skill's Bash call) CLAUDE_PLUGIN_DATA is unset; this is the path Claude Code gives the hook.
+    path = Path(os.environ.get("CLAUDE_PLUGIN_DATA") or config_dir() / "plugins/data/auto-rename-skills-dir")
+    (path / "sessions").mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def option(key: str, default: int) -> int:
+    try:
+        return max(1, int(os.environ.get(f"CLAUDE_PLUGIN_OPTION_{key}", default)))
+    except ValueError:
+        return default
+
+
+def log(session_id: str, message: str) -> None:
+    with open(data_dir() / "auto-rename.log", "a") as f:
+        f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} {session_id[:8]} {message}\n")
+
+
+def run(cmd: list[str], cwd: str | None = None, timeout: int = 10) -> str:
+    try:
+        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
+def parse_remote(url: str) -> tuple[str, str]:
+    m = re.match(r"^(?:[a-z+]+://)?(?:[^@/]+@)?([^/:]+)(?::\d+)?[:/](.+?)(?:\.git)?/?$", url)
+    return (m.group(1), m.group(2)) if m else ("", "")
+
+
+def repo_info(cwd: str) -> dict | None:
+    common = run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd)
+    if not common:
+        return None
+    # The common dir names the main checkout, so worktrees report the repo, not the worktree directory.
+    common_path = Path(common)
+    project = common_path.parent.name if common_path.name == ".git" else common_path.name.removesuffix(".git")
+    host, path = parse_remote(run(["git", "remote", "get-url", "origin"], cwd))
+    return {"project": project, "branch": run(["git", "branch", "--show-current"], cwd), "host": host, "path": path}
+
+
+def herdr_workspace_label() -> str | None:
+    workspace_id = os.environ.get("HERDR_WORKSPACE_ID")
+    if os.environ.get("HERDR_ENV") != "1" or not workspace_id:
+        return None
+    try:
+        listing = json.loads(run([os.environ.get("HERDR_BIN_PATH") or "herdr", "workspace", "list"], timeout=5))
+    except ValueError:
+        return None
+    for ws in listing.get("result", {}).get("workspaces", []):
+        if ws.get("workspace_id") == workspace_id:
+            # Tab-numbering plugins prefix labels with "[N] ".
+            return re.sub(r"^\[\d+\] ", "", ws.get("label", ""))
+    return None
+
+
+def session_context(cwd: str) -> str:
+    repo = repo_info(cwd)
+    if not repo:
+        return "Repo: none\nInclude project: no (not in a repo)"
+    lines = [f"Repo: {repo['project']}"]
+    if repo["path"]:
+        lines.append(f"Remote: {repo['host']}/{repo['path']}")
+    if repo["branch"]:
+        lines.append(f"Branch: {repo['branch']}")
+    if herdr_workspace_label() == repo["project"]:
+        lines.append("Include project: no (the herdr workspace already shows it)")
+    else:
+        lines.append("Include project: yes")
+    return "\n".join(lines)
+
+
+def registry_name() -> str | None:
+    registry = config_dir() / "sessions" / f"{os.environ.get('CLAUDE_PID')}.json"
+    try:
+        return json.loads(registry.read_text()).get("name")
+    except (OSError, ValueError):
+        return None
+
+
+def rename(session_id: str, name: str) -> bool:
+    sock_path = os.environ.get("CLAUDE_CODE_MESSAGING_SOCKET")
+    if not sock_path:
+        return False
+    msg = {"type": "control", "action": "rename", "name": name, "session_id": session_id}
+    try:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.settimeout(5)
+            s.connect(sock_path)
+            s.sendall((json.dumps(msg) + "\n").encode())
+    except OSError:
+        return False
+    for _ in range(10):
+        if registry_name() == name:
+            return True
+        time.sleep(0.3)
+    return False
+
+
+def clean(name: str) -> str:
+    line = next((ln for ln in name.splitlines() if ln.strip()), "")
+    line = re.sub(r"\s+", " ", line.strip().strip("`'\"").lower()).rstrip(".")
+    line = line.encode("ascii", "ignore").decode()
+    if len(line) > MAX_LEN:
+        line = line[:MAX_LEN].rsplit(" ", 1)[0]
+    return line.strip()
+
+
+def user_prompts(transcript: str, limit: int = 15) -> list[str]:
+    prompts = []
+    try:
+        with open(transcript) as f:
+            for raw in f:
+                try:
+                    entry = json.loads(raw)
+                except ValueError:
+                    continue
+                if entry.get("type") != "user" or entry.get("isMeta") or entry.get("isSidechain"):
+                    continue
+                content = entry.get("message", {}).get("content")
+                if isinstance(content, list):
+                    content = " ".join(c.get("text", "") for c in content if c.get("type") == "text")
+                text = " ".join(str(content or "").split())
+                # Skip tool results, command output and injected system text.
+                if text and not text.startswith("<"):
+                    prompts.append(text[:300])
+    except OSError:
+        pass
+    return prompts[:1] + prompts[1:][-(limit - 1):]
+
+
+def generate(cwd: str, current: str | None, prompts: list[str], extra: str = "") -> str:
+    prompt = "\n\n".join(
+        [
+            (ROOT / "naming.md").read_text(),
+            "## This session",
+            session_context(cwd) + f"\nCurrent name: {current or 'none'}",
+            extra,
+            "User prompts, oldest first:\n" + "\n".join(f"- {p}" for p in prompts),
+            "Reply with the session name only, nothing else.",
+        ]
+    )
+    cmd = [os.environ.get("CLAUDE_CODE_EXECPATH") or "claude", "-p", "--safe-mode", "--no-session-persistence"]
+    cmd += ["--model", "haiku", "--disallowedTools", "*"]
+    try:
+        out = subprocess.run(
+            cmd,
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=120,
+            cwd=data_dir(),
+            env={**os.environ, "AUTO_RENAME_CHILD": "1"},
+        ).stdout
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return clean(out)
+
+
+def state_path(session_id: str) -> Path:
+    return data_dir() / "sessions" / f"{session_id}.json"
+
+
+def load_state(session_id: str) -> dict:
+    try:
+        return json.loads(state_path(session_id).read_text())
+    except (OSError, ValueError):
+        return {"turns": 0}
+
+
+def save_state(session_id: str, state: dict) -> None:
+    state_path(session_id).write_text(json.dumps(state))
+
+
+def hook() -> None:
+    if os.environ.get("AUTO_RENAME_CHILD"):
+        return
+    event = json.load(sys.stdin)
+    session_id = event.get("session_id")
+    if not session_id or event.get("agent_id"):
+        return
+    lock = open(data_dir() / "sessions" / f"{session_id}.lock", "w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return
+
+    state = load_state(session_id)
+    name_event = event.get("hook_event_name")
+    if name_event == "UserPromptSubmit":
+        state["turns"] = state.get("turns", 0) + 1
+    save_state(session_id, state)
+
+    current = event.get("session_title") or registry_name()
+    if current and current != state.get("last_name") and not DEFAULT_NAME.match(current):
+        return
+    turns = state["turns"]
+    if name_event == "PostCompact":
+        due = True
+    elif not state.get("last_name"):
+        due = turns >= option("FIRST_TURN", 2)
+    else:
+        due = turns - state.get("checked_turn", 0) >= option("INTERVAL", 10)
+    if not due:
+        return
+
+    prompts = user_prompts(event.get("transcript_path", ""))
+    if event.get("prompt"):
+        latest = " ".join(event["prompt"].split())[:300]
+        if not prompts or prompts[-1] != latest:
+            prompts.append(latest)
+    extra = ""
+    if event.get("compact_summary"):
+        extra = "Conversation summary:\n" + event["compact_summary"][:3000]
+
+    name = generate(event.get("cwd") or os.getcwd(), current, prompts, extra)
+    state["checked_turn"] = turns
+    if not name:
+        log(session_id, f"{name_event}: no name generated")
+    elif name == current:
+        state["last_name"] = name
+    elif rename(session_id, name):
+        state["last_name"] = name
+        log(session_id, f"{name_event}: renamed {current!r} to {name!r}")
+    else:
+        log(session_id, f"{name_event}: rename to {name!r} not confirmed")
+    save_state(session_id, state)
+
+
+def apply(name: str) -> None:
+    session_id = os.environ.get("CLAUDE_CODE_SESSION_ID")
+    if not session_id:
+        sys.exit("CLAUDE_CODE_SESSION_ID is not set; run from inside a Claude Code session")
+    name = clean(name)
+    if not name or not rename(session_id, name):
+        sys.exit(f"rename not confirmed; run /rename {name}")
+    state = load_state(session_id)
+    state["last_name"] = name
+    state["checked_turn"] = state.get("turns", 0)
+    save_state(session_id, state)
+    print(f"renamed session to: {name}")
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    if args == ["hook"]:
+        hook()
+    elif args == ["context"]:
+        print((ROOT / "naming.md").read_text())
+        print("## This session\n")
+        print(session_context(os.getcwd()))
+        print(f"Current name: {registry_name() or 'none'}")
+    elif len(args) == 2 and args[0] == "apply":
+        apply(args[1])
+    else:
+        sys.exit(__doc__)
+
+
+main()
