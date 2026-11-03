@@ -23,3 +23,9 @@ key = "prefix+a"
 type = "plugin_action"
 command = "herdr-automatic-rename.reset"
 description = "hand this tab's name back to automatic naming"
+
+[[keys.command]]
+key = "prefix+i"
+type = "popup"
+command = "\"$HOME/.local/bin/worktree-agent\" pick"
+description = "start an agent on an issue or task in a new worktree"

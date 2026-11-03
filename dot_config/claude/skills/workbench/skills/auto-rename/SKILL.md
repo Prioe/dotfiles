@@ -2,7 +2,7 @@
 name: auto-rename
 description: Name or rename the current session after its main task, and hand a manually named session back to automatic naming. Use when the user invokes /auto-rename or asks to name or rename the current session.
 allowed-tools:
-  - Bash(~/.config/claude/skills/auto-rename/scripts/auto-rename apply:*)
+  - Bash(~/.config/claude/skills/workbench/scripts/auto-rename apply:*)
 model: haiku
 ---
 
@@ -13,7 +13,7 @@ hands a session you renamed by hand back to the hook.
 
 ## Rules and session context
 
-!`~/.config/claude/skills/auto-rename/scripts/auto-rename context`
+!`~/.config/claude/skills/workbench/scripts/auto-rename context`
 
 ## Flow
 
@@ -23,7 +23,7 @@ hands a session you renamed by hand back to the hook.
 3. Apply it:
 
    ```bash
-   ~/.config/claude/skills/auto-rename/scripts/auto-rename apply "<name>"
+   ~/.config/claude/skills/workbench/scripts/auto-rename apply "<name>"
    ```
 
 4. Confirm the new name to the user in one short sentence.

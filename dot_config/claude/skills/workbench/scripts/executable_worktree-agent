@@ -1,0 +1,362 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Start coding agents in herdr-managed git worktrees.
+
+usage:
+  worktree-agent start <issue|url|text> [--base REF] [--no-agent] [--no-focus] [--dry-run]
+  worktree-agent list
+  worktree-agent close <issue|branch> [--force]
+  worktree-agent adopt
+  worktree-agent pick
+"""
+
+import argparse
+import fnmatch
+import json
+import os
+import re
+import sys
+import time
+import tomllib
+import uuid
+from pathlib import Path
+
+from common import Fail, git, herdr, herdr_bin, parse_remote, run, save_state
+from common import repo_root as find_root
+
+CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser() / "worktree-agent"
+DEFAULTS = {
+    "agent": "claude",
+    "worktree_dir": ".claude/worktrees",
+    "branch": "{id}-{slug}",
+    "task_branch": "{slug}",
+    "label": "#{id} {short}",
+    "task_label": "{short}",
+    "session_name": "#{id}: {title}",
+    "task_session_name": "{title}",
+    "prompt": "Work on {ref} ({url}): {title}. Read it and its comments first, then plan and implement it.",
+    "task_prompt": "{text}",
+}
+
+
+def load_config(remote: str) -> dict:
+    config = dict(DEFAULTS)
+    matches = []
+    for path in [CONFIG_DIR / "config.toml", *sorted((CONFIG_DIR / "config.d").glob("*.toml"))]:
+        if path.is_file():
+            data = tomllib.loads(path.read_text())
+            matches += data.pop("match", [])
+            config.update(data)
+    for rule in matches:
+        if fnmatch.fnmatch(remote, rule.get("remote", "")):
+            config.update({k: v for k, v in rule.items() if k != "remote"})
+    return config
+
+
+def repo_root(cwd: Path) -> Path:
+    root = find_root(cwd)
+    if not root:
+        raise Fail(f"{cwd} is not inside a git repository")
+    return root
+
+
+def remote_of(repo: Path) -> str:
+    host, path = parse_remote(git(repo, "remote", "get-url", "origin", check=False))
+    return f"{host}/{path}" if path else ""
+
+
+def slugify(text: str, limit: int = 50) -> str:
+    # Changing this rule stops existing worktrees from being found again by their branch path.
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")[:limit].rstrip("-") or "task"
+
+
+def shorten(slug: str, limit: int = 24) -> str:
+    return slug if len(slug) <= limit else slug[:limit].rsplit("-", 1)[0]
+
+
+def fetch_issue(repo: Path, remote: str, number: str) -> dict:
+    if remote.startswith("github.com/"):
+        data = json.loads(run(["gh", "issue", "view", number, "--json", "number,title,url"], cwd=repo).stdout)
+        return {"id": str(data["number"]), "title": data["title"], "url": data["url"]}
+    data = json.loads(run(["glab", "issue", "view", number, "--output", "json"], cwd=repo).stdout)
+    return {"id": str(data["iid"]), "title": data["title"], "url": data["web_url"]}
+
+
+def plan_task(ref: str, repo: Path, base: str | None) -> dict:
+    remote = remote_of(repo)
+    config = load_config(remote)
+    url_match = re.match(r"^https?://[^/]+/(.+?)(?:/-)?/(?:issues|pull|merge_requests)/(\d+)", ref)
+    if url_match and not remote.endswith("/" + url_match.group(1)) and remote.split("/", 1)[-1] != url_match.group(1):
+        raise Fail(f"{ref} belongs to {url_match.group(1)}, but this checkout is {remote}")
+    number = url_match.group(2) if url_match else ref.lstrip("#") if re.fullmatch(r"#?\d+", ref) else None
+
+    if number:
+        issue = fetch_issue(repo, remote, number)
+        values = {**issue, "ref": f"#{issue['id']}", "text": issue["title"], "slug": slugify(issue["title"])}
+        kind = ""
+    else:
+        values = {"id": "", "ref": "", "url": "", "title": ref, "text": ref, "slug": slugify(ref)}
+        kind = "task_"
+    values["short"] = shorten(values["slug"])
+    values["repo"] = repo.name
+    branch = config[kind + "branch"].format(**values)
+    values["branch"] = branch
+    session = config[kind + "session_name"].format(**values).lower()
+    if len(session) > 48:
+        session = session[:48].rsplit(" ", 1)[0]
+    name = re.sub(r"[^a-z0-9_-]+", "-", f"i{values['id']}-{values['short']}" if number else values["short"])
+    name = name.strip("-_")[:32].rstrip("-_")
+    if not name[:1].isalpha():
+        name = f"t{name}"[:32]
+    return {
+        "repo": str(repo),
+        "remote": remote,
+        "base": base or default_base(repo),
+        "branch": branch,
+        "path": str(repo / config["worktree_dir"] / branch),
+        "label": config[kind + "label"].format(**values),
+        "agent_kind": config["agent"],
+        "agent_name": name,
+        "session_name": session,
+        "prompt": config[kind + "prompt"].format(**values),
+    }
+
+
+def default_base(repo: Path) -> str:
+    head = git(repo, "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD", check=False)
+    return head or "origin/main"
+
+
+def worktrees(repo: Path) -> list[dict]:
+    result, current = [], {}
+    for line in git(repo, "worktree", "list", "--porcelain").splitlines() + [""]:
+        if not line:
+            if current:
+                result.append(current)
+            current = {}
+        elif line.startswith("worktree "):
+            current["path"] = line.removeprefix("worktree ")
+        elif line.startswith("branch refs/heads/"):
+            current["branch"] = line.removeprefix("branch refs/heads/")
+    return result
+
+
+def herdr_workspace_for(path: str) -> dict | None:
+    for ws in herdr("workspace", "list").get("workspaces", []):
+        if (ws.get("worktree") or {}).get("checkout_path") == path:
+            return ws
+    return None
+
+
+def agents_in(workspace_id: str) -> list[dict]:
+    return [p for p in herdr("pane", "list").get("panes", []) if p.get("workspace_id") == workspace_id and p.get("agent")]
+
+
+def ensure_ignored(repo: Path, worktree_dir: str) -> None:
+    if run(["git", "check-ignore", "-q", f"{worktree_dir}/x"], cwd=repo, check=False).returncode == 0:
+        return
+    exclude = repo_root(repo) / ".git" / "info" / "exclude"
+    exclude.parent.mkdir(parents=True, exist_ok=True)
+    with open(exclude, "a") as f:
+        f.write(f"/{worktree_dir}/\n")
+
+
+def start_agent(plan: dict, pane: str) -> str:
+    session_id = str(uuid.uuid4())
+    name = plan["agent_name"]
+    args = ["--session-id", session_id, "-n", plan["session_name"]] if plan["agent_kind"] == "claude" else []
+    for attempt in range(6):
+        result = herdr("agent", "start", name, "--kind", plan["agent_kind"], "--pane", pane, "--timeout", "60000", "--", *args, check=False)
+        error = result.get("error")
+        if not error:
+            break
+        message = f"{error.get('code', '')} {error.get('message', '')}"
+        if re.search(r"name", message) and re.search(r"in.?use|taken|exist|already|duplicate", message):
+            name = f"{plan['agent_name'][:27]}-{attempt}"
+            continue
+        if "pane_not_found" in message or "usage" in message:
+            raise Fail(f"herdr agent start: {message.strip()}")
+        time.sleep(1)
+    else:
+        raise Fail(f"herdr agent start kept failing: {message.strip()}")
+    if plan["agent_kind"] == "claude":
+        # Recorded as auto-rename's own name, so its hook keeps refining it instead of treating it as manual.
+        save_state(session_id, {"turns": 0, "last_name": plan["session_name"], "checked_turn": 0})
+    waited = herdr("agent", "wait", pane, "--until", "idle", "--timeout", "60000", check=False)
+    if waited.get("error"):
+        screen = run([herdr_bin(), "agent", "read", pane, "--lines", "15"], check=False).stdout
+        raise Fail(f"the agent did not become ready; it shows:\n{screen}")
+    return name
+
+
+def send_prompt(pane: str, prompt: str) -> bool:
+    herdr("agent", "prompt", pane, prompt)
+    for _ in range(2):
+        if not herdr("agent", "wait", pane, "--until", "working", "--until", "blocked", "--timeout", "8000", check=False).get("error"):
+            return True
+        # The Enter can get lost in a redraw; send it once more.
+        herdr("agent", "send-keys", pane, "enter", check=False)
+    return False
+
+
+def cmd_start(args) -> None:
+    repo = repo_root(Path(args.cwd or os.getcwd()))
+    plan = plan_task(" ".join(args.task), repo, args.base)
+    if args.dry_run:
+        print(json.dumps(plan, indent=2))
+        return
+    focus = "--no-focus" if args.no_focus else "--focus"
+    config = load_config(plan["remote"])
+    ensure_ignored(repo, config["worktree_dir"])
+    git(repo, "fetch", "-q", "origin", check=False)
+
+    existing = next((w for w in worktrees(repo) if plan["branch"] == w.get("branch") or plan["path"] == w["path"]), None)
+    if existing:
+        plan["path"] = existing["path"]
+        ws = herdr_workspace_for(existing["path"])
+        if ws and agents_in(ws["workspace_id"]):
+            if not args.no_focus:
+                herdr("workspace", "focus", ws["workspace_id"], check=False)
+            print(f"already running: {plan['label']} in workspace {ws['workspace_id']}")
+            return
+        if ws:
+            opened = herdr("tab", "create", "--workspace", ws["workspace_id"], "--cwd", existing["path"], focus)
+            workspace_id, pane = ws["workspace_id"], opened["root_pane"]["pane_id"]
+        else:
+            opened = herdr("worktree", "open", "--cwd", str(repo), "--path", existing["path"], "--label", plan["label"], focus)
+            workspace_id, pane = opened["workspace"]["workspace_id"], opened["root_pane"]["pane_id"]
+    else:
+        base = plan["base"]
+        if git(repo, "show-ref", "--verify", f"refs/heads/{plan['branch']}", check=False):
+            base = plan["branch"]
+        elif git(repo, "show-ref", "--verify", f"refs/remotes/origin/{plan['branch']}", check=False):
+            base = f"origin/{plan['branch']}"
+        opened = herdr(
+            "worktree", "create", "--cwd", str(repo), "--branch", plan["branch"], "--base", base,
+            "--path", plan["path"], "--label", plan["label"], focus,
+        )
+        workspace_id, pane = opened["workspace"]["workspace_id"], opened["root_pane"]["pane_id"]
+    print(f"worktree: {plan['path']} (branch {plan['branch']}, workspace {workspace_id})")
+    if args.no_agent:
+        return
+    name = start_agent(plan, pane)
+    submitted = send_prompt(pane, plan["prompt"])
+    state = "working" if submitted else "prompt sent but not confirmed; check its pane"
+    print(f"agent: {name} ({plan['session_name']}), {state}")
+
+
+def cmd_list(args) -> None:
+    repo = repo_root(Path(args.cwd or os.getcwd()))
+    spaces = {(w.get("worktree") or {}).get("checkout_path"): w for w in herdr("workspace", "list").get("workspaces", [])}
+    panes = herdr("pane", "list").get("panes", [])
+    for wt in worktrees(repo):
+        ws = spaces.get(wt["path"])
+        agents = [f"{p.get('agent')}:{p.get('agent_status')}" for p in panes if ws and p.get("workspace_id") == ws["workspace_id"] and p.get("agent")]
+        where = f"{ws['workspace_id']} {ws['label']}" if ws else "not in herdr"
+        print(f"{wt.get('branch', '(detached)'):45} {where:30} {', '.join(agents) or '-'}")
+
+
+def find_worktree(repo: Path, ref: str) -> dict:
+    number = ref.lstrip("#")
+    for wt in worktrees(repo)[1:]:
+        branch = wt.get("branch", "")
+        if ref in (branch, wt["path"]) or (number.isdigit() and branch.startswith(f"{number}-")):
+            return wt
+    raise Fail(f"no worktree matches {ref}")
+
+
+def merged(repo: Path, remote: str, branch: str) -> bool:
+    if remote.startswith("github.com/"):
+        out = run(["gh", "pr", "list", "--head", branch, "--state", "merged", "--json", "number"], cwd=repo, check=False).stdout
+    else:
+        out = run(["glab", "mr", "list", "--source-branch", branch, "--merged", "--output", "json"], cwd=repo, check=False).stdout
+    try:
+        return bool(json.loads(out or "[]"))
+    except ValueError:
+        return False
+
+
+def cmd_close(args) -> None:
+    repo = repo_root(Path(args.cwd or os.getcwd()))
+    wt = find_worktree(repo, args.ref)
+    ws = herdr_workspace_for(wt["path"])
+    force = ["--force"] if args.force else []
+    if ws:
+        herdr("worktree", "remove", "--workspace", ws["workspace_id"], *force)
+    else:
+        git(repo, "worktree", "remove", *force, wt["path"])
+    print(f"removed worktree {wt['path']}")
+    branch = wt.get("branch")
+    if not branch:
+        return
+    if merged(repo, remote_of(repo), branch) or run(["git", "branch", "-d", branch], cwd=repo, check=False).returncode == 0:
+        git(repo, "branch", "-D", branch, check=False)
+        print(f"deleted merged branch {branch}")
+    else:
+        print(f"kept branch {branch}: no merged MR/PR found; delete it with `git branch -D {branch}`")
+
+
+def cmd_adopt(args) -> None:
+    repo = repo_root(Path(args.cwd or os.getcwd()))
+    config = load_config(remote_of(repo))
+    root = repo / config["worktree_dir"]
+    for wt in worktrees(repo):
+        if not wt["path"].startswith(f"{root}/") or herdr_workspace_for(wt["path"]):
+            continue
+        branch = wt.get("branch", Path(wt["path"]).name)
+        m = re.match(r"^(\d+)-(.*)$", branch)
+        label = f"#{m.group(1)} {shorten(m.group(2))}" if m else shorten(branch)
+        herdr("worktree", "open", "--cwd", str(repo), "--path", wt["path"], "--label", label, "--no-focus")
+        print(f"adopted {branch} as {label}")
+
+
+def cmd_pick(args) -> None:
+    pane = os.environ.get("HERDR_ACTIVE_PANE_ID")
+    if pane and not args.cwd:
+        info = herdr("pane", "get", pane).get("pane", {})
+        args.cwd = info.get("foreground_cwd") or info.get("cwd")
+    try:
+        ref = input("Issue number, issue URL or task: ").strip()
+        if not ref:
+            return
+        args.task = [ref]
+        repo = repo_root(Path(args.cwd or os.getcwd()))
+        plan = plan_task(ref, repo, args.base)
+        for key in ("branch", "label", "session_name", "prompt"):
+            print(f"  {key:13} {plan[key]}")
+        if input("Start? [y/N] ").strip().lower() != "y":
+            return
+        cmd_start(args)
+        time.sleep(1.5)
+    except Fail as error:
+        print(f"worktree-agent: {error}")
+        input("Press Enter to close")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(prog="worktree-agent", description=__doc__.splitlines()[0])
+    parser.add_argument("--cwd", help="checkout to work in (default: current directory)")
+    sub = parser.add_subparsers(dest="command", required=True)
+    start = sub.add_parser("start", help="create a worktree and start an agent in it")
+    start.add_argument("task", nargs="+", help="issue number, issue URL or free-text task")
+    for p in (start, sub.add_parser("pick", help="interactive start, for a herdr popup")):
+        p.add_argument("--base", help="base ref for a new branch (default: origin's HEAD)")
+        p.add_argument("--no-agent", action="store_true", help="only create the worktree")
+        p.add_argument("--no-focus", action="store_true", help="leave the focus where it is")
+        p.add_argument("--dry-run", action="store_true", help="print the plan and change nothing")
+    sub.add_parser("list", help="list this repo's worktrees with their herdr workspace and agents")
+    close = sub.add_parser("close", help="remove a worktree; delete its branch when merged")
+    close.add_argument("ref", help="issue number, branch or worktree path")
+    close.add_argument("--force", action="store_true", help="remove even with uncommitted changes")
+    sub.add_parser("adopt", help="open existing worktrees as herdr workspaces")
+    args = parser.parse_args()
+    try:
+        {"start": cmd_start, "list": cmd_list, "close": cmd_close, "adopt": cmd_adopt, "pick": cmd_pick}[args.command](args)
+    except Fail as error:
+        sys.exit(f"worktree-agent: {error}")
+
+
+main()

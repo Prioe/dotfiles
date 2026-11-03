@@ -1,7 +1,7 @@
 {
-  "name": "auto-rename",
-  "description": "Names the session after its main task: on demand with /auto-rename, and in the background every few prompts.",
-  "version": "1.0.0",
+  "name": "workbench",
+  "description": "Session workflow: names sessions after their main task (on demand and in the background), and starts agents in herdr-managed git worktrees.",
+  "version": "1.1.0",
   "author": {
     "name": "Michael Albertz"
   },
