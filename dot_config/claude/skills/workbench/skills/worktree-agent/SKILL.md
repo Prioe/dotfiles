@@ -41,12 +41,19 @@ To pass something on to an agent, show the user the exact text first, then send 
 
 ## Clean up
 
+Close worktrees from the main checkout, never from inside the worktree being closed: closing ends the agent in it,
+including this session if it runs there. Close when the user reports a merge, when an issue agent reports it is done,
+or when the user asks to clean up.
+
 ```bash
 worktree-agent close 708            # removes the worktree and its herdr workspace, ending its agent
+worktree-agent prune                # lists worktrees whose MR/PR is merged
+worktree-agent prune --yes          # removes the clean ones with an idle or no agent
 ```
 
-Ask the user before closing: it ends the agent in that worktree. The script deletes the branch only when a merged MR or
-PR exists for it, and otherwise prints how to delete it. It refuses a worktree with uncommitted changes; pass `--force`
-only when the user confirms the changes can go.
+Ask the user before `close` or `prune --yes`. Both delete a branch only when nothing is lost (a merged MR/PR, or no
+commits of its own), and keep it otherwise. `close` refuses a worktree with uncommitted changes or a working or blocked
+agent; pass `--force` only when the user confirms that work can go. A closed Claude session stays resumable with
+`claude --resume`.
 
 `worktree-agent adopt` opens worktrees created outside herdr (under `.claude/worktrees/`) as herdr workspaces.
