@@ -74,8 +74,16 @@ def slugify(text: str, limit: int = 50) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")[:limit].rstrip("-") or "task"
 
 
+FILLER = {"a", "an", "the", "to", "for", "of", "on", "in", "at", "and", "or", "with", "from", "into", "via"}
+
+
 def shorten(slug: str, limit: int = 24) -> str:
-    return slug if len(slug) <= limit else slug[:limit].rsplit("-", 1)[0]
+    if len(slug) <= limit:
+        return slug
+    words = slug[:limit].rsplit("-", 1)[0].split("-")
+    while len(words) > 1 and words[-1] in FILLER:
+        words.pop()
+    return "-".join(words)
 
 
 def fetch_issue(repo: Path, remote: str, number: str) -> dict:
