@@ -7,7 +7,7 @@
 	defaultBranch = main
 
 [help]
-	autocorrect = 1
+	autocorrect = prompt
 
 [rerere]
 	# Remember resolutions of conflicted merges
@@ -15,6 +15,32 @@
 
 [pull]
   rebase = true
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+
+[fetch]
+	prune = true
+
+[push]
+	autoSetupRemote = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[commit]
+	verbose = true
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
+
+[column]
+	ui = auto
 
 [include]
 	path = ~/.config/git/config.local
