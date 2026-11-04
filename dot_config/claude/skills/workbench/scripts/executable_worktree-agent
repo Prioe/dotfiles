@@ -10,7 +10,7 @@ usage:
   worktree-agent list
   worktree-agent close <issue|branch> [--force]
   worktree-agent prune [--yes]
-  worktree-agent adopt
+  worktree-agent adopt [--all] [--dry-run]
   worktree-agent pick
 """
 
@@ -367,14 +367,28 @@ def cmd_adopt(args) -> None:
     repo = repo_root(Path(args.cwd or os.getcwd()))
     config = load_config(remote_of(repo))
     root = repo / config["worktree_dir"]
+    panes = herdr("pane", "list").get("panes", [])
     for wt in worktrees(repo):
-        if not wt["path"].startswith(f"{root}/") or herdr_workspace_for(wt["path"]):
+        path = wt["path"]
+        if not path.startswith(f"{root}/"):
             continue
-        branch = wt.get("branch", Path(wt["path"]).name)
-        m = re.match(r"^(\d+)-(.*)$", branch)
-        label = f"#{m.group(1)} {shorten(m.group(2))}" if m else shorten(branch)
-        herdr("worktree", "open", "--cwd", str(repo), "--path", wt["path"], "--label", label, "--no-focus")
-        print(f"adopted {branch} as {label}")
+        inside = [p for p in panes if p.get("agent") and f"{p.get('foreground_cwd') or p.get('cwd')}/".startswith(f"{path}/")]
+        ws = herdr_workspace_for(path)
+        to_move = [p for p in inside if not ws or p["workspace_id"] != ws["workspace_id"]]
+        if (ws and not to_move) or (not inside and not args.all):
+            continue
+        # The directory carries the issue id even when another branch is checked out in it.
+        m = re.match(r"^(\d+)-(.*)$", Path(path).name)
+        label = f"#{m.group(1)} {shorten(m.group(2))}" if m else shorten(Path(path).name)
+        steps = [] if ws else [f"open workspace {label!r}"]
+        steps += [f"move {p['agent']} pane {p['pane_id']} ({p.get('terminal_title_stripped', '')})" for p in to_move]
+        print(f"{wt.get('branch', path)}: {'; '.join(steps)}")
+        if args.dry_run:
+            continue
+        if not ws:
+            ws = herdr("worktree", "open", "--cwd", str(repo), "--path", path, "--label", label, "--no-focus")["workspace"]
+        for p in to_move:
+            herdr("pane", "move", p["pane_id"], "--new-tab", "--workspace", ws["workspace_id"], "--no-focus")
 
 
 def cmd_pick(args) -> None:
@@ -417,7 +431,9 @@ def main() -> None:
     close.add_argument("--force", action="store_true", help="remove even with uncommitted changes or a busy agent")
     prune = sub.add_parser("prune", help="list worktrees with a merged MR/PR; remove the clean, idle ones with --yes")
     prune.add_argument("--yes", action="store_true", help="remove them instead of only listing")
-    sub.add_parser("adopt", help="open existing worktrees as herdr workspaces")
+    adopt = sub.add_parser("adopt", help="give worktrees with a running agent their own herdr workspace and move the agent there")
+    adopt.add_argument("--all", action="store_true", help="also open worktrees that have no agent")
+    adopt.add_argument("--dry-run", action="store_true", help="print what would change")
     args = parser.parse_args()
     try:
         commands = {"start": cmd_start, "list": cmd_list, "close": cmd_close, "prune": cmd_prune, "adopt": cmd_adopt, "pick": cmd_pick}

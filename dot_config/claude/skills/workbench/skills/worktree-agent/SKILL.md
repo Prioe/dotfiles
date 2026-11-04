@@ -56,4 +56,5 @@ merged MR/PR, or it has no commits of its own), and keep it otherwise, also when
 agent; pass `--force` only when the user confirms that work can go. A closed Claude session stays resumable with
 `claude --resume`.
 
-`worktree-agent adopt` opens worktrees created outside herdr (under `.claude/worktrees/`) as herdr workspaces.
+`worktree-agent adopt` gives each worktree under `.claude/worktrees/` that has a running agent its own herdr workspace
+and moves the agent's pane there. `--all` also opens worktrees without an agent; `--dry-run` only prints the plan.
