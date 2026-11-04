@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+# herdr config hash: {{ include "dot_config/herdr/config.toml" | sha256sum }}
+# auto-title config hash: {{ include "dot_config/herdr-auto-title/config.env" | sha256sum }}
+
+if ! command -v herdr >/dev/null; then
+  warn "herdr not found in PATH, skipping herdr setup"
+  exit 0
+fi
+
+if ! herdr plugin list | grep -qF "github:kryptamine/herdr-auto-title@"; then
+  info "Installing herdr plugin kryptamine/herdr-auto-title"
+  herdr plugin install --yes kryptamine/herdr-auto-title || warn "Failed to install herdr-auto-title"
+fi
+
+# Both talk to the running server; without one, the next herdr start picks up config and plugin anyway
+info "Reloading herdr config and restarting Auto Title"
+herdr server reload-config >/dev/null || warn "No running herdr server to reload"
+herdr plugin action invoke herdr.auto-title.restart >/dev/null || warn "Failed to restart Auto Title"
