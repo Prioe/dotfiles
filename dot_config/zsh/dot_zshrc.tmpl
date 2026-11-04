@@ -107,12 +107,6 @@ eval "$(atuin init zsh)"
 # Chezmoi
 eval "$(chezmoi completion zsh)"
 
-# Herdr automatic rename
-for _f in ${HOME}/.config/herdr/plugins/github-installations/herdr-automatic-rename-*/*/checkout/shell/hook.zsh(N); do
-  source $_f; break
-done
-unset _f
-
 # Work layer extensions (applied separately, only present on work machines)
 [[ -f "$ZDOTDIR/zshenv-work" ]] && source "$ZDOTDIR/zshenv-work"
 [[ -f "$ZDOTDIR/aliases-work" ]] && source "$ZDOTDIR/aliases-work"
