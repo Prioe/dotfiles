@@ -51,8 +51,8 @@ worktree-agent prune                # lists worktrees whose MR/PR is merged
 worktree-agent prune --yes          # removes the clean ones with an idle or no agent
 ```
 
-Ask the user before `close` or `prune --yes`. Both delete a branch only when nothing is lost (a merged MR/PR, or no
-commits of its own), and keep it otherwise. `close` refuses a worktree with uncommitted changes or a working or blocked
+Ask the user before `close` or `prune --yes`. Both delete a branch only when nothing is lost (its last commit is in a
+merged MR/PR, or it has no commits of its own), and keep it otherwise, also when it has commits after its merged MR/PR. `close` refuses a worktree with uncommitted changes or a working or blocked
 agent; pass `--force` only when the user confirms that work can go. A closed Claude session stays resumable with
 `claude --resume`.
 

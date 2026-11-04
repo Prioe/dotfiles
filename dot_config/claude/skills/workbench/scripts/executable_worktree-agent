@@ -269,15 +269,28 @@ def find_worktree(repo: Path, ref: str) -> dict:
     raise Fail(f"no worktree matches {ref}")
 
 
-def merged(repo: Path, remote: str, branch: str) -> bool:
+def merged_heads(repo: Path, remote: str, branch: str) -> list[str]:
+    """Head commits of the branch's merged MRs/PRs; empty when none is merged."""
     if remote.startswith("github.com/"):
-        out = run(["gh", "pr", "list", "--head", branch, "--state", "merged", "--json", "number"], cwd=repo, check=False).stdout
+        cmd = ["gh", "pr", "list", "--head", branch, "--state", "merged", "--json", "headRefOid"]
+        key = "headRefOid"
     else:
-        out = run(["glab", "mr", "list", "--source-branch", branch, "--merged", "--output", "json"], cwd=repo, check=False).stdout
+        cmd = ["glab", "mr", "list", "--source-branch", branch, "--merged", "--output", "json"]
+        key = "sha"
     try:
-        return bool(json.loads(out or "[]"))
+        return [mr[key] for mr in json.loads(run(cmd, cwd=repo, check=False).stdout or "[]") if mr.get(key)]
     except ValueError:
-        return False
+        return []
+
+
+def merge_state(repo: Path, remote: str, branch: str) -> str:
+    """"merged" when the branch tip is in a merged MR/PR, "ahead" when it has commits after it, else "open"."""
+    heads = merged_heads(repo, remote, branch)
+    if not heads:
+        return "open"
+    tip = git(repo, "rev-parse", f"refs/heads/{branch}", check=False)
+    contained = any(run(["git", "merge-base", "--is-ancestor", tip, h], cwd=repo, check=False).returncode == 0 for h in heads)
+    return "merged" if contained else "ahead"
 
 
 def busy_agents(ws: dict | None) -> list[str]:
@@ -286,7 +299,10 @@ def busy_agents(ws: dict | None) -> list[str]:
     return [f"{p['agent']} ({p['agent_status']})" for p in agents_in(ws["workspace_id"]) if p.get("agent_status") in ("working", "blocked")]
 
 
-def close_worktree(repo: Path, wt: dict, force: bool, is_merged: bool | None = None) -> None:
+def close_worktree(repo: Path, wt: dict, force: bool, state: str | None = None) -> None:
+    branch = wt.get("branch")
+    if branch and state is None:
+        state = merge_state(repo, remote_of(repo), branch)
     ws = herdr_workspace_for(wt["path"])
     busy = busy_agents(ws)
     if busy and not force:
@@ -297,15 +313,14 @@ def close_worktree(repo: Path, wt: dict, force: bool, is_merged: bool | None = N
     else:
         git(repo, "worktree", "remove", *force_args, wt["path"])
     print(f"removed worktree {wt['path']}" + (f" and workspace {ws['workspace_id']}, ending its agent" if ws else ""))
-    branch = wt.get("branch")
     if not branch:
         return
-    if is_merged is None:
-        is_merged = merged(repo, remote_of(repo), branch)
     # `git branch -d` only succeeds when the branch has no commits of its own left.
-    if is_merged or run(["git", "branch", "-d", branch], cwd=repo, check=False).returncode == 0:
+    if state == "merged" or run(["git", "branch", "-d", branch], cwd=repo, check=False).returncode == 0:
         git(repo, "branch", "-D", branch, check=False)
         print(f"deleted branch {branch}")
+    elif state == "ahead":
+        print(f"kept branch {branch}: it has commits after its merged MR/PR; delete it with `git branch -D {branch}`")
     else:
         print(f"kept branch {branch}: no merged MR/PR found; delete it with `git branch -D {branch}`")
 
@@ -325,9 +340,10 @@ def cmd_prune(args) -> None:
         branch = wt.get("branch")
         if not branch or not wt["path"].startswith(f"{root}/"):
             continue
-        if not merged(repo, remote, branch):
+        state = merge_state(repo, remote, branch)
+        if state == "open":
             continue
-        reasons = []
+        reasons = ["commits after the merged MR/PR"] if state == "ahead" else []
         if git(wt["path"], "status", "--porcelain", check=False):
             reasons.append("uncommitted changes")
         busy = busy_agents(herdr_workspace_for(wt["path"]))
@@ -344,7 +360,7 @@ def cmd_prune(args) -> None:
         return
     for wt, reasons in candidates:
         if not reasons:
-            close_worktree(repo, wt, force=False, is_merged=True)
+            close_worktree(repo, wt, force=False, state="merged")
 
 
 def cmd_adopt(args) -> None:
