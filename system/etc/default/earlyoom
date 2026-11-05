@@ -1,0 +1,2 @@
+# systemd splits this at whitespace without unquoting: no quotes, no spaces inside regexes
+EARLYOOM_ARGS="-r 3600 --prefer (^|/)(Web.Content|Isolated.Web.Co)$ --avoid (^|/)(gnome-shell|Xwayland|sway|ghostty|systemd|sshd)$"

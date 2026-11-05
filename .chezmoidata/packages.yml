@@ -12,6 +12,7 @@ packages:
       - atuin
       - bat
       - btop
+      - earlyoom
       - eza
       - fd
       - fzf
@@ -92,6 +93,7 @@ packages:
       - https://mise.jdx.dev/rpm/mise.repo
     dnf:
       - coreutils
+      - earlyoom
       - git
       - mise
       - neovim

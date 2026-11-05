@@ -1,0 +1,26 @@
+{{ if and .managePackages (not .isWSL) (stat "/run/systemd/system") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ template "scriptLogging" . }}
+
+{{ template "hashList" (glob (joinPath .chezmoi.sourceDir "system/etc/**/*")) }}
+
+src="{{ joinPath .chezmoi.sourceDir "system/etc" }}"
+
+while IFS= read -r -d '' file; do
+    info "Installing /etc/$file"
+    sudo install -Dm644 "$src/$file" "/etc/$file"
+done < <(find "$src" -type f -printf '%P\0')
+
+info "Applying sysrq and MGLRU settings"
+sudo sysctl -q -p /etc/sysctl.d/90-sysrq.conf
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/90-mglru-min-ttl.conf
+
+if systemctl list-unit-files earlyoom.service &>/dev/null; then
+    info "Enabling and restarting earlyoom"
+    sudo systemctl enable earlyoom.service
+    sudo systemctl restart earlyoom.service
+else
+    warn "earlyoom.service not found, skipping"
+fi
+{{ end -}}
