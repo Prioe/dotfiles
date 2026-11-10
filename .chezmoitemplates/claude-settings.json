@@ -66,6 +66,7 @@
   "advisorModel": "fable",
   "awaySummaryEnabled": false,
   "idleCompaction": false,
+  "disableAgentView": true,
   "tui": "fullscreen",
   "theme": "dark",
   "editorMode": "vim",
