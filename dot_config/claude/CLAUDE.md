@@ -15,7 +15,6 @@ This file globally provides guidance to agentic code tools when working with cod
   is available.
 - When asked to check grammar, spelling, or punctuation, consider running `languagetool` on the text.
   - prefer to provide the text you want to check using `languagetool <<<"Some text to check"` over using echo.
-- when the user requests code examples, setup or configuration steps, or library/API documentation use **context7 mcp**
 
 ### Python
 
