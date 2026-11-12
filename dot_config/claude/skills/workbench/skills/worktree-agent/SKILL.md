@@ -33,6 +33,7 @@ After starting, report the label and branch the script printed. Do not also work
 
 ```bash
 worktree-agent list                 # this repo's worktrees, their herdr workspace and agent state
+worktree-agent status               # the same plus main's sync state, MR/PR states and what can be pruned
 herdr agent read <agent> --lines 40 # what an agent shows right now
 ```
 

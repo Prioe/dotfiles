@@ -8,6 +8,7 @@
 usage:
   worktree-agent start <issue|url|text> [--base REF] [--no-agent] [--no-focus] [--dry-run]
   worktree-agent list
+  worktree-agent status
   worktree-agent close <issue|branch> [--force]
   worktree-agent prune [--yes]
   worktree-agent adopt [--all] [--dry-run]
@@ -268,6 +269,53 @@ def cmd_list(args) -> None:
         print(f"{wt.get('branch', '(detached)'):45} {where:30} {', '.join(agents) or '-'}")
 
 
+def cmd_status(args) -> None:
+    repo = repo_root(Path(args.cwd or os.getcwd()))
+    remote = remote_of(repo)
+    git(repo, "fetch", "-q", "--prune", "origin", check=False)
+    branch = git(repo, "branch", "--show-current", check=False) or "(detached)"
+    sync = []
+    counts = git(repo, "rev-list", "--left-right", "--count", "HEAD...@{upstream}", check=False).split()
+    if len(counts) == 2:
+        ahead, behind = counts
+        sync += [f"{ahead} ahead"] if ahead != "0" else []
+        sync += [f"{behind} behind"] if behind != "0" else []
+        sync = sync or ["up to date"]
+    else:
+        sync = ["no upstream"]
+    dirty = len(git(repo, "status", "--porcelain", check=False).splitlines())
+    if dirty:
+        sync.append(f"{dirty} uncommitted")
+    print(f"repo: {repo.name} ({remote or 'no origin'})")
+    print(f"main checkout: {branch}, {', '.join(sync)}")
+
+    spaces = {(w.get("worktree") or {}).get("checkout_path"): w for w in herdr("workspace", "list").get("workspaces", [])}
+    panes = herdr("pane", "list").get("panes", [])
+    rows, prunable = [], []
+    for wt in worktrees(repo)[1:]:
+        name = wt.get("branch", "(detached)")
+        ws = spaces.get(wt["path"])
+        agents = [f"{p['agent']}:{p['agent_status']}" for p in panes if ws and p.get("workspace_id") == ws["workspace_id"] and p.get("agent")]
+        mrs = forge_mrs(repo, remote, name) if wt.get("branch") else []
+        mr = ", ".join(f"{m['ref']} {m['state']}" for m in mrs) or "no MR/PR"
+        if mrs and merge_state(repo, remote, name, mrs) == "merged":
+            prunable.append(name)
+        rows.append((name, ws["label"] if ws else "not in herdr", ", ".join(agents) or "no agent", mr))
+    if not rows:
+        print("worktrees: none")
+        return
+    print("worktrees:")
+    for row in rows:
+        print(f"  {row[0][:44]:44} {row[1][:28]:28} {row[2]:20} {row[3]}")
+    if prunable:
+        print(f"merged, can be pruned: {', '.join(prunable)}")
+
+
+def cmd_notes(args) -> None:
+    notes = [p.read_text().strip() for p in sorted((CONFIG_DIR / "manager.d").glob("*.md"))]
+    print("\n\n".join(notes) if notes else "No notes.")
+
+
 def find_worktree(repo: Path, ref: str) -> dict:
     number = ref.lstrip("#")
     for wt in worktrees(repo)[1:]:
@@ -277,23 +325,31 @@ def find_worktree(repo: Path, ref: str) -> dict:
     raise Fail(f"no worktree matches {ref}")
 
 
-def merged_heads(repo: Path, remote: str, branch: str) -> list[str]:
-    """Head commits of the branch's merged MRs/PRs; empty when none is merged."""
+def forge_mrs(repo: Path, remote: str, branch: str) -> list[dict]:
+    """The branch's MRs/PRs in any state, as {ref, state, sha} with state opened, merged or closed."""
     if remote.startswith("github.com/"):
-        cmd = ["gh", "pr", "list", "--head", branch, "--state", "merged", "--json", "headRefOid"]
-        key = "headRefOid"
+        cmd = ["gh", "pr", "list", "--head", branch, "--state", "all", "--json", "number,state,headRefOid"]
+        fields = ("#", "number", "headRefOid")
     else:
-        cmd = ["glab", "mr", "list", "--source-branch", branch, "--merged", "--output", "json"]
-        key = "sha"
+        cmd = ["glab", "mr", "list", "--source-branch", branch, "--all", "--output", "json"]
+        fields = ("!", "iid", "sha")
     try:
-        return [mr[key] for mr in json.loads(run(cmd, cwd=repo, check=False).stdout or "[]") if mr.get(key)]
+        data = json.loads(run(cmd, cwd=repo, check=False).stdout or "[]")
     except ValueError:
         return []
+    states = {"open": "opened", "opened": "opened", "merged": "merged", "closed": "closed"}
+    prefix, number, sha = fields
+    return [
+        {"ref": f"{prefix}{mr[number]}", "state": states.get(str(mr.get("state", "")).lower(), "closed"), "sha": mr.get(sha, "")}
+        for mr in data
+    ]
 
 
-def merge_state(repo: Path, remote: str, branch: str) -> str:
+def merge_state(repo: Path, remote: str, branch: str, mrs: list[dict] | None = None) -> str:
     """"merged" when the branch tip is in a merged MR/PR, "ahead" when it has commits after it, else "open"."""
-    heads = merged_heads(repo, remote, branch)
+    if mrs is None:
+        mrs = forge_mrs(repo, remote, branch)
+    heads = [mr["sha"] for mr in mrs if mr["state"] == "merged" and mr["sha"]]
     if not heads:
         return "open"
     tip = git(repo, "rev-parse", f"refs/heads/{branch}", check=False)
@@ -434,6 +490,8 @@ def main() -> None:
         p.add_argument("--no-focus", action="store_true", help="leave the focus where it is")
         p.add_argument("--dry-run", action="store_true", help="print the plan and change nothing")
     sub.add_parser("list", help="list this repo's worktrees with their herdr workspace and agents")
+    sub.add_parser("status", help="main checkout sync state, worktrees with agent and MR/PR state, prunable ones")
+    sub.add_parser("notes", help="print the manager notes in ~/.config/worktree-agent/manager.d/*.md")
     close = sub.add_parser("close", help="remove a worktree; delete its branch when merged")
     close.add_argument("ref", help="issue number, branch or worktree path")
     close.add_argument("--force", action="store_true", help="remove even with uncommitted changes or a busy agent")
@@ -444,7 +502,7 @@ def main() -> None:
     adopt.add_argument("--dry-run", action="store_true", help="print what would change")
     args = parser.parse_args()
     try:
-        commands = {"start": cmd_start, "list": cmd_list, "close": cmd_close, "prune": cmd_prune, "adopt": cmd_adopt, "pick": cmd_pick}
+        commands = {"start": cmd_start, "list": cmd_list, "status": cmd_status, "notes": cmd_notes, "close": cmd_close, "prune": cmd_prune, "adopt": cmd_adopt, "pick": cmd_pick}
         commands[args.command](args)
     except Fail as error:
         sys.exit(f"worktree-agent: {error}")

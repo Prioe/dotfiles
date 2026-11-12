@@ -9,6 +9,7 @@ usage:
   auto-rename hook          read a hook event on stdin, rename when due
   auto-rename context       print the naming rules and session context
   auto-rename apply <name>  rename now and hand naming back to the hook
+  auto-rename pin <name>    rename now and keep the hook from changing it
 """
 
 import fcntl
@@ -203,7 +204,7 @@ def hook() -> None:
     save_state(session_id, state)
 
 
-def apply(name: str) -> None:
+def apply(name: str, pin: bool = False) -> None:
     session_id = os.environ.get("CLAUDE_CODE_SESSION_ID")
     if not session_id:
         sys.exit("CLAUDE_CODE_SESSION_ID is not set; run from inside a Claude Code session")
@@ -211,10 +212,14 @@ def apply(name: str) -> None:
     if not name or not rename(session_id, name):
         sys.exit(f"rename not confirmed; run /rename {name}")
     state = load_state(session_id)
-    state["last_name"] = name
-    state["checked_turn"] = state.get("turns", 0)
+    if pin:
+        # Without last_name the hook reads the name as manual and never replaces it.
+        state.pop("last_name", None)
+    else:
+        state["last_name"] = name
+        state["checked_turn"] = state.get("turns", 0)
     save_state(session_id, state)
-    print(f"renamed session to: {name}")
+    print(f"{'pinned' if pin else 'renamed'} session to: {name}")
 
 
 def main() -> None:
@@ -226,8 +231,8 @@ def main() -> None:
         print("## This session\n")
         print(session_context(os.getcwd()))
         print(f"Current name: {registry_name() or 'none'}")
-    elif len(args) == 2 and args[0] == "apply":
-        apply(args[1])
+    elif len(args) == 2 and args[0] in ("apply", "pin"):
+        apply(args[1], pin=args[0] == "pin")
     else:
         sys.exit(__doc__)
 
