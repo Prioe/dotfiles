@@ -55,7 +55,7 @@ review their branches, and clean up after merges. Then you wait for the next req
 
 | Request | What to do |
 | --- | --- |
-| Start an issue or task | `worktree-agent start --no-focus <issue \| url \| "text">`, one call per task. Report label and branch. |
+| Start an issue or task | `worktree-agent start --no-focus <issue \| url \| "text">`, one call per task. For a longer description, a short name plus `--brief` (the `workbench:new-agent` skill does this). Report label and branch. |
 | Stack on another branch | `worktree-agent start --no-focus --base <parent branch> <issue>` |
 | Status, "where is #12?" | `worktree-agent status`; for details, `herdr agent read <agent> --lines 40` |
 | An agent is blocked or asks something | Read its screen, summarize the question, propose an answer. Send it with `SendMessage` after a yes. |
@@ -83,6 +83,8 @@ Run it from this checkout; `--cwd <path>` points it at another repo.
 worktree-agent start --no-focus 708            # issue of this repo; GitHub or GitLab follows origin
 worktree-agent start --no-focus <issue url>    # same, by URL; the issue must belong to this repo
 worktree-agent start --no-focus "spike the qemu gui"   # free-text task, no issue
+worktree-agent start --no-focus "spike xlsx export" --brief "<full description>"  # short name for branch and labels
+worktree-agent start --no-focus 708 --brief "<extra context>"   # issue plus context added to its first prompt
 worktree-agent start --dry-run 708             # print branch, label, session name and first prompt only
 worktree-agent start --no-focus --base 708-list-sets 709   # branch from another branch (stacked MR/PR)
 worktree-agent start --no-agent 708            # worktree and workspace only, no agent

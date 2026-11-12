@@ -6,7 +6,7 @@
 """Start coding agents in herdr-managed git worktrees.
 
 usage:
-  worktree-agent start <issue|url|text> [--base REF] [--no-agent] [--no-focus] [--dry-run]
+  worktree-agent start <issue|url|text> [--brief TEXT] [--base REF] [--no-agent] [--no-focus] [--dry-run]
   worktree-agent list
   worktree-agent status
   worktree-agent close <issue|branch> [--force]
@@ -26,7 +26,7 @@ import tomllib
 import uuid
 from pathlib import Path
 
-from common import Fail, git, herdr, herdr_bin, parse_remote, run, save_state
+from common import Fail, data_dir, git, herdr, herdr_bin, parse_remote, run, save_state
 from common import repo_root as find_root
 
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser() / "worktree-agent"
@@ -95,7 +95,22 @@ def fetch_issue(repo: Path, remote: str, number: str) -> dict:
     return {"id": str(data["iid"]), "title": data["title"], "url": data["web_url"]}
 
 
-def plan_task(ref: str, repo: Path, base: str | None) -> dict:
+def with_brief(plan: dict, brief: str, is_task: bool) -> None:
+    """Fold a user brief into the first prompt; a long or multi-line one goes to a file the agent reads."""
+    brief = brief.strip()
+    if not brief:
+        return
+    # A newline in the prompt would submit it early, and long prompts get cut while the agent starts.
+    if "\n" in brief or len(brief) > 300:
+        plan["brief_file"] = str(data_dir() / "briefs" / f"{Path(plan['repo']).name}-{plan['branch']}.md")
+        plan["brief"] = brief
+        brief = f"the brief in {plan['brief_file']}"
+        plan["prompt"] = f"Read {brief}, then plan and implement it." if is_task else f"{plan['prompt']} Also read {brief}."
+    else:
+        plan["prompt"] = brief if is_task else f"{plan['prompt']} Additional context: {brief}"
+
+
+def plan_task(ref: str, repo: Path, base: str | None, brief: str = "") -> dict:
     remote = remote_of(repo)
     config = load_config(remote)
     url_match = re.match(r"^https?://[^/]+/(.+?)(?:/-)?/(?:issues|pull|merge_requests)/(\d+)", ref)
@@ -121,7 +136,7 @@ def plan_task(ref: str, repo: Path, base: str | None) -> dict:
     name = name.strip("-_")[:32].rstrip("-_")
     if not name[:1].isalpha():
         name = f"t{name}"[:32]
-    return {
+    plan = {
         "repo": str(repo),
         "remote": remote,
         "base": base or default_base(repo),
@@ -133,6 +148,8 @@ def plan_task(ref: str, repo: Path, base: str | None) -> dict:
         "session_name": session,
         "prompt": config[kind + "prompt"].format(**values),
     }
+    with_brief(plan, brief, is_task=not number)
+    return plan
 
 
 def default_base(repo: Path) -> str:
@@ -214,7 +231,7 @@ def send_prompt(pane: str, prompt: str) -> bool:
 
 def cmd_start(args) -> None:
     repo = repo_root(Path(args.cwd or os.getcwd()))
-    plan = plan_task(" ".join(args.task), repo, args.base)
+    plan = plan_task(" ".join(args.task), repo, args.base, getattr(args, "brief", "") or "")
     if args.dry_run:
         print(json.dumps(plan, indent=2))
         return
@@ -253,6 +270,9 @@ def cmd_start(args) -> None:
     if args.no_agent:
         return
     name = start_agent(plan, pane)
+    if plan.get("brief_file"):
+        Path(plan["brief_file"]).parent.mkdir(parents=True, exist_ok=True)
+        Path(plan["brief_file"]).write_text(plan["brief"] + "\n")
     submitted = send_prompt(pane, plan["prompt"])
     state = "working" if submitted else "prompt sent but not confirmed; check its pane"
     print(f"agent: {name} ({plan['session_name']}), {state}")
@@ -484,6 +504,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     start = sub.add_parser("start", help="create a worktree and start an agent in it")
     start.add_argument("task", nargs="+", help="issue number, issue URL or free-text task")
+    start.add_argument("--brief", help="what the agent should do: the first prompt for a task, extra context for an issue")
     for p in (start, sub.add_parser("pick", help="interactive start, for a herdr popup")):
         p.add_argument("--base", help="base ref for a new branch (default: origin's HEAD)")
         p.add_argument("--no-agent", action="store_true", help="only create the worktree")
