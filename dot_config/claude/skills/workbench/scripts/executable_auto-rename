@@ -21,11 +21,20 @@ import subprocess
 import sys
 import time
 
-from common import CLAUDE_DIR, PLUGIN_ROOT, current_workspace, data_dir, git, load_state, parse_remote, repo_root, save_state
+from common import (
+    DEFAULT_NAME,
+    PLUGIN_ROOT,
+    current_workspace,
+    data_dir,
+    git,
+    load_state,
+    parse_remote,
+    registry_name,
+    repo_root,
+    save_state,
+)
 
 MAX_LEN = 48
-# Claude Code's own placeholder names look like "chezmoi-f3".
-DEFAULT_NAME = re.compile(r"^[a-z0-9._-]+-[0-9a-f]{2}$")
 
 
 def option(key: str, default: int) -> int:
@@ -60,14 +69,6 @@ def session_context(cwd: str) -> str:
     else:
         lines.append("Include project: yes")
     return "\n".join(lines)
-
-
-def registry_name() -> str | None:
-    registry = CLAUDE_DIR / "sessions" / f"{os.environ.get('CLAUDE_PID')}.json"
-    try:
-        return json.loads(registry.read_text()).get("name")
-    except (OSError, ValueError):
-        return None
 
 
 def rename(session_id: str, name: str) -> bool:

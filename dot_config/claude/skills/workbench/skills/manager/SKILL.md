@@ -71,8 +71,10 @@ are named after their issue, `#<id>: <topic>`, sometimes with the project in fro
 the `[ref]` shown in the list. Start a message with a one-line summary of what it is about; the worker's user sees only
 that line in a preview.
 
-Workers answer with `SendMessage` to this session's name, and their replies arrive here as messages. To hear when a
-worker has finished acting on a message, pass `notify_when_idle: true`. Use `herdr agent prompt <agent> "<text>"` only
+Workers started from here report to this session on their own: `worktree-agent start` tells them to send a report with
+`SendMessage` when they are done, blocked, or need a decision. That works because the name of this session is pinned;
+`start` addresses reports only to a pinned or hand-set name, which auto-rename leaves alone. Reports and answers arrive
+here as messages. To hear when a worker has finished acting on one of your messages, pass `notify_when_idle: true`. Use `herdr agent prompt <agent> "<text>"` only
 for an agent that is not a Claude session and so does not appear in `ListAgents`.
 
 ## worktree-agent

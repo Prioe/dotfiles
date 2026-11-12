@@ -101,3 +101,25 @@ def load_state(session_id: str) -> dict:
 
 def save_state(session_id: str, state: dict) -> None:
     state_path(session_id).write_text(json.dumps(state))
+
+
+# Claude Code's own placeholder names look like "chezmoi-f3".
+DEFAULT_NAME = re.compile(r"^[a-z0-9._-]+-[0-9a-f]{2}$")
+
+
+def registry_name() -> str | None:
+    """The name of the Claude session this process runs in, if any."""
+    registry = CLAUDE_DIR / "sessions" / f"{os.environ.get('CLAUDE_PID')}.json"
+    try:
+        return json.loads(registry.read_text()).get("name")
+    except (OSError, ValueError):
+        return None
+
+
+def stable_session_name() -> str | None:
+    """The calling session's name when auto-rename will not change it: pinned or set by hand."""
+    name = registry_name()
+    session_id = os.environ.get("CLAUDE_CODE_SESSION_ID")
+    if not name or not session_id or DEFAULT_NAME.match(name):
+        return None
+    return None if load_state(session_id).get("last_name") == name else name

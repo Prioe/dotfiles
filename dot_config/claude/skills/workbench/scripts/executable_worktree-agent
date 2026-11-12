@@ -6,7 +6,8 @@
 """Start coding agents in herdr-managed git worktrees.
 
 usage:
-  worktree-agent start <issue|url|text> [--brief TEXT] [--base REF] [--no-agent] [--no-focus] [--dry-run]
+  worktree-agent start <issue|url|text> [--brief TEXT] [--report-to NAME | --no-report] [--base REF]
+                       [--no-agent] [--no-focus] [--dry-run]
   worktree-agent list
   worktree-agent status
   worktree-agent close <issue|branch> [--force]
@@ -26,7 +27,7 @@ import tomllib
 import uuid
 from pathlib import Path
 
-from common import Fail, data_dir, git, herdr, herdr_bin, parse_remote, run, save_state
+from common import Fail, data_dir, git, herdr, herdr_bin, parse_remote, run, save_state, stable_session_name
 from common import repo_root as find_root
 
 CONFIG_DIR = Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser() / "worktree-agent"
@@ -110,7 +111,7 @@ def with_brief(plan: dict, brief: str, is_task: bool) -> None:
         plan["prompt"] = brief if is_task else f"{plan['prompt']} Additional context: {brief}"
 
 
-def plan_task(ref: str, repo: Path, base: str | None, brief: str = "") -> dict:
+def plan_task(ref: str, repo: Path, base: str | None, brief: str = "", report_to: str | None = None) -> dict:
     remote = remote_of(repo)
     config = load_config(remote)
     url_match = re.match(r"^https?://[^/]+/(.+?)(?:/-)?/(?:issues|pull|merge_requests)/(\d+)", ref)
@@ -149,6 +150,12 @@ def plan_task(ref: str, repo: Path, base: str | None, brief: str = "") -> dict:
         "prompt": config[kind + "prompt"].format(**values),
     }
     with_brief(plan, brief, is_task=not number)
+    if report_to:
+        plan["report_to"] = report_to
+        plan["prompt"] += (
+            f' When you are done, blocked, or need a decision, send a short report with SendMessage to the session'
+            f' "{report_to}", which started you.'
+        )
     return plan
 
 
@@ -231,7 +238,10 @@ def send_prompt(pane: str, prompt: str) -> bool:
 
 def cmd_start(args) -> None:
     repo = repo_root(Path(args.cwd or os.getcwd()))
-    plan = plan_task(" ".join(args.task), repo, args.base, getattr(args, "brief", "") or "")
+    report_to = None
+    if not getattr(args, "no_report", False):
+        report_to = getattr(args, "report_to", None) or stable_session_name()
+    plan = plan_task(" ".join(args.task), repo, args.base, getattr(args, "brief", "") or "", report_to)
     if args.dry_run:
         print(json.dumps(plan, indent=2))
         return
@@ -505,6 +515,8 @@ def main() -> None:
     start = sub.add_parser("start", help="create a worktree and start an agent in it")
     start.add_argument("task", nargs="+", help="issue number, issue URL or free-text task")
     start.add_argument("--brief", help="what the agent should do: the first prompt for a task, extra context for an issue")
+    start.add_argument("--report-to", help="session the agent reports to (default: this session, when its name is pinned)")
+    start.add_argument("--no-report", action="store_true", help="do not ask the agent to report to any session")
     for p in (start, sub.add_parser("pick", help="interactive start, for a herdr popup")):
         p.add_argument("--base", help="base ref for a new branch (default: origin's HEAD)")
         p.add_argument("--no-agent", action="store_true", help="only create the worktree")
