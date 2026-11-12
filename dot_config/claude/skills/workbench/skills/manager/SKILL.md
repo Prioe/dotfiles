@@ -7,6 +7,7 @@ allowed-tools:
   - Bash(worktree-agent start:*)
   - Bash(worktree-agent list)
   - Bash(worktree-agent prune)
+  - ListAgents
   - Bash(herdr agent list:*)
   - Bash(herdr agent read:*)
   - Bash(~/.config/claude/skills/workbench/scripts/auto-rename pin:*)
@@ -44,7 +45,8 @@ review their branches, and clean up after merges. Then you wait for the next req
 - Do not implement features or fixes in the main checkout. Start an issue agent instead. Small chores on main (a typo,
   a version bump, a config tweak) only when the user asks for them here.
 - Do not edit files inside a worktree. Each belongs to its agent.
-- Before sending text to an agent, show the user the exact text and wait for a yes.
+- Talk to issue agents with `SendMessage`, never by typing into their pane. The worker then sees the message as coming
+  from this session, not from the user. Before sending, show the user the exact text and wait for a yes.
 - Before `worktree-agent close` or `prune --yes`, ask: both end agents and remove checkouts.
 - Writes on GitHub or GitLab (issues, comments, MR/PR changes) need the user's approval for that exact action.
 - Keep the main checkout clean. Pull only when it has no uncommitted changes and the user agrees.
@@ -56,12 +58,22 @@ review their branches, and clean up after merges. Then you wait for the next req
 | Start an issue or task | `worktree-agent start --no-focus <issue \| url \| "text">`, one call per task. Report label and branch. |
 | Stack on another branch | `worktree-agent start --no-focus --base <parent branch> <issue>` |
 | Status, "where is #12?" | `worktree-agent status`; for details, `herdr agent read <agent> --lines 40` |
-| An agent is blocked or asks something | Read its screen, summarize the question, propose an answer. Send it with `herdr agent prompt <agent> "<text>"` after a yes. |
-| An MR/PR is ready, "review #12" | Review the branch from here, without checking it out: load the `code-review` skill with the branch as target. Give a short verdict: blockers, worth fixing, fine as is. Offer to pass findings to the issue agent. |
+| An agent is blocked or asks something | Read its screen, summarize the question, propose an answer. Send it with `SendMessage` after a yes. |
+| An MR/PR is ready, "review #12" | Review the branch from here, without checking it out: load the `code-review` skill with the branch as target. Give a short verdict: blockers, worth fixing, fine as is. Offer to send the findings to the issue agent. |
+| A message from a worker arrives | Summarize it for the user. Answer the worker only with the user's go-ahead. |
 | An MR/PR was merged | `worktree-agent close <issue>` after a yes, or `worktree-agent prune` to list everything merged |
 | Agents run in worktrees outside their own workspace | `worktree-agent adopt --dry-run`, then `adopt` after a yes |
 
-`herdr agent list` shows every agent with its name and pane. Address an agent by either.
+## Messaging workers
+
+`ListAgents` lists the Claude sessions on this machine by name, which is their address for `SendMessage`. Issue agents
+are named after their issue, `#<id>: <topic>`, sometimes with the project in front. When two sessions share a name, add
+the `[ref]` shown in the list. Start a message with a one-line summary of what it is about; the worker's user sees only
+that line in a preview.
+
+Workers answer with `SendMessage` to this session's name, and their replies arrive here as messages. To hear when a
+worker has finished acting on a message, pass `notify_when_idle: true`. Use `herdr agent prompt <agent> "<text>"` only
+for an agent that is not a Claude session and so does not appear in `ListAgents`.
 
 ## worktree-agent
 
@@ -93,6 +105,7 @@ worktree-agent adopt --dry-run   # worktrees with an agent but no own workspace;
 
 ## Other tools
 
-- `herdr agent list | read | prompt | wait`: see and talk to running agents. `read <agent> --lines 40` shows its screen.
+- `ListAgents` and `SendMessage`: find and message worker sessions (see above).
+- `herdr agent list | read | wait`: see running agents and their state. `read <agent> --lines 40` shows a screen.
 - `gh` on GitHub, `glab` on GitLab, depending on `origin`: issues and MRs/PRs.
 - The `code-review` skill for reviewing a branch.
